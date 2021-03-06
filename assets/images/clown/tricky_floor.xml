@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="tricky floor.png">
+	<!-- Created with Adobe Animate version 21.0.2.37893 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Symbol 10000" x="0" y="0" width="2251" height="935" frameX="-900" frameY="-104" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10001" x="2261" y="0" width="2251" height="940" frameX="-900" frameY="-99" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10002" x="4522" y="0" width="2251" height="945" frameX="-900" frameY="-94" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10003" x="0" y="955" width="2251" height="950" frameX="-900" frameY="-89" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10004" x="2261" y="955" width="2251" height="955" frameX="-900" frameY="-84" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10005" x="4522" y="955" width="2251" height="960" frameX="-900" frameY="-79" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10006" x="0" y="1925" width="2251" height="965" frameX="-900" frameY="-74" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10007" x="2261" y="1925" width="2251" height="969" frameX="-900" frameY="-70" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10008" x="4522" y="1925" width="2251" height="974" frameX="-900" frameY="-65" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10009" x="0" y="2909" width="2251" height="978" frameX="-900" frameY="-61" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10010" x="2261" y="2909" width="2251" height="983" frameX="-900" frameY="-56" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10011" x="4522" y="2909" width="2251" height="987" frameX="-900" frameY="-52" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10012" x="0" y="3906" width="2251" height="992" frameX="-900" frameY="-47" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10013" x="2261" y="3906" width="2251" height="996" frameX="-900" frameY="-43" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10014" x="4522" y="3906" width="2251" height="1000" frameX="-900" frameY="-39" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10015" x="0" y="4916" width="2251" height="1004" frameX="-900" frameY="-35" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10016" x="2261" y="4916" width="2251" height="1008" frameX="-900" frameY="-31" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10017" x="4522" y="4916" width="2251" height="1012" frameX="-900" frameY="-27" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10018" x="0" y="5938" width="2251" height="1016" frameX="-900" frameY="-23" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10019" x="2261" y="5938" width="2251" height="1019" frameX="-900" frameY="-20" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10020" x="4522" y="5938" width="2251" height="1023" frameX="-900" frameY="-16" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10021" x="0" y="6971" width="2251" height="1026" frameX="-900" frameY="-13" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10022" x="2261" y="6971" width="2251" height="1029" frameX="-900" frameY="-10" frameWidth="3151" frameHeight="1039"/>
+	<SubTexture name="Symbol 10023" x="4522" y="6971" width="2251" height="1031" frameX="-900" frameY="-8" frameWidth="3151" frameHeight="1039"/>
+</TextureAtlas>
