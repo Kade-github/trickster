@@ -1224,15 +1224,16 @@ class PlayState extends MusicBeatState
 		for (section in noteData)
 		{
 			var coolSection:Int = Std.int(section.lengthInSteps / 4);
+			var playerNotes:Array<Int> = [0, 1, 2, 3, 8, 9, 10, 11];
 
 			for (songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daNoteData:Int = Std.int(songNotes[1]);
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > 3)
+				if (!playerNotes.contains(songNotes[1]))
 				{
 					gottaHitNote = !section.mustHitSection;
 				}
@@ -1837,13 +1838,14 @@ class PlayState extends MusicBeatState
 				}
 
 				daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(PlayState.SONG.speed, 2)));
+				daNote.y -= (daNote.burning ? 65 : 0) - ((daNote.burning && curStage.startsWith('school')) ? 40 : 0);
 
 				// WIP interpolation shit? Need to fix the pause issue
 				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
 
 				if (daNote.y < -daNote.height)
 				{
-					if (daNote.tooLate || !daNote.wasGoodHit)
+					if ((daNote.tooLate || !daNote.wasGoodHit) && !daNote.burning)
 					{
 						health -= 0.0475;
 						vocals.volume = 0;
@@ -1851,6 +1853,8 @@ class PlayState extends MusicBeatState
 
 					daNote.active = false;
 					daNote.visible = false;
+
+					if(daNote.burning) { songScore += 100; }
 
 					daNote.kill();
 					notes.remove(daNote, true);
@@ -2376,45 +2380,59 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
-		if (!note.wasGoodHit)
-		{
-			if (!note.isSustainNote)
+		if(!note.burning){
+			if (!note.wasGoodHit)
 			{
-				popUpScore(note.strumTime);
-				combo += 1;
-			}
-
-			if (note.noteData >= 0)
-				health += 0.023;
-			else
-				health += 0.004;
-
-			switch (note.noteData)
-			{
-				case 2:
-					boyfriend.playAnim('singUP', true);
-				case 3:
-					boyfriend.playAnim('singRIGHT', true);
-				case 1:
-					boyfriend.playAnim('singDOWN', true);
-				case 0:
-					boyfriend.playAnim('singLEFT', true);
-			}
-
-			playerStrums.forEach(function(spr:FlxSprite)
-			{
-				if (Math.abs(note.noteData) == spr.ID)
+				if (!note.isSustainNote)
 				{
-					spr.animation.play('confirm', true);
+					popUpScore(note.strumTime);
+					combo += 1;
 				}
-			});
 
-			note.wasGoodHit = true;
-			vocals.volume = 1;
+				if (note.noteData >= 0)
+					health += 0.023;
+				else
+					health += 0.004;
 
+				switch (note.noteData)
+				{
+					case 2:
+						boyfriend.playAnim('singUP', true);
+					case 3:
+						boyfriend.playAnim('singRIGHT', true);
+					case 1:
+						boyfriend.playAnim('singDOWN', true);
+					case 0:
+						boyfriend.playAnim('singLEFT', true);
+				}
+
+				playerStrums.forEach(function(spr:FlxSprite)
+				{
+					if (Math.abs(note.noteData) == spr.ID)
+					{
+						spr.animation.play('confirm', true);
+					}
+				});
+
+				note.wasGoodHit = true;
+				vocals.volume = 1;
+
+				note.kill();
+				notes.remove(note, true);
+				note.destroy();
+			}
+		}
+		else{
+			FlxG.sound.play('assets/sounds/burnSound.ogg', 0.75);
+			combo = 0;
+			//misses += 1;
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
+			health -= 0.25;
+			boyfriend.playAnim('stunned', true);
+			songScore -= 100;
+			//updateAccuracy();
 		}
 	}
 
