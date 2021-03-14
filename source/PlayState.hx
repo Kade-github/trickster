@@ -876,9 +876,6 @@ class PlayState extends MusicBeatState
 				case 'whatever':
 					camFollow.setPosition(boyfriend.getMidpoint().x + 70, boyfriend.getMidpoint().y - 50);
 					trickyCutscene();
-				case 'madness':
-					camFollow.setPosition(boyfriend.getMidpoint().x + 70, boyfriend.getMidpoint().y - 50);
-					trickyCutscene();
 				default:
 					startCountdown();
 			}
@@ -1017,6 +1014,13 @@ class PlayState extends MusicBeatState
 			nevada.setGraphicSize(Std.int(nevada.width * 0.5));
 			add(animation); // add it to the scene
 			
+			// sounds
+
+			var ground:FlxSound = new FlxSound().loadEmbedded(Paths.sound('ground','clown'));
+			var wind:FlxSound = new FlxSound().loadEmbedded(Paths.sound('wind','clown'));
+			var cloth:FlxSound = new FlxSound().loadEmbedded(Paths.sound('cloth','clown'));
+			var metal:FlxSound = new FlxSound().loadEmbedded(Paths.sound('metal','clown'));
+
 			camHUD.visible = false;
 
 			add(boyfriend);
@@ -1056,6 +1060,7 @@ class PlayState extends MusicBeatState
 					}
 					if (animation.animation.curAnim == null && red.alpha == 0)
 					{
+						wind.fadeIn();
 						remove(red);
 						trace('play tricky');
 						animation.animation.play('fuckyou', false, false, 40);
@@ -1065,6 +1070,21 @@ class PlayState extends MusicBeatState
 						trace("animation loop");
 						tmr.reset(0.01);
 
+						// animation code is bad I hate this
+						// :(
+
+						
+						switch(animation.animation.frameIndex) // THESE ARE THE SOUNDS NOT THE ACTUAL CAMERA MOVEMENT!!!!
+						{
+							case 80:
+								ground.play();
+							case 86:
+								metal.play();
+							case 160:
+								cloth.play();
+						}
+
+					
 						// im sorry for making this code.
 						// TODO: CLEAN THIS FUCKING UP (switch case it or smth)
 
@@ -1137,7 +1157,7 @@ class PlayState extends MusicBeatState
 							}
 							else 
 							{
-								
+								wind.fadeOut();
 								startCountdown();
 							}
 						}
