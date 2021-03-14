@@ -36,6 +36,10 @@ dababy--biggest inspiration
 fashionably late--but here it is
 yooooooooooo--yooooooooo
 pico funny--pico funny
+<<<<<<< HEAD:assets/preload/data/introText.txt
 updates each friday--on time every time
 shoutouts to mason--for da homies
 bonk--get in the discord call
+=======
+updates each friday--on time every time
+>>>>>>> f5eb980d18edf84b370f6dc94a935cc57bef1a67:assets/data/introText.txt

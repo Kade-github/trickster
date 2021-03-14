@@ -15,6 +15,7 @@ class Note extends FlxSprite
 	public var strumTime:Float = 0;
 
 	public var mustPress:Bool = false;
+	public var burning:Bool = false;
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
@@ -32,22 +33,30 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
+	public function new(_strumTime:Float, _noteData:Int, ?_prevNote:Note, ?sustainNote:Bool = false)
 	{
 		super();
 
-		if (prevNote == null)
-			prevNote = this;
+		if (_prevNote == null)
+			_prevNote = this;
 
-		this.prevNote = prevNote;
+		prevNote = _prevNote;
 		isSustainNote = sustainNote;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		this.strumTime = strumTime;
+		strumTime = _strumTime;
 
-		this.noteData = noteData;
+		burning = _noteData > 7;
+		//if(!isSustainNote) { burning = Std.random(3) == 1; } //Set random notes to burning
+
+		//No held fire notes :[ (Part 1)
+		if(isSustainNote && prevNote.burning) { 
+			burning = true;
+		}
+
+		noteData = _noteData % 4;
 
 		var daStage:String = PlayState.curStage;
 
@@ -65,15 +74,14 @@ class Note extends FlxSprite
 				{
 					loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
 
-					animation.add('purpleholdend', [4]);
-					animation.add('greenholdend', [6]);
-					animation.add('redholdend', [7]);
-					animation.add('blueholdend', [5]);
+					loadGraphic(Paths.image('NOTE_fire-pixel.png'), true, 21, 31);
+					
+					animation.add('greenScroll', [6, 7, 6, 8], 8);
+					animation.add('redScroll', [9, 10, 9, 11], 8);
+					animation.add('blueScroll', [3, 4, 3, 5], 8);
+					animation.add('purpleScroll', [0, 1 ,0, 2], 8);
+					x -= 15;
 
-					animation.add('purplehold', [0]);
-					animation.add('greenhold', [2]);
-					animation.add('redhold', [3]);
-					animation.add('bluehold', [1]);
 				}
 
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
@@ -96,6 +104,15 @@ class Note extends FlxSprite
 				animation.addByPrefix('greenhold', 'green hold piece');
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
+
+				if(burning){
+					frames = FlxAtlasFrames.fromSparrow('assets/images/clown/NOTE_fire.png', 'assets/images/clown/NOTE_fire.xml');
+					animation.addByPrefix('greenScroll', 'green fire');
+					animation.addByPrefix('redScroll', 'red fire');
+					animation.addByPrefix('blueScroll', 'blue fire');
+					animation.addByPrefix('purpleScroll', 'purple fire');
+					x -= 50;
+				}
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
@@ -170,6 +187,11 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		//No held fire notes :[ (Part 2)
+		if(isSustainNote && prevNote.burning) { 
+			this.kill(); 
+		}
 
 		if (mustPress)
 		{

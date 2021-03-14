@@ -35,32 +35,27 @@ class NGio
 
 	public static function noLogin(api:String)
 	{
-		trace('INIT NOLOGIN');
-		GAME_VER = "v" + Application.current.meta.get('version');
+		//trace('INIT NOLOGIN');
+		//GAME_VER = "v" + Application.current.meta.get('version');
 
-		if (api.length != 0)
-		{
-			NG.create(api);
+		//NG.create(api);
 
-			new FlxTimer().start(2, function(tmr:FlxTimer)
-			{
-				var call = NG.core.calls.app.getCurrentVersion(GAME_VER).addDataHandler(function(response:Response<GetCurrentVersionResult>)
-				{
-					GAME_VER = response.result.data.currentVersion;
-					GAME_VER_NUMS = GAME_VER.split(" ")[0].trim();
-					trace('CURRENT NG VERSION: ' + GAME_VER);
-					trace('CURRENT NG VERSION: ' + GAME_VER_NUMS);
-					gotOnlineVer = true;
-				});
+		//new FlxTimer().start(2, function(tmr:FlxTimer)
+		//{
+		//	var call = NG.core.calls.app.getCurrentVersion(GAME_VER).addDataHandler(function(response:Response<GetCurrentVersionResult>)
+		//	{
+		//		GAME_VER = response.result.data.current_version;
+		//		trace('CURRENT NG VERSION: ' + GAME_VER);
+		//		gotOnlineVer = true;
+		//	});
 
-				call.send();
-			});
-		}
+		//	call.send();
+	//	});
 	}
 
 	public function new(api:String, encKey:String, ?sessionId:String)
 	{
-		trace("connecting to newgrounds");
+		/*trace("connecting to newgrounds");
 
 		NG.createAndCheckSession(api, sessionId);
 
@@ -74,7 +69,7 @@ class NGio
 		{
 			/* a session_id was found in the loadervars, this means the user is playing on newgrounds.com
 			 * and we should login shortly. lets wait for that to happen
-			 */
+			 
 			trace("attempting login");
 			NG.core.onLogin.add(onNGLogin);
 		}
@@ -82,14 +77,14 @@ class NGio
 		{
 			/* They are NOT playing on newgrounds.com, no session id was found. We must start one manually, if we want to.
 			 * Note: This will cause a new browser window to pop up where they can log in to newgrounds
-			 */
+			 
 			NG.core.requestLogin(onNGLogin);
-		}
+		}*/
 	}
 
 	function onNGLogin():Void
 	{
-		trace('logged in! user:${NG.core.user.name}');
+		/*trace('logged in! user:${NG.core.user.name}');
 		isLoggedIn = true;
 		FlxG.save.data.sessionId = NG.core.sessionId;
 		// FlxG.save.flush();
@@ -99,7 +94,7 @@ class NGio
 		// Load Scoreboards hten call onNGBoardsFetch()
 		NG.core.requestScoreBoards(onNGBoardsFetch);
 
-		ngDataLoaded.dispatch();
+		ngDataLoaded.dispatch();*/
 	}
 
 	// --- MEDALS
@@ -147,7 +142,7 @@ class NGio
 
 	inline static public function postScore(score:Int = 0, song:String)
 	{
-		if (isLoggedIn)
+		/*if (isLoggedIn)
 		{
 			for (id in NG.core.scoreBoards.keys())
 			{
@@ -160,12 +155,12 @@ class NGio
 
 				// trace('loaded scoreboard id:$id, name:${board.name}');
 			}
-		}
+		}*/
 	}
 
 	function onNGScoresFetch():Void
 	{
-		scoreboardsLoaded = true;
+		/*scoreboardsLoaded = true;
 
 		ngScoresLoaded.dispatch();
 		/* 
@@ -184,17 +179,17 @@ class NGio
 
 	inline static public function logEvent(event:String)
 	{
-		NG.core.calls.event.logEvent(event).send();
-		trace('should have logged: ' + event);
+		//NG.core.calls.event.logEvent(event).send();
+		//trace('should have logged: ' + event);
 	}
 
 	inline static public function unlockMedal(id:Int)
 	{
-		if (isLoggedIn)
-		{
-			var medal = NG.core.medals.get(id);
-			if (!medal.unlocked)
-				medal.sendUnlock();
-		}
+		//if (isLoggedIn)
+		//{
+		//	var medal = NG.core.medals.get(id);
+		//	if (!medal.unlocked)
+		//		medal.sendUnlock();
+	//	}
 	}
 }

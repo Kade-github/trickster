@@ -37,6 +37,8 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
+	var amongus:Bool = false;
+
 	override function create()
 	{
 		if (!FlxG.sound.music.playing)
@@ -47,11 +49,21 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		amongus = FlxG.random.bool(1);
+
+		var bg:FlxSprite;
+
+		if (amongus)
+			bg = new FlxSprite(-80).loadGraphic(Paths.image('amog','clown'));
+		else
+			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG','clown'));
+		
 		bg.scrollFactor.x = 0;
 		bg.scrollFactor.y = 0.18;
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
+		bg.y + 50;
 		bg.antialiasing = true;
 		add(bg);
 
@@ -59,14 +71,18 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		if (amongus)
+			magenta = new FlxSprite(-80).loadGraphic(Paths.image('amogPink','clown'));
+		else
+			magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuBGPink','clown'));
 		magenta.scrollFactor.x = 0;
 		magenta.scrollFactor.y = 0.18;
 		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
+		bg.y + 50;
 		magenta.antialiasing = true;
-		magenta.color = 0xFFfd719b;
 		add(magenta);
 		// magenta.scrollFactor.set();
 

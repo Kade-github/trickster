@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="campaign_menu_UI_characters.png">
-	<!-- Created with Adobe Animate version 20.0.0.17400 -->
+<TextureAtlas imagePath="campaign_menu_UI_assets.png">
+	<!-- Created with Adobe Animate version 21.0.3.38773 -->
 	<!-- http://www.adobe.com/products/animate.html -->
 	<SubTexture name="BF HEY!!0000" x="0" y="0" width="395" height="416" frameX="0" frameY="0" frameWidth="415" frameHeight="418"/>
 	<SubTexture name="BF HEY!!0001" x="0" y="0" width="395" height="416" frameX="0" frameY="0" frameWidth="415" frameHeight="418"/>
@@ -158,4 +158,29 @@
 	<SubTexture name="spooky dance idle BLACK LINES0013" x="2164" y="3066" width="357" height="484" frameX="-79" frameY="-61" frameWidth="492" frameHeight="549"/>
 	<SubTexture name="spooky dance idle BLACK LINES0014" x="2531" y="3066" width="354" height="494" frameX="-78" frameY="-52" frameWidth="492" frameHeight="549"/>
 	<SubTexture name="spooky dance idle BLACK LINES0015" x="2531" y="3066" width="354" height="494" frameX="-78" frameY="-52" frameWidth="492" frameHeight="549"/>
+	<SubTexture name="tricky week0000" x="3888" y="3066" width="607" height="615" frameX="-1" frameY="-41" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0001" x="4505" y="3066" width="610" height="611" frameX="-9" frameY="-45" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0002" x="5125" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0003" x="5755" y="3066" width="615" height="654" frameX="-11" frameY="-2" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0004" x="6380" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0005" x="7010" y="3066" width="619" height="656" frameX="-5" frameY="0" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0006" x="0" y="3732" width="615" height="649" frameX="-11" frameY="-7" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0007" x="5125" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0008" x="5755" y="3066" width="615" height="654" frameX="-11" frameY="-2" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0009" x="6380" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0010" x="7010" y="3066" width="619" height="656" frameX="-5" frameY="0" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0011" x="625" y="3732" width="615" height="649" frameX="-11" frameY="-7" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0012" x="5125" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0013" x="5755" y="3066" width="615" height="654" frameX="-11" frameY="-2" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0014" x="6380" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0015" x="7010" y="3066" width="619" height="656" frameX="-5" frameY="0" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0016" x="0" y="3732" width="615" height="649" frameX="-11" frameY="-7" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0017" x="5125" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0018" x="5755" y="3066" width="615" height="654" frameX="-11" frameY="-2" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0019" x="6380" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0020" x="7010" y="3066" width="619" height="656" frameX="-5" frameY="0" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0021" x="0" y="3732" width="615" height="649" frameX="-11" frameY="-7" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0022" x="5125" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0023" x="5755" y="3066" width="615" height="654" frameX="-11" frameY="-2" frameWidth="626" frameHeight="656"/>
+	<SubTexture name="tricky week0024" x="6380" y="3066" width="620" height="643" frameX="0" frameY="-13" frameWidth="626" frameHeight="656"/>
 </TextureAtlas>
