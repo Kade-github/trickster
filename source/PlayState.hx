@@ -1849,7 +1849,7 @@ class PlayState extends MusicBeatState
 							switch(dad.curCharacter)
 							{
 								case 'trickyMask': // 1% chance
-									if (FlxG.random.bool(1) && !spookyRendered) // create spooky text :flushed:
+									if (FlxG.random.bool(1) && !spookyRendered && !daNote.isSustainNote) // create spooky text :flushed:
 										{
 											spookySteps = curStep;
 											spookyRendered = true;
@@ -1862,7 +1862,7 @@ class PlayState extends MusicBeatState
 											add(spookyText);
 										}
 								case 'tricky': // 20% chance
-									if (FlxG.random.bool(20) && !spookyRendered) // create spooky text :flushed:
+									if (FlxG.random.bool(20) && !spookyRendered && !daNote.isSustainNote) // create spooky text :flushed:
 										{
 											spookySteps = curStep;
 											spookyRendered = true;
