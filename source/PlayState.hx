@@ -186,12 +186,6 @@ class PlayState extends MusicBeatState
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
-
-		if (theFunne)
-			Conductor.safeFrames = 46;
-		else
-			Conductor.safeFrames = 10;
-
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
@@ -2056,6 +2050,14 @@ class PlayState extends MusicBeatState
 					ss = false;
 					shits++;
 				}
+				else if (noteDiff < Conductor.safeZoneOffset * -0.45)
+				{
+					daRating = 'bad';
+					score = -1000;
+					totalNotesHit += 0.2;
+					ss = false;
+					bads++;
+				}
 				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
 				{
 					daRating = 'bad';
@@ -2063,6 +2065,14 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 0.2;
 					ss = false;
 					bads++;
+				}
+				else if (noteDiff < Conductor.safeZoneOffset * -0.25)
+				{
+					daRating = 'good';
+					totalNotesHit += 0.65;
+					score = 200;
+					ss = false;
+					goods++;
 				}
 				else if (noteDiff > Conductor.safeZoneOffset * 0.25)
 				{
