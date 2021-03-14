@@ -53,7 +53,7 @@ class TitleState extends MusicBeatState
 		#end
 
 		if (FlxG.save.data.newInput == null)
-			FlxG.save.data.newInput = true;
+			FlxG.save.data.newInput = false;
 
 		if (FlxG.save.data.downscroll == null)
 			FlxG.save.data.downscroll = false;
