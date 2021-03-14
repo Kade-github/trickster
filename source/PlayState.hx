@@ -179,6 +179,11 @@ class PlayState extends MusicBeatState
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
 
+		if (theFunne)
+			Conductor.safeFrames = 46;
+		else
+			Conductor.safeFrames = 10;
+
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
@@ -1923,10 +1928,36 @@ class PlayState extends MusicBeatState
 			return Math.abs(FlxMath.roundDecimal(value1, 1) - FlxMath.roundDecimal(value2, 1)) < unimportantDifference;
 		}
 
-		var upHold:Bool = false;
-		var downHold:Bool = false;
-		var rightHold:Bool = false;
-		var leftHold:Bool = false;	
+
+	// anti mash functions :D (soon TM)
+
+	public function canHit(controlArray:Array<Bool>, noteArray:Array<Note>):Bool
+	{
+		var hit:Bool = true;
+
+		if (noteArray == null)
+			return true;
+
+		var baseStrum:Float = noteArray[0].strumTime;
+
+		for(i in 0...noteArray.length)
+		{
+			var n:Note = noteArray[i];
+			if (!controlArray[n.noteData])
+				hit = false;
+		}
+		return hit;
+	}
+
+
+
+
+	var upHold:Bool = false;
+	var downHold:Bool = false;
+	var rightHold:Bool = false;
+	var leftHold:Bool = false;	
+
+	var noteHit:Int = 0;
 
 	private function keyShit():Void
 	{
@@ -2005,7 +2036,7 @@ class PlayState extends MusicBeatState
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
 
 		// FlxG.watch.addQuick('asdfa', upP);
-		if ((upP || rightP || downP || leftP) && !boyfriend.stunned && generatedMusic)
+		if ((upP || rightP || downP || leftP) && generatedMusic)
 			{
 				repPresses++;
 				boyfriend.holdTimer = 0;
@@ -2025,7 +2056,7 @@ class PlayState extends MusicBeatState
 						ignoreList.push(daNote.noteData);
 					}
 				});
-	
+				
 				
 				if (possibleNotes.length > 0)
 				{
@@ -2033,31 +2064,78 @@ class PlayState extends MusicBeatState
 	
 					if (perfectMode)
 						noteCheck(true, daNote);
-	
-					// Jump notes
-					if (possibleNotes.length >= 2)
+
+					/*var canHit:Bool = true;
+					if (theFunne)
 					{
-						if (possibleNotes[0].strumTime == possibleNotes[1].strumTime)
+						canHit = this.canHit(controlArray,possibleNotes);
+						trace('possibleNoteCheck = ' + canHit);
+					}
+
+
+					if (canHit)
+					{*/
+						// Jump notes
+						if (possibleNotes.length >= 2)
 						{
-							for (coolNote in possibleNotes)
+							if (possibleNotes[0].strumTime == possibleNotes[1].strumTime)
 							{
-								if (controlArray[coolNote.noteData])
-									goodNoteHit(coolNote);
-								else
+								for (coolNote in possibleNotes)
 								{
-									var inIgnoreList:Bool = false;
-									for (shit in 0...ignoreList.length)
+			
+									if (controlArray[coolNote.noteData])
+										goodNoteHit(coolNote);
+									else
 									{
-										if (controlArray[ignoreList[shit]])
-											inIgnoreList = true;
+										var inIgnoreList:Bool = false;
+										for (shit in 0...ignoreList.length)
+										{
+											if (controlArray[ignoreList[shit]])
+												inIgnoreList = true;
+										}
+										if (!inIgnoreList && !theFunne)
+											badNoteCheck();
 									}
-									if (!inIgnoreList && !theFunne)
-										badNoteCheck();
+								}
+							}
+							else if (possibleNotes[0].noteData == possibleNotes[1].noteData)
+							{
+								if (loadRep)
+								{
+									if (NearlyEquals(daNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
+									{
+										goodNoteHit(daNote);
+										trace('force note hit');
+									}
+									else
+										noteCheck(controlArray[daNote.noteData], daNote);
+								}
+								else
+									noteCheck(controlArray[daNote.noteData], daNote);
+							}
+							else
+							{
+								for (coolNote in possibleNotes)
+								{
+									if (loadRep)
+										{
+											if (NearlyEquals(coolNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
+											{
+												goodNoteHit(coolNote);
+												trace('force note hit');
+											}
+											else
+												noteCheck(controlArray[daNote.noteData], daNote);
+										}
+									else
+									{
+											noteCheck(controlArray[coolNote.noteData], coolNote);
+									}
 								}
 							}
 						}
-						else if (possibleNotes[0].noteData == possibleNotes[1].noteData)
-						{
+						else // regular notes?
+						{	
 							if (loadRep)
 							{
 								if (NearlyEquals(daNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
@@ -2069,64 +2147,33 @@ class PlayState extends MusicBeatState
 									noteCheck(controlArray[daNote.noteData], daNote);
 							}
 							else
-								noteCheck(controlArray[daNote.noteData], daNote);
-						}
-						else
-						{
-							for (coolNote in possibleNotes)
 							{
-								if (loadRep)
-									{
-										if (NearlyEquals(coolNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
-										{
-											goodNoteHit(coolNote);
-											trace('force note hit');
-										}
-										else
-											noteCheck(controlArray[daNote.noteData], daNote);
-									}
-								else
-									noteCheck(controlArray[coolNote.noteData], coolNote);
+									noteCheck(controlArray[daNote.noteData], daNote);
 							}
 						}
-					}
-					else // regular notes?
-					{	
-						if (loadRep)
-						{
-							if (NearlyEquals(daNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
-							{
+						/* 
+							if (controlArray[daNote.noteData])
 								goodNoteHit(daNote);
-								trace('force note hit');
+						*/
+						// trace(daNote.noteData);
+						/* 
+							switch (daNote.noteData)
+							{
+								case 2: // NOTES YOU JUST PRESSED
+									if (upP || rightP || downP || leftP)
+										noteCheck(upP, daNote);
+								case 3:
+									if (upP || rightP || downP || leftP)
+										noteCheck(rightP, daNote);
+								case 1:
+									if (upP || rightP || downP || leftP)
+										noteCheck(downP, daNote);
+								case 0:
+									if (upP || rightP || downP || leftP)
+										noteCheck(leftP, daNote);
 							}
-							else
-								noteCheck(controlArray[daNote.noteData], daNote);
-						}
-						else
-							noteCheck(controlArray[daNote.noteData], daNote);
-					}
-					/* 
-						if (controlArray[daNote.noteData])
-							goodNoteHit(daNote);
-					 */
-					// trace(daNote.noteData);
-					/* 
-						switch (daNote.noteData)
-						{
-							case 2: // NOTES YOU JUST PRESSED
-								if (upP || rightP || downP || leftP)
-									noteCheck(upP, daNote);
-							case 3:
-								if (upP || rightP || downP || leftP)
-									noteCheck(rightP, daNote);
-							case 1:
-								if (upP || rightP || downP || leftP)
-									noteCheck(downP, daNote);
-							case 0:
-								if (upP || rightP || downP || leftP)
-									noteCheck(leftP, daNote);
-						}
-					 */
+						*/
+					//}
 					if (daNote.wasGoodHit)
 					{
 						daNote.kill();
@@ -2182,7 +2229,6 @@ class PlayState extends MusicBeatState
 						if (upP && spr.animation.curAnim.name != 'confirm')
 						{
 							spr.animation.play('pressed');
-							trace('play');
 						}
 						if (upR)
 						{
@@ -2311,7 +2357,7 @@ class PlayState extends MusicBeatState
 			}
 			else if (keyP)
 				{
-				goodNoteHit(note);
+					goodNoteHit(note);
 				}
 			else if (!theFunne)
 			{
