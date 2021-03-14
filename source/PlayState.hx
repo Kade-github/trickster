@@ -487,7 +487,7 @@ class PlayState extends MusicBeatState
 				add(waveSpriteFG);
 			 */
 		}
-		else if (SONG.song.toLowerCase() == 'whatever')
+		else if (SONG.song.toLowerCase() == 'whatever' || SONG.song.toLowerCase() == 'madness')
 		{
 			defaultCamZoom = 0.75;
 			curStage = 'podium';
@@ -577,8 +577,6 @@ class PlayState extends MusicBeatState
 		dad = new Character(100, 100, SONG.player2);
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
-
-		tStaticSound.volume = 0.5;
 
 		switch (SONG.player2)
 		{
@@ -796,6 +794,8 @@ class PlayState extends MusicBeatState
 				case 'thorns':
 					schoolIntro(doof);
 				case 'whatever':
+					camFollow.setPosition(boyfriend.getMidpoint().x + 70, boyfriend.getMidpoint().y - 50);
+				case 'madness':
 					camFollow.setPosition(boyfriend.getMidpoint().x + 70, boyfriend.getMidpoint().y - 50);
 					trickyCutscene();
 				default:

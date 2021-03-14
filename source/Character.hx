@@ -142,11 +142,11 @@ class Character extends FlxSprite
 			case 'tricky':
 				tex = FlxAtlasFrames.fromSparrow('assets/images/clown/tricky.png', 'assets/images/clown/tricky.xml');
 				frames = tex;
-				animation.addByPrefix('idle', 'Dad idle dance', 24);
-				animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
-				animation.addByPrefix('singRIGHT', 'Dad Sing Note RIGHT', 24);
-				animation.addByPrefix('singDOWN', 'Dad Sing Note DOWN', 24);
-				animation.addByPrefix('singLEFT', 'Dad Sing Note LEFT', 24); 
+				animation.addByPrefix('idle', 'Idle', 24);
+				animation.addByPrefix('singUP', 'Sing Up', 24);
+				animation.addByPrefix('singRIGHT', 'Sing Right', 24);
+				animation.addByPrefix('singDOWN', 'Sing Down', 24);
+				animation.addByPrefix('singLEFT', 'Sing Left', 24); 
 				
 				addOffset("idle", 0, -75);
 				addOffset("singUP", 93, -76);
