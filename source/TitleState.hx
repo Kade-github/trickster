@@ -61,11 +61,6 @@ class TitleState extends MusicBeatState
 		if (FlxG.save.data.dfjk == null)
 			FlxG.save.data.dfjk = false;
 
-		if (FlxG.save.data.dfjk)
-			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
-		else
-			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
-
 		PlayerSettings.init();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -143,6 +138,7 @@ class TitleState extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
+			
 		}
 
 		Conductor.changeBPM(102);
