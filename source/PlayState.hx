@@ -1020,6 +1020,7 @@ class PlayState extends MusicBeatState
 			var wind:FlxSound = new FlxSound().loadEmbedded(Paths.sound('wind','clown'));
 			var cloth:FlxSound = new FlxSound().loadEmbedded(Paths.sound('cloth','clown'));
 			var metal:FlxSound = new FlxSound().loadEmbedded(Paths.sound('metal','clown'));
+			var buildUp:FlxSound = new FlxSound().loadEmbedded(Paths.sound('trickyIsTriggered','clown'));
 
 			camHUD.visible = false;
 
@@ -1056,11 +1057,12 @@ class PlayState extends MusicBeatState
 							trace(red.alpha);
 							red.alpha -= 0.1;
 						}
+						if (nevada.animation.frameIndex == 34)
+							wind.fadeIn();
 						tmr.reset(0.1);
 					}
 					if (animation.animation.curAnim == null && red.alpha == 0)
 					{
-						wind.fadeIn();
 						remove(red);
 						trace('play tricky');
 						animation.animation.play('fuckyou', false, false, 40);
@@ -1076,12 +1078,16 @@ class PlayState extends MusicBeatState
 						
 						switch(animation.animation.frameIndex) // THESE ARE THE SOUNDS NOT THE ACTUAL CAMERA MOVEMENT!!!!
 						{
-							case 80:
+							case 73:
 								ground.play();
-							case 86:
+							case 84:
 								metal.play();
-							case 160:
+							case 170:
 								cloth.play();
+							case 192:
+								buildUp.fadeIn();
+							case 219:
+								buildUp.fadeOut();
 						}
 
 					
