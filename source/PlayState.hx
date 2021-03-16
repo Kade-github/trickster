@@ -1488,7 +1488,7 @@ class PlayState extends MusicBeatState
 
 		if (!paused)
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
-		if (SONG.song.toLowerCase().contains('madness') /*&& isStoryMode*/)
+		if (SONG.song.toLowerCase().contains('madness') && isStoryMode)
 			FlxG.sound.music.onComplete = trickySecondCutscene;
 		else
 			FlxG.sound.music.onComplete = endSong;
@@ -2131,8 +2131,10 @@ class PlayState extends MusicBeatState
 		if (!inCutscene)
 			keyShit();
 
-		if (FlxG.keys.justPressed.ONE)
-			trickySecondCutscene();
+		/*
+			if (FlxG.keys.justPressed.ONE)
+				trickySecondCutscene();
+		*/
 	}
 
 	function createSpookyText(text:String, x:Float = -1111111111111, y:Float = -1111111111111):Void
