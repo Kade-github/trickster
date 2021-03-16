@@ -27,7 +27,7 @@ class StoryMenuState extends MusicBeatState
 		['Satin-Panties', "High", "Milf"],
 		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
 		['Senpai', 'Roses', 'Thorns'],
-		['whatever', 'Madness']
+		['Improbable-Outset', 'Madness']
 	];
 	var curDifficulty:Int = 1;
 
@@ -163,7 +163,10 @@ class StoryMenuState extends MusicBeatState
 					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 0.9));
 					weekCharacterThing.updateHitbox();
 				case 'trickyMask':
-					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 2.4));
+					trace('AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH');
+					weekCharacterThing.y -= 150;
+					weekCharacterThing.x -= 60;
+					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 3.5));
 					weekCharacterThing.updateHitbox();
 			}
 
@@ -418,7 +421,10 @@ class StoryMenuState extends MusicBeatState
 			case 'dad':
 				grpWeekCharacters.members[0].offset.set(120, 200);
 				grpWeekCharacters.members[0].setGraphicSize(Std.int(grpWeekCharacters.members[0].width * 1));
-
+			case 'trickyMask':
+				grpWeekCharacters.members[0].offset.set(195, 180);
+				grpWeekCharacters.members[0].setGraphicSize(Std.int(grpWeekCharacters.members[0].width * 1.6));
+				
 			default:
 				grpWeekCharacters.members[0].offset.set(100, 100);
 				grpWeekCharacters.members[0].setGraphicSize(Std.int(grpWeekCharacters.members[0].width * 1));

@@ -1,5 +1,6 @@
 package;
 
+import flixel.system.FlxSound;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -29,6 +30,12 @@ class FreeplayState extends MusicBeatState
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
+
+
+	function amongUsDone():Void
+	{
+		FlxG.sound.music.volume = 1;
+	}
 
 	override function create()
 	{
@@ -62,7 +69,7 @@ class FreeplayState extends MusicBeatState
 			
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
 
-			addWeek(['whatever', 'Madness'], 6, ['trickyMask', 'tricky']);
+			addWeek(['Improbable-Outset', 'Madness'], 6, ['trickyMask', 'tricky']);
 
 		// LOAD MUSIC
 
@@ -70,8 +77,15 @@ class FreeplayState extends MusicBeatState
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic('assets/images/menuBGBlue.png');
 		if (FlxG.random.bool(1))
+		{
+			var amongUs:FlxSound = new FlxSound().loadEmbedded(Paths.sound('dontListenToThis','clown'));
+			amongUs.onComplete = amongUsDone;
+			amongUs.play();
+			FlxG.sound.music.volume = 0.1;
 			bg = new FlxSprite(60,-80).loadGraphic('assets/images/amogBlue.png');
+		}
 		else
+			
 			bg = new FlxSprite(60,-80).loadGraphic('assets/images/menuBGBlue.png');
 		bg.setGraphicSize(Std.int(bg.width * 1.4));
 

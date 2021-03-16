@@ -1,5 +1,6 @@
 package;
 
+import flixel.system.FlxSound;
 import Controls.KeyboardScheme;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -40,6 +41,11 @@ class MainMenuState extends MusicBeatState
 
 	var amongus:Bool = false;
 
+	function amongUsDone():Void
+	{
+		FlxG.sound.music.volume = 1;
+	}
+
 	override function create()
 	{
 		if (!FlxG.sound.music.playing)
@@ -55,7 +61,13 @@ class MainMenuState extends MusicBeatState
 		var bg:FlxSprite;
 
 		if (amongus)
+		{
+			var amongUs:FlxSound = new FlxSound().loadEmbedded(Paths.sound('dontListenToThis','clown'));
+			amongUs.onComplete = amongUsDone;
+			amongUs.play();
+			FlxG.sound.music.volume = 0.1;
 			bg = new FlxSprite(-80).loadGraphic(Paths.image('amog','clown'));
+		}
 		else
 			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG','clown'));
 		
