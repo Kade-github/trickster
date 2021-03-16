@@ -2117,7 +2117,7 @@ class PlayState extends MusicBeatState
 								{
 									health -= 0.075;
 									vocals.volume = 0;
-									if (theFunne)
+									if (theFunne && !daNote.burning)
 										noteMiss(daNote.noteData);
 								}		
 							daNote.active = false;
