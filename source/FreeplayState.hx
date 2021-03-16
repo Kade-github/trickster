@@ -77,7 +77,6 @@ class FreeplayState extends MusicBeatState
 
 		var bg:FlxSprite;
 		if (FlxG.random.bool(1))
-<<<<<<< HEAD
 		{
 			var amongUs:FlxSound = new FlxSound().loadEmbedded(Paths.sound('dontListenToThis','clown'));
 			amongUs.onComplete = amongUsDone;
@@ -89,12 +88,6 @@ class FreeplayState extends MusicBeatState
 			
 			bg = new FlxSprite(60,-80).loadGraphic('assets/images/menuBGBlue.png');
 		bg.setGraphicSize(Std.int(bg.width * 1.4));
-=======
-			bg = new FlxSprite(60,-80).loadGraphic(Paths.image('amogBlue','clown'));
-		else
-			bg = new FlxSprite(60,-80).loadGraphic(Paths.image('menuBGBlue','clown'));
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
->>>>>>> 7b3305a2b28119b2dbc0650789d70f5cddd689fe
 
 		add(bg);
 
