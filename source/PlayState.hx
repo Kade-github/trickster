@@ -3092,6 +3092,7 @@ class PlayState extends MusicBeatState
 	var lightningOffset:Int = 8;
 
 	var lastBeatT:Int = 0;
+	var lastBeatDadT:Int = 0;
 
 	override function beatHit()
 	{
@@ -3113,8 +3114,11 @@ class PlayState extends MusicBeatState
 			// Conductor.changeBPM(SONG.bpm);
 
 			// Dad doesnt interupt his own notes
-			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
+			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection && curBeat != lastBeatDadT)
+			{
+				lastBeatDadT = curBeat;
 				dad.dance();
+			}
 		}
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
