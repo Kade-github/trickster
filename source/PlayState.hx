@@ -138,7 +138,8 @@ class PlayState extends MusicBeatState
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
 
-	
+	var gfDance:Bool = false;
+
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -1374,10 +1375,13 @@ class PlayState extends MusicBeatState
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
-			dad.dance();
-			gf.dance();
-			boyfriend.playAnim('idle');
-
+			if (swagCounter < 4)
+			{
+				trace('dance moment');
+				dad.dance();
+				gf.dance();
+				boyfriend.playAnim('idle');
+			}
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 			introAssets.set('default', ['ready', "set", "go"]);
 			introAssets.set('school', [
@@ -2244,19 +2248,25 @@ class PlayState extends MusicBeatState
 	
 			var daRating:String = "sick";
 	
-			if (noteDiff > Conductor.safeZoneOffset * 2)
+			if (noteDiff > Conductor.safeZoneOffset * 24)
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
 					score = -3000;
 					ss = false;
+					misses++;
+					combo = 0;
+					health -= 0.5;
 					shits++;
 				}
-				else if (noteDiff < Conductor.safeZoneOffset * -2)
+				else if (noteDiff < Conductor.safeZoneOffset * -24)
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
 					score = -3000;
+					combo = 0;
+					misses++;
+					health -= 0.5;
 					ss = false;
 					shits++;
 				}
@@ -2266,6 +2276,7 @@ class PlayState extends MusicBeatState
 					score = -1000;
 					totalNotesHit += 0.2;
 					ss = false;
+					health -= 0.2;
 					bads++;
 				}
 				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
@@ -2273,6 +2284,7 @@ class PlayState extends MusicBeatState
 					daRating = 'bad';
 					score = -1000;
 					totalNotesHit += 0.2;
+					health -= 0.2;
 					ss = false;
 					bads++;
 				}
@@ -2281,6 +2293,7 @@ class PlayState extends MusicBeatState
 					daRating = 'good';
 					totalNotesHit += 0.65;
 					score = 200;
+					health -= 0.04;
 					ss = false;
 					goods++;
 				}
@@ -2289,12 +2302,15 @@ class PlayState extends MusicBeatState
 					daRating = 'good';
 					totalNotesHit += 0.65;
 					score = 200;
+					health -= 0.04;
 					ss = false;
 					goods++;
 				}
 			if (daRating == 'sick')
 			{
 				totalNotesHit += 1;
+				if (health < 2)
+					health += 0.1;
 				sicks++;
 			}
 		
@@ -2758,7 +2774,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			health -= 0.04;
+			health -= 0.2;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -2773,7 +2789,7 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add('played imss note');
 
 
-			if (FlxG.random.bool(dad.curCharacter == "tricky" ? 10 : 4) && !spookyRendered && curStage == "podium") // create spooky text :flushed:
+			if (dad.curCharacter.toLowerCase().contains("tricky") && FlxG.random.bool(dad.curCharacter == "tricky" ? 10 : 4) && !spookyRendered && curStage == "podium") // create spooky text :flushed:
 				createSpookyText(TrickyLinesMiss[FlxG.random.int(0,TrickyLinesMiss.length)]);
 				
 
@@ -2868,11 +2884,6 @@ class PlayState extends MusicBeatState
 				}
 				else
 					totalNotesHit += 1;
-
-				if (note.noteData >= 0)
-					health += 0.023;
-				else
-					health += 0.004;
 
 				switch (note.noteData)
 				{
@@ -3048,6 +3059,8 @@ class PlayState extends MusicBeatState
 	var lightningStrikeBeat:Int = 0;
 	var lightningOffset:Int = 8;
 
+	var lastBeatT:Int = 0;
+
 	override function beatHit()
 	{
 		super.beatHit();
@@ -3093,8 +3106,9 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		if (curBeat % gfSpeed == 0)
+		if (curBeat % gfSpeed == 0 && curBeat != lastBeatT)
 		{
+			lastBeatT = curBeat;
 			gf.dance();
 		}
 
