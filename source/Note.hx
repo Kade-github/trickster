@@ -48,6 +48,7 @@ class Note extends FlxSprite
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
 		strumTime = _strumTime + FlxG.save.data.offset;
+		strumTime = strumTime < 0 ? 0 : strumTime;
 
 		burning = _noteData > 7;
 		//if(!isSustainNote) { burning = Std.random(3) == 1; } //Set random notes to burning
