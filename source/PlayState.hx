@@ -74,7 +74,8 @@ class PlayState extends MusicBeatState
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
 
-	var tstatic:FlxSprite = new FlxSprite(-600,-100).loadGraphic(Paths.image('TrickyStatic','clown'));
+	var tstatic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.image('TrickyStatic','clown'), true, 320, 180);
+
 	var tStaticSound:FlxSound = new FlxSound().loadEmbedded(Paths.sound("staticSound","preload"));
 
 	private var strumLine:FlxSprite;
@@ -532,12 +533,15 @@ class PlayState extends MusicBeatState
 		}
 		else if (SONG.song.toLowerCase() == 'improbable-outset' || SONG.song.toLowerCase() == 'madness')
 		{
-			trace("line 538");
+			//trace("line 538");
 			defaultCamZoom = 0.75;
-			curStage = 'podium';
+			curStage = 'nevada';
 
 			tstatic.antialiasing = true;
-			tstatic.scrollFactor.set(0.9,0.9);
+			tstatic.scrollFactor.set(0,0);
+			tstatic.setGraphicSize(Std.int(tstatic.width * 8.3));
+			tstatic.animation.add('static', [0, 1, 2], 24, true);
+			tstatic.animation.play('static');
 
 			tstatic.alpha = 0;
 
@@ -696,7 +700,7 @@ class PlayState extends MusicBeatState
 				boyfriend.y += 220;
 				gf.x += 180;
 				gf.y += 300;
-			case 'podium':
+			case 'nevada':
 				boyfriend.y -= 0;
 				boyfriend.x += 260;
 		}
@@ -709,7 +713,7 @@ class PlayState extends MusicBeatState
 
 		add(dad);
 		add(boyfriend);
-		if (curStage == 'podium')
+		if (curStage == 'nevada')
 		{	
 			add(MAINLIGHT);
 		}
@@ -777,7 +781,7 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 
 		// Add Kade Engine watermark
-
+		// what's your fuckin' deal???????????? -roze
 		// no 
 		//
 		// ░░░░░▄▄▄▄▀▀▀▀▀▀▀▀▄▄▄▄▄▄░░░░░░░
@@ -894,7 +898,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (curStage == "podium")
+		if (curStage == "nevada")
 			add(tstatic);
 
 		super.create();
@@ -2017,7 +2021,7 @@ class PlayState extends MusicBeatState
 			{
 				trace('this is funny!!!');
 				spookyText.angle = FlxG.random.int(-5,5); // change its angle between -5 and 5 so it starts shaking violently.
-				tstatic.x = tstatic.x + FlxG.random.int(-2,2); // move it back and fourth to repersent shaking.
+				//tstatic.x = tstatic.x + FlxG.random.int(-2,2); // move it back and fourth to repersent shaking.
 				if (tstatic.alpha != 0)
 					tstatic.alpha = FlxG.random.float(0.1,0.5); // change le alpha too :)
 			}
@@ -2051,7 +2055,7 @@ class PlayState extends MusicBeatState
 									altAnim = '-alt';
 							}
 		
-							trace("DA ALT THO?: " + SONG.notes[Math.floor(curStep / 16)].altAnim);
+							//trace("DA ALT THO?: " + SONG.notes[Math.floor(curStep / 16)].altAnim);
 		
 							switch (Math.abs(daNote.noteData))
 							{
@@ -2791,7 +2795,7 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add('played imss note');
 
 
-			if (dad.curCharacter.toLowerCase().contains("tricky") && FlxG.random.bool(dad.curCharacter == "tricky" ? 10 : 4) && !spookyRendered && curStage == "podium") // create spooky text :flushed:
+			if (dad.curCharacter.toLowerCase().contains("tricky") && FlxG.random.bool(dad.curCharacter == "tricky" ? 10 : 4) && !spookyRendered && curStage == "nevada") // create spooky text :flushed:
 				createSpookyText(TrickyLinesMiss[FlxG.random.int(0,TrickyLinesMiss.length)]);
 				
 

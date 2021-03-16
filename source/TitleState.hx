@@ -44,7 +44,7 @@ class TitleState extends MusicBeatState
 	override public function create():Void
 	{
 		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
+		//polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
 		#end
 		
 		#if sys
@@ -199,7 +199,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('thePals','clown'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('thePals','clown'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 1.1));
@@ -365,12 +365,13 @@ class TitleState extends MusicBeatState
 			// credTextShit.text += '\npresent...';
 			// credTextShit.addText();
 			case 4:
-				deleteCoolText();
-				ngSpr.visible = false;
+				
 			// credTextShit.visible = false;
 			// credTextShit.text = 'In association \nwith';
 			// credTextShit.screenCenter();
 			case 5:
+				deleteCoolText();
+				ngSpr.visible = false;
 				createCoolText(['Absolute Gaming']);
 			case 7:
 				addMoreText('krinkels aproved');

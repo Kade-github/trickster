@@ -82,12 +82,12 @@ class FreeplayState extends MusicBeatState
 			amongUs.onComplete = amongUsDone;
 			amongUs.play();
 			FlxG.sound.music.volume = 0.1;
-			bg = new FlxSprite(60,-80).loadGraphic('assets/images/amogBlue.png');
+			bg = new FlxSprite(60,-80).loadGraphic(Paths.image('amogBlue', "clown"));
 		}
 		else
 			
-			bg = new FlxSprite(60,-80).loadGraphic('assets/images/menuBGBlue.png');
-		bg.setGraphicSize(Std.int(bg.width * 1.4));
+			bg = new FlxSprite(60,-80).loadGraphic(Paths.image('menuBGBlue', "clown"));
+		bg.setGraphicSize(Std.int(bg.width * 1.1));
 
 		add(bg);
 
