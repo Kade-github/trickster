@@ -2291,6 +2291,8 @@ class PlayState extends MusicBeatState
 						score = -1000;
 						health -= 0.06;
 					}
+					else
+						score = 100;
 					ss = false;
 					bads++;
 				}
@@ -2303,6 +2305,8 @@ class PlayState extends MusicBeatState
 							score = -1000;
 							health -= 0.06;
 						}
+						else
+							score = 100;
 					ss = false;
 					bads++;
 				}
@@ -2315,6 +2319,8 @@ class PlayState extends MusicBeatState
 						score = 200;
 						health -= 0.01;
 					}
+					else
+						score = 200;
 					ss = false;
 					goods++;
 				}
@@ -2327,6 +2333,8 @@ class PlayState extends MusicBeatState
 							score = 200;
 							health -= 0.01;
 						}
+						else
+							score = 200;
 					ss = false;
 					goods++;
 				}
