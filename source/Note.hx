@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
@@ -46,7 +47,7 @@ class Note extends FlxSprite
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		strumTime = _strumTime;
+		strumTime = _strumTime + FlxG.save.data.offset;
 
 		burning = _noteData > 7;
 		//if(!isSustainNote) { burning = Std.random(3) == 1; } //Set random notes to burning
