@@ -58,6 +58,9 @@ class Note extends FlxSprite
 			burning = true;
 		}
 
+		if(isSustainNote && FlxG.save.data.downscroll)
+			flipY = true;
+		
 		noteData = _noteData % 4;
 
 		var daStage:String = PlayState.curStage;
