@@ -357,8 +357,13 @@ class TitleState extends MusicBeatState
 
 		switch (curBeat)
 		{
+<<<<<<< HEAD
 			case 1:
 				createCoolText(['Banbuds','Rozebud','CVAL','KadeDev'], 100);
+=======
+			case 2:
+				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+>>>>>>> 7b3305a2b28119b2dbc0650789d70f5cddd689fe
 			// credTextShit.visible = true;
 			case 3:
 				ngSpr.visible = true;
