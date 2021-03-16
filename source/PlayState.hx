@@ -2258,39 +2258,51 @@ class PlayState extends MusicBeatState
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
-					score = -3000;
 					ss = false;
-					misses++;
-					combo = 0;
-					health -= 0.3;
+					if (theFunne)
+						{
+							score = -3000;
+							combo = 0;
+							misses++;
+							health -= 0.3;
+						}
 					shits++;
 				}
 				else if (noteDiff < Conductor.safeZoneOffset * -24)
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
-					score = -3000;
-					combo = 0;
-					misses++;
-					health -= 0.3;
+					if (theFunne)
+					{
+						score = -3000;
+						combo = 0;
+						misses++;
+						health -= 0.3;
+					}
 					ss = false;
 					shits++;
 				}
 				else if (noteDiff < Conductor.safeZoneOffset * -0.45)
 				{
 					daRating = 'bad';
-					score = -1000;
 					totalNotesHit += 0.2;
+					if (theFunne)
+					{
+						score = -1000;
+						health -= 0.06;
+					}
 					ss = false;
-					health -= 0.06;
 					bads++;
 				}
 				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
 				{
 					daRating = 'bad';
-					score = -1000;
 					totalNotesHit += 0.2;
-					health -= 0.06;
+					if (theFunne)
+						{
+							score = -1000;
+							health -= 0.06;
+						}
 					ss = false;
 					bads++;
 				}
@@ -2298,8 +2310,11 @@ class PlayState extends MusicBeatState
 				{
 					daRating = 'good';
 					totalNotesHit += 0.65;
-					score = 200;
-					health -= 0.01;
+					if (theFunne)
+					{
+						score = 200;
+						health -= 0.01;
+					}
 					ss = false;
 					goods++;
 				}
@@ -2307,8 +2322,11 @@ class PlayState extends MusicBeatState
 				{
 					daRating = 'good';
 					totalNotesHit += 0.65;
-					score = 200;
-					health -= 0.01;
+					if (theFunne)
+						{
+							score = 200;
+							health -= 0.01;
+						}
 					ss = false;
 					goods++;
 				}
