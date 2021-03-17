@@ -2264,7 +2264,7 @@ class PlayState extends MusicBeatState
 							score = -3000;
 							combo = 0;
 							misses++;
-							health -= 0.3;
+							health -= 0.2;
 						}
 					shits++;
 				}
@@ -2277,7 +2277,7 @@ class PlayState extends MusicBeatState
 						score = -3000;
 						combo = 0;
 						misses++;
-						health -= 0.3;
+						health -= 0.2;
 					}
 					ss = false;
 					shits++;
@@ -2289,7 +2289,7 @@ class PlayState extends MusicBeatState
 					if (theFunne)
 					{
 						score = -1000;
-						health -= 0.06;
+						health -= 0.03;
 					}
 					else
 						score = 100;
@@ -2303,7 +2303,7 @@ class PlayState extends MusicBeatState
 					if (theFunne)
 						{
 							score = -1000;
-							health -= 0.06;
+							health -= 0.03;
 						}
 						else
 							score = 100;
@@ -2317,7 +2317,7 @@ class PlayState extends MusicBeatState
 					if (theFunne)
 					{
 						score = 200;
-						health -= 0.01;
+						//health -= 0.01;
 					}
 					else
 						score = 200;
@@ -2331,7 +2331,7 @@ class PlayState extends MusicBeatState
 					if (theFunne)
 						{
 							score = 200;
-							health -= 0.01;
+							//health -= 0.01;
 						}
 						else
 							score = 200;
@@ -2807,7 +2807,7 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			if (theFunne)
-				health -= 0.2;
+				health -= 0.13;
 			else
 				health -= 0.04;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
