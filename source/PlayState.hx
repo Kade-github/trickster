@@ -2259,7 +2259,7 @@ class PlayState extends MusicBeatState
 	
 			var daRating:String = "sick";
 	
-			if (noteDiff > Conductor.safeZoneOffset * 24)
+			if (noteDiff > Conductor.safeZoneOffset * 2)
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
@@ -2273,7 +2273,7 @@ class PlayState extends MusicBeatState
 						}
 					shits++;
 				}
-				else if (noteDiff < Conductor.safeZoneOffset * -24)
+				else if (noteDiff < Conductor.safeZoneOffset * -2)
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
