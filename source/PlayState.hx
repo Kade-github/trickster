@@ -2958,7 +2958,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			FlxG.sound.play(Paths.sound('burnSound.ogg','preload'), 0.75);
+			FlxG.sound.play(Paths.sound('burnSound'), 0.6);
 			combo = 0;
 			//misses += 1;
 			note.kill();
