@@ -2597,9 +2597,6 @@ class PlayState extends MusicBeatState
 				{
 					var daNote = possibleNotes[0];
 	
-					if (perfectMode)
-						noteCheck(true, daNote);
-
 					/*var canHit:Bool = true;
 					if (theFunne)
 					{
@@ -2643,10 +2640,10 @@ class PlayState extends MusicBeatState
 										trace('force note hit');
 									}
 									else
-										noteCheck(controlArray[daNote.noteData], daNote);
+										noteCheck(controlArray, daNote);
 								}
 								else
-									noteCheck(controlArray[daNote.noteData], daNote);
+									noteCheck(controlArray, daNote);
 							}
 							else
 							{
@@ -2660,11 +2657,11 @@ class PlayState extends MusicBeatState
 												trace('force note hit');
 											}
 											else
-												noteCheck(controlArray[daNote.noteData], daNote);
+												noteCheck(controlArray, daNote);
 										}
 									else
 									{
-											noteCheck(controlArray[coolNote.noteData], coolNote);
+											noteCheck(controlArray, coolNote);
 									}
 								}
 							}
@@ -2679,11 +2676,11 @@ class PlayState extends MusicBeatState
 									trace('force note hit');
 								}
 								else
-									noteCheck(controlArray[daNote.noteData], daNote);
+									noteCheck(controlArray, daNote);
 							}
 							else
 							{
-									noteCheck(controlArray[daNote.noteData], daNote);
+									noteCheck(controlArray, daNote);
 							}
 						}
 						/* 
@@ -2884,36 +2881,80 @@ class PlayState extends MusicBeatState
 		}
 
 
-	function noteCheck(keyP:Bool, note:Note):Void // sorry lol
-		{
-			if (loadRep)
+	
+		function getKeyPresses(note:Note):Int
 			{
-				if (keyP)
-					goodNoteHit(note);
-				else if (!theFunne) 
-					badNoteCheck();
-				else if (rep.replay.keyPresses.length > repPresses && !keyP)
+				var possibleNotes:Array<Note> = []; // copypasted but you already know that
+		
+				notes.forEachAlive(function(daNote:Note)
 				{
-					if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
+					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
 					{
-						goodNoteHit(note);
+						possibleNotes.push(daNote);
+						possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
 					}
-					else if (!theFunne) 
-						badNoteCheck();
-				}
+				});
+				return possibleNotes.length;
 			}
-			else if (keyP)
+			
+			var mashing:Int = 0;
+			var mashViolations:Int = 0;
+		
+			function noteCheck(controlArray:Array<Bool>, note:Note):Void // sorry lol
 				{
-					goodNoteHit(note);
+					if (loadRep)
+					{
+						if (controlArray[note.noteData])
+							goodNoteHit(note);
+						else if (!theFunne) 
+							badNoteCheck();
+						else if (rep.replay.keyPresses.length > repPresses && !controlArray[note.noteData])
+						{
+							if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
+							{
+								goodNoteHit(note);
+							}
+							else if (!theFunne) 
+								badNoteCheck();
+						}
+					}
+					else if (controlArray[note.noteData] && theFunne)
+						{
+							for (b in controlArray) {
+								if (b)
+									mashing++;
+							}
+		
+							// ANTI MASH CODE FOR THE BOYS
+		
+							if (mashing <= getKeyPresses(note) + 1 && mashViolations < 2)
+							{
+								mashViolations++;
+								goodNoteHit(note, (mashing <= getKeyPresses(note) + 1));
+							}
+							else
+							{
+								playerStrums.members[note.noteData].animation.play('static');
+								trace('mash ' + mashing);
+							}
+		
+							if (mashing != 0)
+								mashing = 0;
+						}
+					else if (!theFunne)
+					{
+						if (controlArray[note.noteData])
+							goodNoteHit(note);
+						else
+							badNoteCheck();
+					}
 				}
-			else if (!theFunne)
-			{
-				badNoteCheck();
-			}
-		}
 
-	function goodNoteHit(note:Note):Void
+	function goodNoteHit(note:Note, resetMashViolation = true):Void
 	{
+		if (resetMashViolation)
+			mashViolations--;
+
 		if(!note.burning){
 			if (!note.wasGoodHit)
 			{
