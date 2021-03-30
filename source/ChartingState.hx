@@ -862,7 +862,7 @@ class ChartingState extends MusicBeatState
 			note.sustainLength = daSus;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
-			note.color = FlxColor.ORANGE;
+			note.burning = daNoteInfo > 7;
 			note.x = Math.floor(daNoteInfo - (daNoteInfo > 7 ? 8 : 0) * GRID_SIZE);
 			note.y = Math.floor(getYfromStrum((daStrumTime - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps)));
 
