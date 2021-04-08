@@ -619,6 +619,7 @@ class PlayState extends MusicBeatState
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
+
 		switch (SONG.player2)
 		{
 			case 'gf':
@@ -643,6 +644,8 @@ class PlayState extends MusicBeatState
 				camPos.y += 600;
 			case 'trickyMask':
 				camPos.x += 400;
+			case 'trickyH':
+				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y - 1200);
 			case 'pico':
 				camPos.x += 600;
 				dad.y += 300;
@@ -713,6 +716,14 @@ class PlayState extends MusicBeatState
 
 		add(dad);
 		add(boyfriend);
+
+		if (dad.curCharacter == 'trickyH')
+		{
+			gf.setGraphicSize(Std.int(gf.width * 0.8));
+			boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.8));
+			gf.x += 220;
+		}
+
 		if (curStage == 'nevada')
 		{	
 			add(MAINLIGHT);
@@ -748,6 +759,7 @@ class PlayState extends MusicBeatState
 
 		camFollow.setPosition(camPos.x, camPos.y);
 
+		
 		if (prevCamFollow != null)
 		{
 			camFollow = prevCamFollow;
@@ -782,6 +794,7 @@ class PlayState extends MusicBeatState
 
 		// Add Kade Engine watermark
 		// what's your fuckin' deal???????????? -roze
+		// what roze bud??? -kade
 		// no 
 		//
 		// ░░░░░▄▄▄▄▀▀▀▀▀▀▀▀▄▄▄▄▄▄░░░░░░░
@@ -839,6 +852,8 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
+
+		camHUD.visible = false;
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -1907,6 +1922,8 @@ class PlayState extends MusicBeatState
 						camFollow.y = dad.getMidpoint().y;
 					case 'trickyMask':
 						camFollow.y = dad.getMidpoint().y + 25;
+					case 'trickyH':
+						camFollow.y = dad.getMidpoint().y - 600;
 					case 'senpai':
 						camFollow.y = dad.getMidpoint().y - 430;
 						camFollow.x = dad.getMidpoint().x - 100;

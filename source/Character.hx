@@ -157,6 +157,16 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 				
+			case 'trickyH':
+				tex = Paths.getSparrowAtlas('trickyH', 'clown');
+				frames = tex;
+
+				animation.addByPrefix('idle','Idle', 24);
+
+				addOffset("idle", 325, 760);
+
+				playAnim('idle');
+
 			case 'trickyMask':
 				tex = Paths.getSparrowAtlas('TrickyMask','clown');
 				frames = tex;
