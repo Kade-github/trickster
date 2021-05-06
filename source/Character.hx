@@ -17,9 +17,13 @@ class Character extends FlxSprite
 
 	public var holdTimer:Float = 0;
 
-	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
+	public var otherFrames:Array<Character>;
+
+	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false, ?isDebug:Bool = false)
 	{
 		super(x, y);
+
+		trace('creating ' + character);
 
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
@@ -158,13 +162,88 @@ class Character extends FlxSprite
 				playAnim('idle');
 				
 			case 'trickyH':
-				tex = Paths.getSparrowAtlas('trickyH', 'clown');
+				tex = Paths.getSparrowAtlas('hellclwn/Idle', 'clown');
+
 				frames = tex;
 
-				animation.addByPrefix('idle','Idle', 24);
+				animation.addByPrefix('idle','Phase 3 Tricky Idle', 24);
+				
+				// they have to be left right up down, in that order.
+				// cuz im too lazy to dynamicly get these names
+				// cry about it
 
-				addOffset("idle", 325, 760);
+				otherFrames = new Array<Character>();
 
+				
+				otherFrames.push(new Character(100, 100, 'trickyHLeft'));
+				otherFrames.push(new Character(100, 100, 'trickyHRight'));
+				otherFrames.push(new Character(100, 100, 'trickyHUp'));
+				otherFrames.push(new Character(100, 100, 'trickyHDown'));
+
+				trace('poggers');
+
+				for (i in otherFrames)
+					{
+						if (!isDebug)
+							PlayState.staticVar.add(i);
+						else
+							AnimationDebug.staticVar.add(i);
+						i.visible = false;
+					}
+
+				addOffset("idle", 325, 0);
+				playAnim('idle');
+			case 'trickyHDown':
+				tex = Paths.getSparrowAtlas('hellclwn/Down', 'clown');
+
+				frames = tex;
+
+				animation.addByPrefix('idle','Proper Down', 24);
+
+				addOffset("idle",465, -390);
+
+				y -= 2000;
+				x -= 1400;
+
+				playAnim('idle');
+			case 'trickyHUp':
+				tex = Paths.getSparrowAtlas('hellclwn/Up', 'clown');
+
+				frames = tex;
+
+				animation.addByPrefix('idle','Proper Up', 24);
+
+				addOffset("idle", 575, -379);
+
+				y -= 2000;
+				x -= 1400;
+
+				playAnim('idle');
+			case 'trickyHRight':
+				tex = Paths.getSparrowAtlas('hellclwn/right', 'clown');
+
+				frames = tex;
+
+				animation.addByPrefix('idle','Proper Right', 24);
+
+				addOffset("idle",555, -270);
+
+				y -= 2000;
+				x -= 1400;
+
+				playAnim('idle');
+			case 'trickyHLeft':
+				tex = Paths.getSparrowAtlas('hellclwn/Left', 'clown');
+
+				frames = tex;
+
+				animation.addByPrefix('idle','Proper Left', 24);
+
+				addOffset("idle", 555, 30);
+
+				y -= 2000;
+				x -= 1400;
+				
 				playAnim('idle');
 
 			case 'trickyMask':
@@ -572,7 +651,7 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 		{
-			if (!curCharacter.startsWith('bf'))
+			if (!curCharacter.startsWith('bf') && animation.curAnim != null)
 			{
 				if (animation.curAnim.name.startsWith('sing'))
 				{
@@ -669,30 +748,101 @@ class Character extends FlxSprite
 	
 		public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 		{
-			animation.play(AnimName, Force, Reversed, Frame);
-	
-			var daOffset = animOffsets.get(AnimName);
-			if (animOffsets.exists(AnimName))
-			{
-				offset.set(daOffset[0], daOffset[1]);
-			}
+
+			if (debugMode && otherFrames != null)
+				{
+					if (AnimationDebug.dad != null)
+					{
+						trace('debug play anim ' + AnimName);
+						AnimationDebug.dad.alpha = 0.6;
+						for(i in otherFrames)
+						{
+							i.visible = false;
+						}
+
+						
+						switch(AnimName)
+						{
+							case 'singLEFT':
+								otherFrames[0].visible = true;
+								otherFrames[0].playAnim('idle', Force, Reversed, Frame);
+							case 'singRIGHT':
+								otherFrames[1].visible = true;
+								otherFrames[1].playAnim('idle', Force, Reversed, Frame);
+							case 'singUP':
+								otherFrames[2].visible = true;
+								otherFrames[2].playAnim('idle', Force, Reversed, Frame);
+							case 'singDOWN':
+								otherFrames[3].visible = true;
+								otherFrames[3].playAnim('idle', Force, Reversed, Frame);
+							default:
+								AnimationDebug.dad.alpha = 1;
+								animation.play('idle', Force, Reversed, Frame);
+						}
+					}
+				}
+				else if (otherFrames != null && PlayState.dad != null)
+					{
+						visible = false;
+						for(i in otherFrames)
+						{
+							i.visible = false;
+							i.x = x;
+							i.y = y + 60;
+						}
+
+						switch(AnimName)
+						{
+							case 'singLEFT':
+								otherFrames[0].visible = true;
+								otherFrames[0].playAnim('idle', Force, Reversed, Frame);
+							case 'singRIGHT':
+								otherFrames[1].visible = true;
+								otherFrames[1].playAnim('idle', Force, Reversed, Frame);
+							case 'singUP':
+								otherFrames[2].visible = true;
+								otherFrames[2].playAnim('idle', Force, Reversed, Frame);
+								otherFrames[2].y += 20;
+							case 'singDOWN':
+								otherFrames[3].visible = true;
+								otherFrames[3].playAnim('idle', Force, Reversed, Frame);
+							default:
+								visible = true;
+								animation.play(AnimName, Force, Reversed, Frame);
+		
+								var daOffset = animOffsets.get(AnimName);
+								if (animOffsets.exists(AnimName))
+									offset.set(daOffset[0], daOffset[1]);
+								else
+									offset.set(0, 0);
+						}
+					}
 			else
-				offset.set(0, 0);
-	
-			if (curCharacter == 'gf')
 			{
-				if (AnimName == 'singLEFT')
+				animation.play(AnimName, Force, Reversed, Frame);
+
+				var daOffset = animOffsets.get(AnimName);
+				if (animOffsets.exists(AnimName))
 				{
-					danced = true;
+					offset.set(daOffset[0], daOffset[1]);
 				}
-				else if (AnimName == 'singRIGHT')
+				else
+					offset.set(0, 0);
+				if (curCharacter == 'gf')
 				{
-					danced = false;
-				}
-	
-				if (AnimName == 'singUP' || AnimName == 'singDOWN')
-				{
-					danced = !danced;
+					if (AnimName == 'singLEFT')
+					{
+						danced = true;
+					}
+					else if (AnimName == 'singRIGHT')
+					{
+						danced = false;
+					}
+		
+					if (AnimName == 'singUP' || AnimName == 'singDOWN')
+					{
+						danced = !danced;
+					}
 				}
 			}
 		}

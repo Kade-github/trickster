@@ -69,8 +69,8 @@ class FreeplayState extends MusicBeatState
 			
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
 
-			addWeek(['Improbable-Outset', 'Madness'], 6, ['trickyMask', 'tricky']);
-
+			addWeek(['Improbable-Outset', 'Madness', 'testsong'], 6, ['trickyMask', 'tricky','tricky']);
+			
 		// LOAD MUSIC
 
 		// LOAD CHARACTERS

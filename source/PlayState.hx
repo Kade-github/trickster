@@ -58,6 +58,8 @@ class PlayState extends MusicBeatState
 	public static var rep:Replay;
 	public static var loadRep:Bool = false;
 
+	public static var staticVar:PlayState;
+
 	var halloweenLevel:Bool = false;
 
 	private var vocals:FlxSound;
@@ -66,7 +68,7 @@ class PlayState extends MusicBeatState
 	public var TrickyLinesSing:Array<String> = ["SUFFER","INCORRECT", "INCOMPLETE", "INSUFFICIENT", "INVALID", "CORRECTION", "MISTAKE", "REDUCE", "ERROR", "ADJUSTING", "IMPROBABLE", "IMPLAUSIBLE", "MISJUDGED"];
 	public var TrickyLinesMiss:Array<String> = ["TERRIBLE", "WASTE", "MISS CALCULTED", "PREDICTED", "FAILURE", "DISGUSTING", "ABHORRENT", "FORESEEN", "CONTEMPTIBLE", "PROGNOSTICATE", "DISPICABLE", "REPREHENSIBLE"];
 
-	private var dad:Character;
+	public static var dad:Character;
 	private var gf:Character;
 	private var boyfriend:Boyfriend;
 	var MAINLIGHT:FlxSprite;
@@ -99,7 +101,6 @@ class PlayState extends MusicBeatState
 	private var totalNotesHit:Float = 0;
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
-
 
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
@@ -184,6 +185,8 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 
 		FlxCamera.defaultCameras = [camGame];
+
+		staticVar = this;
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -569,6 +572,27 @@ class PlayState extends MusicBeatState
 			MAINLIGHT.antialiasing = true;
 			MAINLIGHT.scrollFactor.set(1.2, 1.2);
 		}
+		else if (SONG.song.toLowerCase() == 'testsong')
+		{
+			//trace("line 538");
+			defaultCamZoom = 0.35;
+			curStage = 'nevadaSpook';
+
+			tstatic.antialiasing = true;
+			tstatic.scrollFactor.set(0,0);
+			tstatic.setGraphicSize(Std.int(tstatic.width * 8.3));
+			tstatic.animation.add('static', [0, 1, 2], 24, true);
+			tstatic.animation.play('static');
+
+			tstatic.alpha = 0;
+
+			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('hellclwn/bigFloor','clown'));
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
+			stageFront.antialiasing = true;
+			stageFront.scrollFactor.set(0.9, 0.9);
+			stageFront.active = false;
+			add(stageFront);
+		}
 		else
 		{
 			defaultCamZoom = 0.9;
@@ -617,6 +641,7 @@ class PlayState extends MusicBeatState
 
 		dad = new Character(100, 100, SONG.player2);
 
+		
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
 
@@ -645,7 +670,10 @@ class PlayState extends MusicBeatState
 			case 'trickyMask':
 				camPos.x += 400;
 			case 'trickyH':
-				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y - 1200);
+				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 375);
+				dad.y -= 2000;
+				dad.x -= 1400;
+				gf.x -= 380;
 			case 'pico':
 				camPos.x += 600;
 				dad.y += 300;
@@ -714,8 +742,12 @@ class PlayState extends MusicBeatState
 		if (curStage == 'limo')
 			add(limo);
 
+		
 		add(dad);
+		
 		add(boyfriend);
+
+		trace('hello');
 
 		if (dad.curCharacter == 'trickyH')
 		{
@@ -759,6 +791,8 @@ class PlayState extends MusicBeatState
 
 		camFollow.setPosition(camPos.x, camPos.y);
 
+		if (dad.curCharacter == 'trickyH')
+			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y + 265);
 		
 		if (prevCamFollow != null)
 		{
@@ -852,8 +886,6 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
-
-		camHUD.visible = false;
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -1923,7 +1955,7 @@ class PlayState extends MusicBeatState
 					case 'trickyMask':
 						camFollow.y = dad.getMidpoint().y + 25;
 					case 'trickyH':
-						camFollow.y = dad.getMidpoint().y - 600;
+						camFollow.y = dad.getMidpoint().y + 375;
 					case 'senpai':
 						camFollow.y = dad.getMidpoint().y - 430;
 						camFollow.x = dad.getMidpoint().x - 100;
@@ -1943,7 +1975,7 @@ class PlayState extends MusicBeatState
 
 			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
 			{
-				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 300);
 
 				switch (curStage)
 				{

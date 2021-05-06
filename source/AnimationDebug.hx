@@ -14,8 +14,9 @@ import flixel.util.FlxColor;
  */
 class AnimationDebug extends FlxState
 {
+	public static var staticVar:AnimationDebug = null;
 	var bf:Boyfriend;
-	var dad:Character;
+	public static var dad:Character;
 	var char:Character;
 	var textAnim:FlxText;
 	var dumbTexts:FlxTypedGroup<FlxText>;
@@ -28,6 +29,7 @@ class AnimationDebug extends FlxState
 	public function new(daAnim:String = 'spooky')
 	{
 		super();
+		staticVar = this;
 		this.daAnim = daAnim;
 	}
 
@@ -35,7 +37,9 @@ class AnimationDebug extends FlxState
 	{
 		FlxG.sound.music.stop();
 
-		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
+		FlxG.mouse.visible = true;
+
+		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10,20000,20000);
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
@@ -44,8 +48,8 @@ class AnimationDebug extends FlxState
 
 		if (isDad)
 		{
-			dad = new Character(0, 0, daAnim);
-			dad.screenCenter();
+			dad = new Character(PlayState.dad.x, PlayState.dad.y, daAnim, false, true);
+			dad.setGraphicSize(Std.int(dad.width * 0.7));
 			dad.debugMode = true;
 			add(dad);
 
@@ -86,17 +90,49 @@ class AnimationDebug extends FlxState
 	{
 		var daLoop:Int = 0;
 
-		for (anim => offsets in char.animOffsets)
+		if (char.otherFrames == null)
 		{
-			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
-			text.scrollFactor.set();
-			text.color = FlxColor.BLUE;
-			dumbTexts.add(text);
+			for (anim => offsets in char.animOffsets)
+			{
+				var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
+				text.scrollFactor.set();
+				text.color = FlxColor.BLUE;
+				dumbTexts.add(text);
 
-			if (pushList)
-				animList.push(anim);
+				if (pushList)
+					animList.push(anim);
 
-			daLoop++;
+				daLoop++;
+			}
+		}
+
+		if (char.otherFrames != null)
+		{
+			for (i in char.otherFrames)
+			{
+				i.setGraphicSize(Std.int(i.width * 0.7));
+				for (anim => offsets in i.animOffsets)
+				{
+					var anim = "";
+					if (StringTools.contains(i.curCharacter.toLowerCase(),"left"))
+						anim = "singLEFT";
+					if (StringTools.contains(i.curCharacter.toLowerCase(),"up"))
+						anim = "singUP";
+					if (StringTools.contains(i.curCharacter.toLowerCase(),"down"))
+						anim = "singDOWN";
+					if (StringTools.contains(i.curCharacter.toLowerCase(),"right"))
+						anim = "singRIGHT";
+					var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
+					text.scrollFactor.set();
+					text.color = FlxColor.BLUE;
+					dumbTexts.add(text);
+		
+					if (pushList)
+						animList.push(anim);
+		
+					daLoop++;
+				}
+			}
 		}
 	}
 
@@ -113,10 +149,17 @@ class AnimationDebug extends FlxState
 	{
 		textAnim.text = char.animation.curAnim.name;
 
+		
+
 		if (FlxG.keys.justPressed.E)
 			FlxG.camera.zoom += 0.25;
 		if (FlxG.keys.justPressed.Q)
 			FlxG.camera.zoom -= 0.25;
+
+		if (FlxG.keys.pressed.ONE)
+			camFollow.y += 10;
+		else if (FlxG.keys.pressed.TWO)
+			camFollow.y -= 10;
 
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{
@@ -142,11 +185,33 @@ class AnimationDebug extends FlxState
 		if (FlxG.keys.justPressed.W)
 		{
 			curAnim -= 1;
+			switch(animList[curAnim])
+			{
+				case 'singLEFT':
+					curAnim = 0;
+				case 'singRIGHT':
+					curAnim = 1;
+				case 'singUP':
+					curAnim = 2;
+				case 'singDOWN':
+					curAnim = 3;
+			}
 		}
 
 		if (FlxG.keys.justPressed.S)
 		{
 			curAnim += 1;
+			switch(animList[curAnim])
+			{
+				case 'singLEFT':
+					curAnim = 0;
+				case 'singRIGHT':
+					curAnim = 1;
+				case 'singUP':
+					curAnim = 2;
+				case 'singDOWN':
+					curAnim = 3;
+			}
 		}
 
 		if (curAnim < 0)
@@ -176,18 +241,47 @@ class AnimationDebug extends FlxState
 		if (upP || rightP || downP || leftP)
 		{
 			updateTexts();
-			if (upP)
-				char.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
-			if (downP)
-				char.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
-			if (leftP)
-				char.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
-			if (rightP)
-				char.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
+			if (char.otherFrames != null)
+			{
+				trace(char.otherFrames[curAnim].animOffsets);
+				if (upP)
+					char.otherFrames[curAnim].animOffsets.get('idle')[1] += 1 * multiplier;
+				if (downP)
+					char.otherFrames[curAnim].animOffsets.get('idle')[1] -= 1 * multiplier;
+				if (leftP)
+					char.otherFrames[curAnim].animOffsets.get('idle')[0] += 1 * multiplier;
+				if (rightP)
+					char.otherFrames[curAnim].animOffsets.get('idle')[0] -= 1 * multiplier;
+				updateTexts();
+				genBoyOffsets(false);
+				var anim = "";
+				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"left"))
+					anim = "singLEFT";
+				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"up"))
+					anim = "singUP";
+				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"down"))
+					anim = "singDOWN";
+				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"right"))
+					anim = "singRIGHT";
+				
+				char.playAnim(anim);
+			}
+			else
+			{
+				if (upP)
+					char.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
+				if (downP)
+					char.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
+				if (leftP)
+					char.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
+				if (rightP)
+					char.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
 
-			updateTexts();
-			genBoyOffsets(false);
-			char.playAnim(animList[curAnim]);
+				updateTexts();
+				genBoyOffsets(false);
+				char.playAnim(animList[curAnim]);
+			}
+
 		}
 
 		super.update(elapsed);
