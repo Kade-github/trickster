@@ -295,7 +295,7 @@ class TitleState extends MusicBeatState
 			{
 
 				// Get current version of Kade Engine
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(new VideoState("assets/videos/TricksterMan.webm", new MainMenuState()));
 				
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
