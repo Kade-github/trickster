@@ -25,7 +25,6 @@ class VideoState extends MusicBeatState
 	public var notDone:Bool = true;
 	public var vidSound:FlxSound;
 	public var useSound:Bool = false;
-	public var videoAudioOffset:Int = 0;
 	public var soundMultiplier:Float = 1;
 	public var prevSoundMultiplier:Float = 1;
 	public var videoFrames:Int = 0;
@@ -73,6 +72,12 @@ class VideoState extends MusicBeatState
 		txt.screenCenter();
 		add(txt);
 
+		if (GlobalVideo.isWebm)
+		{
+			useSound = true;
+			vidSound = FlxG.sound.play(leSource.replace(".webm", ".ogg"));
+		}
+
 		GlobalVideo.get().source(leSource);
 		GlobalVideo.get().clearPause();
 		if (GlobalVideo.isWebm)
@@ -88,9 +93,9 @@ class VideoState extends MusicBeatState
 			GlobalVideo.get().play();
 		}
 		
-		if (useSound)
-		{
-			vidSound = FlxG.sound.play(leSource.replace(".webm", ".ogg"));
+		/*if (useSound)
+		{*/
+			//vidSound = FlxG.sound.play(leSource.replace(".webm", ".ogg"));
 		
 			/*new FlxTimer().start(0.1, function(tmr:FlxTimer)
 			{*/
@@ -104,7 +109,7 @@ class VideoState extends MusicBeatState
 				}, 0);*/
 				doShit = true;
 			//}, 1);
-		}
+		//}
 	}
 	
 	override function update(elapsed:Float)
@@ -126,7 +131,7 @@ class VideoState extends MusicBeatState
 			}
 			if (doShit)
 			{
-				var compareShit:Float = 85;
+				var compareShit:Float = 50;
 				if (vidSound.time >= (vidSound.length * soundMultiplier) + compareShit || vidSound.time <= (vidSound.length * soundMultiplier) - compareShit)
 					vidSound.time = vidSound.length * soundMultiplier;
 			}

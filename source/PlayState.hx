@@ -66,6 +66,7 @@ class PlayState extends MusicBeatState
 
 	// tricky lines
 	public var TrickyLinesSing:Array<String> = ["SUFFER","INCORRECT", "INCOMPLETE", "INSUFFICIENT", "INVALID", "CORRECTION", "MISTAKE", "REDUCE", "ERROR", "ADJUSTING", "IMPROBABLE", "IMPLAUSIBLE", "MISJUDGED"];
+	public var ExTrickyLinesSing:Array<String> = ["YOU AREN'T HANK", "WHERE IS HANK", "HANK???", "WHO ARE YOU", "WHERE AM I", "THIS ISN'T RIGHT", "MIDGIT", "SYSTEM UNRESPONSIVE", "WHY CAN'T I KILL??????????????"];
 	public var TrickyLinesMiss:Array<String> = ["TERRIBLE", "WASTE", "MISS CALCULTED", "PREDICTED", "FAILURE", "DISGUSTING", "ABHORRENT", "FORESEEN", "CONTEMPTIBLE", "PROGNOSTICATE", "DISPICABLE", "REPREHENSIBLE"];
 
 	public static var dad:Character;
@@ -157,9 +158,10 @@ class PlayState extends MusicBeatState
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
 
+	public static var trans:FlxSprite;
+
 	override public function create()
 	{
-
 		theFunne = FlxG.save.data.newInput;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -1170,6 +1172,7 @@ class PlayState extends MusicBeatState
 					else
 					{
 						trace('completed ' + animation.animation.name);
+						resetSpookyTextManual();
 						switch(animation.animation.name)
 						{
 							case 'cut1':
@@ -1224,9 +1227,25 @@ class PlayState extends MusicBeatState
 		}
 
 
-		function trickyCutscene():Void
+		function trickyCutscene():Void // god this function is terrible
 		{
 			trace('starting cutscene');
+
+			trans = new FlxSprite(-400,-760);
+			trans.frames = Paths.getSparrowAtlas('Jaws','clown');
+			trans.antialiasing = true;
+
+			trans.animation.addByPrefix("Close","Jaws smol", 24, false);
+			
+			trace(trans.animation.frames);
+
+			trans.setGraphicSize(Std.int(trans.width * 1.6));
+
+			trans.scrollFactor.set();
+
+			trace('added trancacscas ' + trans);
+
+	
 
 			var faded:Bool = false;
 			var wat:Bool = false;
@@ -1265,7 +1284,7 @@ class PlayState extends MusicBeatState
 			var buildUp:FlxSound = new FlxSound().loadEmbedded(Paths.sound('trickyIsTriggered','clown'));
 
 			camHUD.visible = false;
-
+			
 			add(boyfriend);
 
 			add(red);
@@ -1274,142 +1293,168 @@ class PlayState extends MusicBeatState
 
 			add(nevada);
 
+			add(trans);
+
+			trans.animation.play("Close",false,false,18);
+			trans.animation.pause();
+
 			new FlxTimer().start(0.01, function(tmr:FlxTimer)
-			{
-				if (!wat)
 				{
-					tmr.reset(1.5);
-					wat = true;
+				if (!wat)
+					{
+						tmr.reset(1.5);
+						wat = true;
+					}
+					else
+					{
+					if (wat && trans.animation.frameIndex == 18)
+					{
+						trans.animation.resume();
+						trace('playing animation...');
+					}
+				if (trans.animation.finished)
+				{
+				trace('animation done lol');
+				new FlxTimer().start(0.01, function(tmr:FlxTimer)
+				{
+
+						if (boyfriend.animation.finished && !bfScared)
+							boyfriend.animation.play('idle');
+						else if (boyfriend.animation.finished)
+							boyfriend.animation.play('scared');
+						if (nevada.animation.curAnim == null)
+						{
+							trace('NEVADA | ' + nevada);
+							nevada.animation.play('nevada');
+						}
+						if (!nevada.animation.finished && nevada.animation.curAnim.name == 'nevada')
+						{
+							if (nevada.animation.frameIndex >= 41 && red.alpha != 0)
+							{
+								trace(red.alpha);
+								red.alpha -= 0.1;
+							}
+							if (nevada.animation.frameIndex == 34)
+								wind.fadeIn();
+							tmr.reset(0.1);
+						}
+						if (animation.animation.curAnim == null && red.alpha == 0)
+						{
+							remove(red);
+							trace('play tricky');
+							animation.animation.play('fuckyou', false, false, 40);
+						}
+						if (!animation.animation.finished && animation.animation.curAnim.name == 'fuckyou' && red.alpha == 0 && !faded)
+						{
+							trace("animation loop");
+							tmr.reset(0.01);
+
+							// animation code is bad I hate this
+							// :(
+
+							
+							switch(animation.animation.frameIndex) // THESE ARE THE SOUNDS NOT THE ACTUAL CAMERA MOVEMENT!!!!
+							{
+								case 73:
+									ground.play();
+								case 84:
+									metal.play();
+								case 170:
+									cloth.play();
+								case 192:
+									buildUp.fadeIn();
+								case 219:
+									trace('reset thingy');
+									buildUp.fadeOut();
+							}
+
+						
+							// im sorry for making this code.
+							// TODO: CLEAN THIS FUCKING UP (switch case it or smth)
+
+							if (animation.animation.frameIndex == 190)
+								bfScared = true;
+
+							if (animation.animation.frameIndex >= 115 && animation.animation.frameIndex < 200)
+							{
+								camFollow.setPosition(dad.getMidpoint().x + 150, boyfriend.getMidpoint().y + 50);
+								if (FlxG.camera.zoom < 1.1)
+									FlxG.camera.zoom += 0.01;
+								else
+									FlxG.camera.zoom = 1.1;
+							}
+							else if (animation.animation.frameIndex > 200 && FlxG.camera.zoom != defaultCamZoom)
+							{
+								FlxG.camera.shake(0.01, 3);
+								if (FlxG.camera.zoom < defaultCamZoom || camFollow.y < boyfriend.getMidpoint().y - 50)
+									{
+										FlxG.camera.zoom = defaultCamZoom;
+										camFollow.y = boyfriend.getMidpoint().y - 50;
+									}
+								else
+									{
+										FlxG.camera.zoom -= 0.008;
+										camFollow.y = dad.getMidpoint().y -= 1;
+									}
+							}
+							if (animation.animation.frameIndex >= 235)
+								faded = true;
+						}
+						else if (red.alpha == 0 && faded)
+						{
+							trace('red gay');
+							// animation finished, start a dialog or start the countdown (should also probably fade into this, aka black fade in when the animation gets done and black fade out. Or just make the last frame tranisiton into the idle animation)
+							if (black.alpha != 1)
+							{
+								black.alpha += 0.4;
+								tmr.reset(0.1);
+								trace('increase blackness lmao!!!');
+							}
+							else
+							{
+								if (black.alpha == 1 && black.visible)
+								{
+									black.visible = false;
+									black3.alpha = 1;
+									trace('transision ' + black.visible + ' ' + black3.alpha);
+									remove(animation);
+									dad.alpha = 1;
+									// shitty layering but ninja muffin can suck my dick like mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+									remove(red);
+									remove(black);
+									remove(black3);
+									dad.alpha = 1;
+									gf.alpha = 1;
+									add(black);
+									add(black3);
+									remove(tstatic);
+									add(tstatic);
+									tmr.reset(0.3);
+									FlxG.camera.stopFX();
+									camHUD.visible = true;
+								}
+								else if (black3.alpha != 0)
+								{
+									black3.alpha -= 0.1;
+									tmr.reset(0.3);
+									trace('decrease blackness lmao!!!');
+								}
+								else 
+								{
+									wind.fadeOut();
+									startCountdown();
+								}
+							}
+					}
+				});
 				}
 				else
 				{
-					if (boyfriend.animation.finished && !bfScared)
-						boyfriend.animation.play('idle');
-					else if (boyfriend.animation.finished)
-						boyfriend.animation.play('scared');
-					if (nevada.animation.curAnim == null)
-					{
-						trace('NEVADA | ' + nevada);
-						nevada.animation.play('nevada');
-					}
-					if (!nevada.animation.finished && nevada.animation.curAnim.name == 'nevada')
-					{
-						if (nevada.animation.frameIndex >= 41 && red.alpha != 0)
-						{
-							trace(red.alpha);
-							red.alpha -= 0.1;
-						}
-						if (nevada.animation.frameIndex == 34)
-							wind.fadeIn();
-						tmr.reset(0.1);
-					}
-					if (animation.animation.curAnim == null && red.alpha == 0)
-					{
-						remove(red);
-						trace('play tricky');
-						animation.animation.play('fuckyou', false, false, 40);
-					}
-					if (!animation.animation.finished && animation.animation.curAnim.name == 'fuckyou' && red.alpha == 0 && !faded)
-					{
-						trace("animation loop");
-						tmr.reset(0.01);
-
-						// animation code is bad I hate this
-						// :(
-
-						
-						switch(animation.animation.frameIndex) // THESE ARE THE SOUNDS NOT THE ACTUAL CAMERA MOVEMENT!!!!
-						{
-							case 73:
-								ground.play();
-							case 84:
-								metal.play();
-							case 170:
-								cloth.play();
-							case 192:
-								buildUp.fadeIn();
-							case 219:
-								buildUp.fadeOut();
-						}
-
-					
-						// im sorry for making this code.
-						// TODO: CLEAN THIS FUCKING UP (switch case it or smth)
-
-						if (animation.animation.frameIndex == 190)
-							bfScared = true;
-
-						if (animation.animation.frameIndex >= 115 && animation.animation.frameIndex < 200)
-						{
-							camFollow.setPosition(dad.getMidpoint().x + 150, boyfriend.getMidpoint().y + 50);
-							if (FlxG.camera.zoom < 1.1)
-								FlxG.camera.zoom += 0.01;
-							else
-								FlxG.camera.zoom = 1.1;
-						}
-						else if (animation.animation.frameIndex > 200 && FlxG.camera.zoom != defaultCamZoom)
-						{
-							FlxG.camera.shake(0.01, 3);
-							if (FlxG.camera.zoom < defaultCamZoom || camFollow.y < boyfriend.getMidpoint().y - 50)
-								{
-									FlxG.camera.zoom = defaultCamZoom;
-									camFollow.y = boyfriend.getMidpoint().y - 50;
-								}
-							else
-								{
-									FlxG.camera.zoom -= 0.008;
-									camFollow.y = dad.getMidpoint().y -= 1;
-								}
-						}
-						if (animation.animation.frameIndex >= 235)
-							faded = true;
-					}
-					else if (red.alpha == 0 && faded)
-					{
-						trace('red gay');
-						// animation finished, start a dialog or start the countdown (should also probably fade into this, aka black fade in when the animation gets done and black fade out. Or just make the last frame tranisiton into the idle animation)
-						if (black.alpha != 1)
-						{
-							black.alpha += 0.4;
-							tmr.reset(0.1);
-							trace('increase blackness lmao!!!');
-						}
-						else
-						{
-							if (black.alpha == 1 && black.visible)
-							{
-								black.visible = false;
-								black3.alpha = 1;
-								trace('transision ' + black.visible + ' ' + black3.alpha);
-								remove(animation);
-								dad.alpha = 1;
-								// shitty layering but ninja muffin can suck my dick like mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-								remove(red);
-								remove(black);
-								remove(black3);
-								dad.alpha = 1;
-								gf.alpha = 1;
-								add(black);
-								add(black3);
-								remove(tstatic);
-								add(tstatic);
-								tmr.reset(0.3);
-								FlxG.camera.stopFX();
-								camHUD.visible = true;
-							}
-							else if (black3.alpha != 0)
-							{
-								black3.alpha -= 0.1;
-								tmr.reset(0.3);
-								trace('decrease blackness lmao!!!');
-							}
-							else 
-							{
-								wind.fadeOut();
-								startCountdown();
-							}
-						}
-					}
+					trace(trans.animation.frameIndex);
+					if (trans.animation.frameIndex == 30)
+						trans.alpha = 0;
+					tmr.reset(0.1);
+				}
 				}
 			});
 		}

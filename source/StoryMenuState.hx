@@ -1,5 +1,7 @@
 package;
 
+import flixel.system.FlxSound;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -71,10 +73,25 @@ class StoryMenuState extends MusicBeatState
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
 
+
+	var trans:FlxSprite;
+
 	override function create()
 	{
+		trans = new FlxSprite(-300,-760);
+		trans.frames = Paths.getSparrowAtlas('Jaws','clown');
+		trans.antialiasing = true;
+
+		trans.animation.addByPrefix("Close","Jaws smol", 24);
+		
+		trace(trans.animation.frames);
+
+		trans.setGraphicSize(Std.int(trans.width * 1.38));
+		
+
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
+
 
 		if (FlxG.sound.music != null)
 		{
@@ -324,10 +341,38 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
-			new FlxTimer().start(1, function(tmr:FlxTimer)
-			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
-			});
+
+			add(trans);
+
+			new FlxTimer().start(0.4, function(tmr:FlxTimer)
+				{
+					if (curWeek == 7 && trans.animation.curAnim == null)
+					{
+						trans.animation.play("Close");
+						var snd = new FlxSound().loadEmbedded(Paths.sound('swipe','clown'));
+						snd.play();
+					}
+					if (curWeek == 7)
+					{
+						if (trans.animation.frameIndex == 18)
+						{
+							var snd = new FlxSound().loadEmbedded(Paths.sound('clink','clown'));
+							snd.play();
+							transOut = null;
+							trans.animation.pause();
+							LoadingState.loadAndSwitchState(new PlayState(), true);
+						}
+						else
+							tmr.reset(0.1);
+					}
+					else
+					{
+						LoadingState.loadAndSwitchState(new PlayState(), true);
+					}
+				});
+
+			
+		
 		}
 	}
 
