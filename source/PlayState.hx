@@ -2605,6 +2605,7 @@ class PlayState extends MusicBeatState
 				controls.RIGHT_R
 			];
 	 
+	 
 			// HOLDS, check for sustain notes
 			if (holdArray.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
 			{

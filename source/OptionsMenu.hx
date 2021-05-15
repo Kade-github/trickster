@@ -46,7 +46,6 @@ class OptionsMenu extends MusicBeatState
 			#if desktop
 			new FPSOption("Toggle the FPS Counter"),
 			#end
-			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 		])
 		
 	];
