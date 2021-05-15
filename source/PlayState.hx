@@ -2725,7 +2725,7 @@ class PlayState extends MusicBeatState
 								noteMiss(shit);
 					}
 
-				if(dontCheck && possibleNotes.length > 0 && FlxG.save.data.ghost && !FlxG.save.data.botplay)
+				if(dontCheck && possibleNotes.length > 0 && theFunne )
 				{
 					if (mashViolations > 4)
 					{
