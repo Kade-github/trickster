@@ -82,7 +82,7 @@ class StoryMenuState extends MusicBeatState
 		trans.frames = Paths.getSparrowAtlas('Jaws','clown');
 		trans.antialiasing = true;
 
-		trans.animation.addByPrefix("Close","Jaws smol", 24);
+		trans.animation.addByPrefix("Close","Jaws smol", 24, false);
 		
 		trace(trans.animation.frames);
 
