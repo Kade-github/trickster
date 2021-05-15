@@ -582,7 +582,7 @@ class PlayState extends MusicBeatState
 			MAINLIGHT.antialiasing = true;
 			MAINLIGHT.scrollFactor.set(1.2, 1.2);
 		}
-		else if (SONG.song.toLowerCase() == 'testsong')
+		else if (SONG.song.toLowerCase() == 'testsong' || SONG.song.toLowerCase() == 'hellclown')
 		{
 			//trace("line 538");
 			defaultCamZoom = 0.35;
@@ -2265,7 +2265,10 @@ class PlayState extends MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
-				FlxG.switchState(new StoryMenuState());
+				if (song.toLowerCase() == 'hellclown')
+					LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new StoryMenuState()));
+				else
+					FlxG.switchState(new StoryMenuState());
 
 				// if ()
 				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
@@ -2315,8 +2318,6 @@ class PlayState extends MusicBeatState
 						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm",new PlayState()));
 					case 'madness':
 						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",new PlayState()));
-					case 'hellclown':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new PlayState()));
 					default:
 						LoadingState.loadAndSwitchState(new PlayState());
 				}
