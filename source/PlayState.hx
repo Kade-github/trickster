@@ -2416,7 +2416,6 @@ class PlayState extends MusicBeatState
 	
 	
 			songScore += Math.round(score);
-			songScoreDef += Math.round(ConvertScore.convertScore(noteDiff));
 	
 			/* if (combo > 60)
 					daRating = 'sick';
