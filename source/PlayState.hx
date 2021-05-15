@@ -1,5 +1,6 @@
 package;
 
+import openfl.media.Video;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -94,6 +95,8 @@ class PlayState extends MusicBeatState
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
 
+	public static var instance:PlayState;
+
 	private var gfSpeed:Int = 1;
 	private var health:Float = 1;
 	private var combo:Int = 0;
@@ -165,6 +168,11 @@ class PlayState extends MusicBeatState
 		theFunne = FlxG.save.data.newInput;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
+
+		instance = this;
+
+		if (storyWeek == 7)
+			transIn = null;
 
 		sicks = 0;
 		bads = 0;
@@ -938,7 +946,6 @@ class PlayState extends MusicBeatState
 				case 'improbable-outset':
 					camFollow.setPosition(boyfriend.getMidpoint().x + 70, boyfriend.getMidpoint().y - 50);
 					trickyCutscene();
-					
 				default:
 					startCountdown();
 			}
@@ -1164,7 +1171,7 @@ class PlayState extends MusicBeatState
 
 						if (animation.animation.name == 'pillar')
 						{
-							if (animation.animation.frameIndex >= 45) // why is this not in the switch case above? idk cry about it
+							if (animation.animation.frameIndex >= 85) // why is this not in the switch case above? idk cry about it
 								startFading = true;
 							FlxG.camera.shake(0.05);
 						}
@@ -1198,29 +1205,8 @@ class PlayState extends MusicBeatState
 
 					if (startFading)
 					{
-						trace('do the fade out and the text');
-						if (textFadeOut.alpha != 1)
-						{
-							tmr.reset(0.1);
-							textFadeOut.alpha += 0.02;
-							black.alpha += 0.02;
-
-							if (black.alpha >= 0.9 && !roarPlayed)
-							{
-								roar.play();
-								roarPlayed = true;
-							}
-						}
-						else if (done)
-						{
-							endSong();
-							FlxG.camera.stopFX();
-						}
-						else
-						{
-							done = true;
-							tmr.reset(5);
-						}
+						endSong();
+						FlxG.camera.stopFX();
 					}
 				}
 			});
@@ -2253,8 +2239,9 @@ class PlayState extends MusicBeatState
 		add(spookyText);
 	}
 
-	function endSong():Void
+	public function endSong():Void
 	{
+		var song = SONG.song;
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
@@ -2322,8 +2309,17 @@ class PlayState extends MusicBeatState
 
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
 				FlxG.sound.music.stop();
-
-				LoadingState.loadAndSwitchState(new PlayState());
+				switch(song.toLowerCase())
+				{
+					case 'improbable-outset':
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm",new PlayState()));
+					case 'madness':
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",new PlayState()));
+					case 'hellclown':
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new PlayState()));
+					default:
+						LoadingState.loadAndSwitchState(new PlayState());
+				}
 			}
 		}
 		else
