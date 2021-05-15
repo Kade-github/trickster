@@ -115,6 +115,7 @@ class PlayState extends MusicBeatState
 	private var iconP1:HealthIcon;
 	private var iconP2:HealthIcon;
 	private var camHUD:FlxCamera;
+	var notesHitArray:Array<Date> = [];
 	private var camGame:FlxCamera;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
@@ -1851,12 +1852,28 @@ class PlayState extends MusicBeatState
 	var spookyText:FlxText;
 	var spookyRendered:Bool = false;
 	var spookySteps:Int = 0;
+	var nps:Int = 0;
+	var maxNPS:Int = 0;
 
 	override public function update(elapsed:Float)
 	{
 		#if !debug
 		perfectMode = false;
 		#end
+
+		var balls = notesHitArray.length-1;
+			while (balls >= 0)
+			{
+				var cock:Date = notesHitArray[balls];
+				if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
+					notesHitArray.remove(cock);
+				else
+					balls = 0;
+				balls--;
+			}
+			nps = notesHitArray.length;
+			if (nps > maxNPS)
+				maxNPS = nps;
 
 		if (FlxG.keys.justPressed.NINE)
 		{
@@ -1884,7 +1901,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = (!FlxG.save.data.newInput ? "UNRANKED " : "" )+ "Score:" + songScore + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "% " + (fc ? "| FC" : misses == 0 ? "| A" : accuracy <= 75 ? "| BAD" : "");
+		scoreTxt.text = Ratings.CalculateRanking(songScore,0,nps,accuracy);
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -2181,9 +2198,9 @@ class PlayState extends MusicBeatState
 		
 
 						if (FlxG.save.data.downscroll)
-							daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
+							daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2)));
 						else
-							daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
+							daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2)));
 						
 						daNote.y -= (daNote.burning ? 65 : 0) - ((daNote.burning && curStage.startsWith('school')) ? 40 : 0);
 		
@@ -2332,9 +2349,10 @@ class PlayState extends MusicBeatState
 
 	var endingSong:Bool = false;
 
-	private function popUpScore(strumtime:Float):Void
+	private function popUpScore(daNote:Note):Void
 		{
-			var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
+			var noteDiff:Float = Math.abs(Conductor.songPosition - daNote.strumTime);
+			var wife:Float = EtternaFunctions.wife3(noteDiff, Conductor.timeScale);
 			// boyfriend.playAnim('hey');
 			vocals.volume = 1;
 	
@@ -2343,111 +2361,62 @@ class PlayState extends MusicBeatState
 			var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 			coolText.screenCenter();
 			coolText.x = FlxG.width * 0.55;
+			coolText.y -= 350;
+			coolText.cameras = [camHUD];
 			//
 	
 			var rating:FlxSprite = new FlxSprite();
-			var score:Int = 350;
-	
-			var daRating:String = "sick";
-	
-			if (noteDiff > Conductor.safeZoneOffset * 2)
-				{
-					daRating = 'shit';
-					totalNotesHit -= 2;
-					ss = false;
-					if (theFunne)
-						{
-							score = -3000;
-							combo = 0;
-							misses++;
-							health -= 0.2;
-						}
-					shits++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -2)
-				{
-					daRating = 'shit';
-					totalNotesHit -= 2;
-					if (theFunne)
-					{
-						score = -3000;
-						combo = 0;
-						misses++;
-						health -= 0.2;
-					}
-					ss = false;
-					shits++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -0.45)
-				{
-					daRating = 'bad';
-					totalNotesHit += 0.2;
-					if (theFunne)
-					{
-						score = -1000;
-						health -= 0.03;
-					}
-					else
-						score = 100;
-					ss = false;
-					bads++;
-				}
-				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
-				{
-					daRating = 'bad';
-					totalNotesHit += 0.2;
-					if (theFunne)
-						{
-							score = -1000;
-							health -= 0.03;
-						}
-						else
-							score = 100;
-					ss = false;
-					bads++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -0.25)
-				{
-					daRating = 'good';
-					totalNotesHit += 0.65;
-					if (theFunne)
-					{
-						score = 200;
-						//health -= 0.01;
-					}
-					else
-						score = 200;
-					ss = false;
-					goods++;
-				}
-				else if (noteDiff > Conductor.safeZoneOffset * 0.25)
-				{
-					daRating = 'good';
-					totalNotesHit += 0.65;
-					if (theFunne)
-						{
-							score = 200;
-							//health -= 0.01;
-						}
-						else
-							score = 200;
-					ss = false;
-					goods++;
-				}
-			if (daRating == 'sick')
+			var score:Float = 350;
+
+			if (FlxG.save.data.accuracyMod == 1)
+				totalNotesHit += wife;
+
+			var daRating = daNote.rating;
+
+			switch(daRating)
 			{
-				totalNotesHit += 1;
-				if (health < 2)
-					health += 0.1;
-				sicks++;
+				case 'shit':
+					score = -300;
+					combo = 0;
+					misses++;
+					health -= 0.2;
+					ss = false;
+					shits++;
+					if (FlxG.save.data.accuracyMod == 0)
+						totalNotesHit += 0.25;
+				case 'bad':
+					daRating = 'bad';
+					score = 0;
+					health -= 0.06;
+					ss = false;
+					bads++;
+					if (FlxG.save.data.accuracyMod == 0)
+						totalNotesHit += 0.50;
+				case 'good':
+					daRating = 'good';
+					score = 200;
+					ss = false;
+					goods++;
+					if (health < 2)
+						health += 0.04;
+					if (FlxG.save.data.accuracyMod == 0)
+						totalNotesHit += 0.75;
+				case 'sick':
+					if (health < 2)
+						health += 0.1;
+					if (FlxG.save.data.accuracyMod == 0)
+						totalNotesHit += 1;
+					sicks++;
 			}
-		
-	
+
+			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
+
 			if (daRating != 'shit' || daRating != 'bad')
 				{
 	
 	
-			songScore += score;
+			songScore += Math.round(score);
+			songScoreDef += Math.round(ConvertScore.convertScore(noteDiff));
 	
 			/* if (combo > 60)
 					daRating = 'sick';
@@ -2468,17 +2437,26 @@ class PlayState extends MusicBeatState
 	
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
 			rating.screenCenter();
-			rating.x = coolText.x - 40;
-			rating.y -= 60;
+			rating.y -= 50;
+			rating.x = coolText.x - 125;
+			
+			if (FlxG.save.data.changedHit)
+			{
+				rating.x = FlxG.save.data.changedHitX;
+				rating.y = FlxG.save.data.changedHitY;
+			}
 			rating.acceleration.y = 550;
 			rating.velocity.y -= FlxG.random.int(140, 175);
 			rating.velocity.x -= FlxG.random.int(0, 10);
-	
+
+
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 			comboSpr.screenCenter();
-			comboSpr.x = coolText.x;
+			comboSpr.x = rating.x;
+			comboSpr.y = rating.y + 100;
 			comboSpr.acceleration.y = 600;
 			comboSpr.velocity.y -= 150;
+
 	
 			comboSpr.velocity.x += FlxG.random.int(1, 10);
 			add(rating);
@@ -2495,24 +2473,35 @@ class PlayState extends MusicBeatState
 				rating.setGraphicSize(Std.int(rating.width * daPixelZoom * 0.7));
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * daPixelZoom * 0.7));
 			}
-	
+
 			comboSpr.updateHitbox();
 			rating.updateHitbox();
 	
+			comboSpr.cameras = [camHUD];
+			rating.cameras = [camHUD];
+
 			var seperatedScore:Array<Int> = [];
 	
-			seperatedScore.push(Math.floor(combo / 100));
-			seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
-			seperatedScore.push(combo % 10);
+			var comboSplit:Array<String> = (combo + "").split('');
+
+			if (comboSplit.length == 2)
+				seperatedScore.push(0); // make sure theres a 0 in front or it looks weird lol!
+
+			for(i in 0...comboSplit.length)
+			{
+				var str:String = comboSplit[i];
+				seperatedScore.push(Std.parseInt(str));
+			}
 	
 			var daLoop:Int = 0;
 			for (i in seperatedScore)
 			{
 				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
 				numScore.screenCenter();
-				numScore.x = coolText.x + (43 * daLoop) - 90;
-				numScore.y += 80;
-	
+				numScore.x = rating.x + (43 * daLoop) - 50;
+				numScore.y = rating.y + 100;
+				numScore.cameras = [camHUD];
+
 				if (!curStage.startsWith('school'))
 				{
 					numScore.antialiasing = true;
@@ -2549,16 +2538,11 @@ class PlayState extends MusicBeatState
 			coolText.text = Std.string(seperatedScore);
 			// add(coolText);
 	
-			FlxTween.tween(rating, {alpha: 0}, 0.2, {
-				startDelay: Conductor.crochet * 0.001
-			});
-	
 			FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)
 				{
 					coolText.destroy();
 					comboSpr.destroy();
-	
 					rating.destroy();
 				},
 				startDelay: Conductor.crochet * 0.001
@@ -2567,6 +2551,8 @@ class PlayState extends MusicBeatState
 			curSection += 1;
 			}
 		}
+
+
 
 	public function NearlyEquals(value1:Float, value2:Float, unimportantDifference:Float = 10):Bool
 		{
@@ -2603,7 +2589,6 @@ class PlayState extends MusicBeatState
 	var leftHold:Bool = false;	
 
 	var noteHit:Int = 0;
-
 	private function keyShit():Void // I've invested in emma stocks
 		{
 			// control arrays, order L D R U
@@ -2621,13 +2606,6 @@ class PlayState extends MusicBeatState
 				controls.RIGHT_R
 			];
 	 
-			// Prevent player input if botplay is on
-			if(FlxG.save.data.botplay)
-			{
-				holdArray = [false, false, false, false];
-				pressArray = [false, false, false, false];
-				releaseArray = [false, false, false, false];
-			} 
 			// HOLDS, check for sustain notes
 			if (holdArray.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
 			{
@@ -2699,7 +2677,7 @@ class PlayState extends MusicBeatState
 					goodNoteHit(possibleNotes[0]);
 				else if (possibleNotes.length > 0 && !dontCheck)
 				{
-					if (!theFunne)
+					if (!FlxG.save.data.ghost)
 					{
 						for (shit in 0...pressArray.length)
 							{ // if a direction is hit that shouldn't be
@@ -2725,7 +2703,7 @@ class PlayState extends MusicBeatState
 								noteMiss(shit);
 					}
 
-				if(dontCheck && possibleNotes.length > 0 && theFunne )
+				if(dontCheck && possibleNotes.length > 0 && FlxG.save.data.ghost)
 				{
 					if (mashViolations > 4)
 					{
@@ -2739,32 +2717,7 @@ class PlayState extends MusicBeatState
 
 			}
 			
-			notes.forEachAlive(function(daNote:Note)
-			{
-				if(FlxG.save.data.downscroll && daNote.y > strumLine.y ||
-				!FlxG.save.data.downscroll && daNote.y < strumLine.y)
-				{
-					// Force good note hit regardless if it's too late to hit it or not as a fail safe
-					/*f(FlxG.save.data.botplay && daNote.canBeHit && daNote.mustPress ||
-					FlxG.save.data.botplay && daNote.tooLate && daNote.mustPress)
-					{
-						if(loadRep)
-						{
-							//trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
-							if(rep.replay.songNotes.contains(HelperFunctions.truncateFloat(daNote.strumTime, 2)))
-							{
-								goodNoteHit(daNote);
-								boyfriend.holdTimer = daNote.sustainLength;
-							}
-						}else {
-							goodNoteHit(daNote);
-							boyfriend.holdTimer = daNote.sustainLength;
-						}
-					}*/
-				}
-			});
-			
-			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || FlxG.save.data.botplay))
+			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true)))
 			{
 				if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 					boyfriend.playAnim('idle');
@@ -2787,6 +2740,7 @@ class PlayState extends MusicBeatState
 					spr.centerOffsets();
 			});
 		}
+
 
 	function noteMiss(direction:Int = 1):Void
 	{
@@ -2886,115 +2840,107 @@ class PlayState extends MusicBeatState
 		
 			function noteCheck(controlArray:Array<Bool>, note:Note):Void // sorry lol
 				{
-					if (loadRep)
+					var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
+		
+					note.rating = Ratings.CalculateRating(noteDiff);
+		
+					/* if (loadRep)
 					{
 						if (controlArray[note.noteData])
-							goodNoteHit(note);
-						else if (!theFunne) 
-							badNoteCheck();
+							goodNoteHit(note, false);
 						else if (rep.replay.keyPresses.length > repPresses && !controlArray[note.noteData])
 						{
 							if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
 							{
-								goodNoteHit(note);
+								goodNoteHit(note, false);
 							}
-							else if (!theFunne) 
-								badNoteCheck();
 						}
-					}
-					else if (controlArray[note.noteData] && theFunne)
+					} */
+					
+					if (controlArray[note.noteData])
+					{
+						goodNoteHit(note, (mashing > getKeyPresses(note)));
+						
+						/*if (mashing > getKeyPresses(note) && mashViolations <= 2)
 						{
-							for (b in controlArray) {
-								if (b)
-									mashing++;
-							}
-		
-							// ANTI MASH CODE FOR THE BOYS
-		
-							if (mashing <= getKeyPresses(note) + 1 && mashViolations < 2)
-							{
-								mashViolations++;
-								goodNoteHit(note, (mashing <= getKeyPresses(note) + 1));
-							}
-							else
-							{
-								playerStrums.members[note.noteData].animation.play('static');
-								trace('mash ' + mashing);
-							}
-		
+							mashViolations++;
+							goodNoteHit(note, (mashing > getKeyPresses(note)));
+						}
+						else if (mashViolations > 2)
+						{
+							// this is bad but fuck you
+							playerStrums.members[0].animation.play('static');
+							playerStrums.members[1].animation.play('static');
+							playerStrums.members[2].animation.play('static');
+							playerStrums.members[3].animation.play('static');
+							health -= 0.4;
+							trace('mash ' + mashing);
 							if (mashing != 0)
 								mashing = 0;
 						}
-					else if (!theFunne)
-					{
-						if (controlArray[note.noteData])
-							goodNoteHit(note);
 						else
-							badNoteCheck();
+							goodNoteHit(note, false);*/
+		
 					}
 				}
+		
 
-	function goodNoteHit(note:Note, resetMashViolation = true):Void
-	{
-		if (resetMashViolation)
-			mashViolations--;
-
-		if(!note.burning){
-			if (!note.wasGoodHit)
-			{
-				if (!note.isSustainNote)
-				{
-					popUpScore(note.strumTime);
-					combo += 1;
-				}
-				else
-					totalNotesHit += 1;
-
-				switch (note.noteData)
-				{
-					case 2:
-						boyfriend.playAnim('singUP', true);
-					case 3:
-						boyfriend.playAnim('singRIGHT', true);
-					case 1:
-						boyfriend.playAnim('singDOWN', true);
-					case 0:
-						boyfriend.playAnim('singLEFT', true);
-				}
-
-				playerStrums.forEach(function(spr:FlxSprite)
-				{
-					if (Math.abs(note.noteData) == spr.ID)
+				function goodNoteHit(note:Note, resetMashViolation = true):Void
 					{
-						spr.animation.play('confirm', true);
-					}
-				});
-
-	
-				note.wasGoodHit = true;
-				vocals.volume = 1;
-	
-				note.kill();
-				notes.remove(note, true);
-				note.destroy();
+		
+						if (mashing != 0)
+							mashing = 0;
+		
+						var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
+		
+						note.rating = Ratings.CalculateRating(noteDiff);
+		
+						// add newest note to front of notesHitArray
+						// the oldest notes are at the end and are removed first
+						if (!note.isSustainNote)
+							notesHitArray.unshift(Date.now());
+		
+						if (!resetMashViolation && mashViolations >= 1)
+							mashViolations--;
+		
+						if (mashViolations < 0)
+							mashViolations = 0;
+		
+						if (!note.wasGoodHit)
+						{
+							if (!note.isSustainNote)
+							{
+								popUpScore(note);
+								combo += 1;
+							}
+							else
+								totalNotesHit += 1;
+			
+		
+							switch (note.noteData)
+							{
+								case 2:
+									boyfriend.playAnim('singUP', true);
+								case 3:
+									boyfriend.playAnim('singRIGHT', true);
+								case 1:
+									boyfriend.playAnim('singDOWN', true);
+								case 0:
+									boyfriend.playAnim('singLEFT', true);
+							}
 				
-				updateAccuracy();
-			}
-		}
-		else
-		{
-			FlxG.sound.play(Paths.sound('burnSound'), 0.6);
-			combo = 0;
-			//misses += 1;
-			note.kill();
-			notes.remove(note, true);
-			note.destroy();
-			health -= 0.25;
-			boyfriend.playAnim('stunned', true);
-			songScore -= 100;
-			//updateAccuracy();
-		}
-	}
+							
+							note.wasGoodHit = true;
+							vocals.volume = 1;
+				
+							note.kill();
+							notes.remove(note, true);
+							note.destroy();
+							
+							updateAccuracy();
+						}
+					}
+				
 
 	var fastCarCanDrive:Bool = true;
 

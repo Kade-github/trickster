@@ -1,5 +1,7 @@
 package;
 
+import flixel.util.FlxColor;
+import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
@@ -67,8 +69,6 @@ class Main extends Sprite
 		initialState = TitleState;
 		#end
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
-
 		var ourSource:String = "assets/videos/DO NOT DELETE OR GAME WILL CRASH/dontDelete.webm";
         
         #if web
@@ -90,8 +90,43 @@ class Main extends Sprite
         GlobalVideo.setWebm(webmHandle);
         #end 
 
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+
+		addChild(game);
+
 		#if !mobile
-		addChild(new FPS(10, 3, 0xFFFFFF));
+		fpsCounter = new FPS(10, 3, 0xFFFFFF);
+		addChild(fpsCounter);
+		toggleFPS(FlxG.save.data.fps);
+
 		#end
+	}
+
+	var game:FlxGame;
+
+	var fpsCounter:FPS;
+
+	public function toggleFPS(fpsEnabled:Bool):Void {
+		fpsCounter.visible = fpsEnabled;
+	}
+
+	public function changeFPSColor(color:FlxColor)
+	{
+		fpsCounter.textColor = color;
+	}
+
+	public function setFPSCap(cap:Float)
+	{
+		openfl.Lib.current.stage.frameRate = cap;
+	}
+
+	public function getFPSCap():Float
+	{
+		return openfl.Lib.current.stage.frameRate;
+	}
+
+	public function getFPS():Float
+	{
+		return fpsCounter.currentFPS;
 	}
 }
