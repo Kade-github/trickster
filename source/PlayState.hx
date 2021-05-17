@@ -1,5 +1,6 @@
 package;
 
+import lime.app.Application;
 import openfl.media.Video;
 import Section.SwagSection;
 import Song.SwagSong;
@@ -2726,7 +2727,10 @@ class PlayState extends MusicBeatState
 			playerStrums.forEach(function(spr:FlxSprite)
 			{
 				if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
+				{
+					trace('poggers');
 					spr.animation.play('pressed');
+				}
 				if (!holdArray[spr.ID])
 					spr.animation.play('static');
 	 
@@ -2928,7 +2932,14 @@ class PlayState extends MusicBeatState
 								case 0:
 									boyfriend.playAnim('singLEFT', true);
 							}
-				
+
+							playerStrums.forEach(function(spr:FlxSprite)
+								{
+									if (Math.abs(note.noteData) == spr.ID)
+									{
+										spr.animation.play('confirm', true);
+									}
+								});
 							
 							note.wasGoodHit = true;
 							vocals.volume = 1;

@@ -1,0 +1,35 @@
+{
+	"frames": {
+		"AmongHand.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 227,
+				"h": 152
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 227,
+				"h": 152
+			},
+			"sourceSize": {
+				"w": 227,
+				"h": 152
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 229,
+			"h": 154
+		},
+		"scale": "1"
+	}
+}
