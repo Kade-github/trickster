@@ -41,11 +41,6 @@ class FreeplayState extends MusicBeatState
 	{
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
-		for (i in 0...initSonglist.length)
-		{
-			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
-		}
-
 		/* 
 			if (FlxG.sound.music != null)
 			{
@@ -60,16 +55,7 @@ class FreeplayState extends MusicBeatState
 		isDebug = true;
 		#end
 
-			addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
-			addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster']);
-			addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
-
-			addWeek(['Satin-Panties', 'High', 'Milf'], 4, ['mom']);
-			addWeek(['Cocoa', 'Eggnog', 'Winter-Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster-christmas']);
-			
-			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
-
-			addWeek(['Improbable-Outset', 'Madness', 'testsong'], 6, ['trickyMask', 'tricky','tricky']);
+		addWeek(['Improbable-Outset', 'Madness', 'testsong'], 6, ['trickyMask', 'tricky','tricky']);
 			
 		// LOAD MUSIC
 
