@@ -293,10 +293,13 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
+			FlxG.sound.music.fadeOut(1,0);
+
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-
-				// Get current version of Kade Engine
+				FlxG.sound.playMusic(Paths.music("Menu-Theme","clown"));
+				FlxG.sound.music.volume = 0.6;
+				Conductor.changeBPM(165);
 				FlxG.switchState(new MainMenuState());
 				
 			});

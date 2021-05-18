@@ -1,253 +1,236 @@
 package;
 
+import FreeplayState.SongMetadata;
 import flixel.system.FlxSound;
-import Controls.KeyboardScheme;
+import flixel.util.FlxTimer;
+import flixel.addons.display.FlxBackdrop;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.effects.FlxFlicker;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import io.newgrounds.NG;
-import lime.app.Application;
 
 using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var curSelected:Int = 0;
+	var slider:FlxBackdrop;
+	var show:String = "";
+	var shower:FlxSprite;
+	public static var curDifficulty:Int = 1;
+	public static var trans:FlxSprite;
 
-	var menuItems:FlxTypedGroup<FlxSprite>;
+	var clownButton:TrickyButton;
 
-	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
-	#else
-	var optionShit:Array<String> = ['story mode', 'freeplay'];
-	#end
-
-	var newGaming:FlxText;
-	var newGaming2:FlxText;
-	var newInput:Bool = true;
-
-	public static var kadeEngineVer:String = "1.5-PRE_LIMIT";
-	public static var gameVer:String = "0.2.7.1";
-
-	var magenta:FlxSprite;
-	var camFollow:FlxObject;
-
-	var amongus:Bool = false;
-
-	function amongUsDone():Void
-	{
-		FlxG.sound.music.volume = 1;
-	}
+	public var listOfButtons:Array<TrickyButton> = 
+	[
+	new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory),
+	new TrickyButton(995, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay)
+	];
+	var listOfDiff:Array<String> = ['easy','medium','hard'];
 
 	override function create()
 	{
-		if (!FlxG.sound.music.playing)
-		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-		}
+		trans = new FlxSprite(-300,-760);
+		trans.frames = Paths.getSparrowAtlas('Jaws','clown');
+		trans.antialiasing = true;
 
-		persistentUpdate = persistentDraw = true;
-
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
-		amongus = FlxG.random.bool(1);
-
-		var bg:FlxSprite;
-
-		if (amongus)
-		{
-			var amongUs:FlxSound = new FlxSound().loadEmbedded(Paths.sound('dontListenToThis','clown'));
-			amongUs.onComplete = amongUsDone;
-			amongUs.play();
-			FlxG.sound.music.volume = 0.1;
-			bg = new FlxSprite(-80).loadGraphic(Paths.image('amog','clown'));
-		}
-		else
-			bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG','clown'));
+		trans.animation.addByPrefix("Close","Jaws smol", 24, false);
 		
-		bg.scrollFactor.x = 0;
-		bg.scrollFactor.y = 0.18;
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.y + 50;
-		bg.antialiasing = true;
+		trace(trans.animation.frames);
+
+		trans.setGraphicSize(Std.int(trans.width * 1.38));
+
+		var bg:FlxSprite = new FlxSprite(-10,-10).loadGraphic(Paths.image('menu/RedBG','clown'));
 		add(bg);
+		var hedgeBG:FlxSprite = new FlxSprite(-750,110).loadGraphic(Paths.image('menu/HedgeBG','clown'));
+		hedgeBG.setGraphicSize(Std.int(hedgeBG.width * 0.65));
+		add(hedgeBG);
+		var foreground:FlxSprite = new FlxSprite(-750,110).loadGraphic(Paths.image('menu/Transforeground','clown'));
+		foreground.setGraphicSize(Std.int(foreground.width * 0.65));
+		add(foreground);
+		slider = new FlxBackdrop(Paths.image('menu/MenuSlider','clown'),1,0,true,false);
+		slider.velocity.set(-14,0);
+		slider.x = -20;
+		slider.y = 209;
+		slider.setGraphicSize(Std.int(slider.width * 0.65));
+		add(slider);
 
-		camFollow = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
+		// figure out who the fuck do I show lol
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		if (amongus)
-			magenta = new FlxSprite(-80).loadGraphic(Paths.image('amogPink','clown'));
-		else
-			magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuBGPink','clown'));
-		magenta.scrollFactor.x = 0;
-		magenta.scrollFactor.y = 0.18;
-		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
-		magenta.updateHitbox();
-		magenta.screenCenter();
-		magenta.visible = false;
-		bg.y + 50;
-		magenta.antialiasing = true;
-		add(magenta);
-		// magenta.scrollFactor.set();
+		var random = FlxG.random.float(0,10000);
+		show = 'bf';
+		if (random >= 6000 && random <= 9998)
+			show = 'tricky';
+		else if (random > 9800)
+			show = 'sus';
 
-		menuItems = new FlxTypedGroup<FlxSprite>();
-		add(menuItems);
+		trace('random ' + random + ' im showin ' + show);
 
-		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
+		shower = new FlxSprite(200,280);
 
-		for (i in 0...optionShit.length)
+		switch(show)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
-			menuItem.frames = tex;
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
-			menuItem.animation.play('idle');
-			menuItem.ID = i;
-			menuItem.screenCenter(X);
-			menuItems.add(menuItem);
-			menuItem.scrollFactor.set();
-			menuItem.antialiasing = true;
+			case 'bf':
+				shower.frames = Paths.getSparrowAtlas("menu/MenuBF/MenuBF","clown");
+				shower.animation.addByPrefix('idle','BF idle menu');
+				shower.flipX = true;
+			case 'tricky':
+				shower.frames = Paths.getSparrowAtlas("menu/MenuTricky/MenuTricky","clown");
+				shower.animation.addByPrefix('idle','menutricky');
+				shower.y -= 155;
+			case 'sus':
+				shower.frames = Paths.getSparrowAtlas("menu/Sus/Menu_ALLSUS","clown");
+				shower.animation.addByPrefix('idle','AmongUsIDLE');
+				shower.animation.addByPrefix('death','AMONG DEATH');
+				shower.animation.addByPrefix('no','AmongUs NuhUh');
 		}
+		
 
-		FlxG.camera.follow(camFollow, null, 0.02);
+		shower.setGraphicSize(Std.int(shower.width * 0.76));
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + " FNF - " + kadeEngineVer + " Kade Engine", 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
+		shower.animation.play('idle');
 
-		// NG.core.calls.event.logEvent('swag').send();
+		add(shower);
 
-		if (FlxG.save.data.dfjk)
-			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
-		else
-			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
+		var bgCover:FlxSprite = new FlxSprite(-10,-445).loadGraphic(Paths.image('menu/BGCover','clown'));
+		add(bgCover);
 
-		changeItem();
+		var hedgeCover:FlxSprite = new FlxSprite(-750,-414).loadGraphic(Paths.image('menu/Hedgecover','clown'));
+		hedgeCover.setGraphicSize(Std.int(hedgeCover.width * 0.65));
+		add(hedgeCover);
+
+		for (i in listOfButtons)
+			{
+				// just general compensation since pasc made this on 1920x1080 and we're on 1280x720
+				i.spriteOne.setGraphicSize(Std.int(i.spriteOne.width * 0.7));
+				i.spriteTwo.setGraphicSize(Std.int(i.spriteTwo.width * 0.7));
+				add(i);
+				add(i.spriteOne);
+				add(i.spriteTwo);
+			}
+	
+
+		var redLines:FlxSprite = new FlxSprite(-749,98).loadGraphic(Paths.image("menu/MenuRedLines","clown"));
+		redLines.setGraphicSize(Std.int(redLines.width * 0.7));
+		add(redLines);
+
+		var logo:FlxSprite = new FlxSprite(75,-15).loadGraphic(Paths.image("menu/Mainlogo","clown"));
+		add(logo);
+
+		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/Menu Shade","clown"));
+		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
+		add(menuShade);
+
+		var credits:FlxSprite = new FlxSprite(-340,585).loadGraphic(Paths.image("menu/Credits","clown"));
+		credits.setGraphicSize(Std.int(credits.width * 0.65));
+		add(credits);
+
+
+
+		add(trans);
+		trans.alpha = 0;
+
+		listOfButtons[0].highlight();
 
 		super.create();
 	}
 
-	var selectedSomethin:Bool = false;
+	public static function goToFreeplay()
+	{
+		FlxG.switchState(new FreeplayState());
+	}
+
+	public static function playStory()
+	{
+		PlayState.storyPlaylist = ['Improbable Outset', 'Madness', 'Hellclown'];
+		PlayState.isStoryMode = true;
+
+		var diffic = "";
+
+		switch (curDifficulty)
+		{
+			case 0:
+				diffic = '-easy';
+			case 2:
+				diffic = '-hard';
+		}
+
+		PlayState.storyDifficulty = curDifficulty;
+
+		PlayState.SONG = Song.loadFromJson('improbable-outset' + diffic, 'improbable-outset');
+		PlayState.storyWeek = 7;
+		PlayState.campaignScore = 0;
+
+		FlxG.sound.music.volume = 1;
+
+		FlxG.sound.music.fadeOut();
+
+		new FlxTimer().start(0.4, function(tmr:FlxTimer)
+			{
+
+					trans.animation.play("Close");
+					trans.alpha = 1;
+					var snd = new FlxSound().loadEmbedded(Paths.sound('swipe','clown'));
+					snd.play();
+
+					if (trans.animation.frameIndex == 18)
+					{
+						var snd = new FlxSound().loadEmbedded(Paths.sound('clink','clown'));
+						snd.play();
+						trans.animation.pause();
+						LoadingState.loadAndSwitchState(new PlayState(), true);
+					}
+					else
+						tmr.reset(0.1);
+			});
+
+	}
+	
+	var selectedSmth = false;
+	var selectedIndex = 0;
+	var selectingDiff = false;
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.8)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-		}
-
-		if (!selectedSomethin)
-		{
-			if (controls.UP_P)
-			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-				changeItem(-1);
-			}
-
-			if (controls.DOWN_P)
-			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-				changeItem(1);
-			}
-
-			if (controls.BACK)
-			{
-				FlxG.switchState(new TitleState());
-			}
-
-			if (controls.ACCEPT)
-			{
-				if (optionShit[curSelected] == 'donate')
-				{
-					#if linux
-					Sys.command('/usr/bin/xdg-open', ["https://ninja-muffin24.itch.io/funkin", "&"]);
-					#else
-					FlxG.openURL('https://ninja-muffin24.itch.io/funkin');
-					#end
-				}
-				else
-				{
-					selectedSomethin = true;
-					FlxG.sound.play(Paths.sound('confirmMenu'));
-
-					FlxFlicker.flicker(magenta, 1.1, 0.15, false);
-
-					menuItems.forEach(function(spr:FlxSprite)
-					{
-						if (curSelected != spr.ID)
-						{
-							FlxTween.tween(spr, {alpha: 0}, 1.3, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
-						}
-						else
-						{
-							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-							{
-								var daChoice:String = optionShit[curSelected];
-
-								switch (daChoice)
-								{
-									case 'story mode':
-										FlxG.switchState(new StoryMenuState());
-										trace("Story Menu Selected");
-									case 'freeplay':
-										FlxG.switchState(new FreeplayState());
-
-										trace("Freeplay Menu Selected");
-
-									case 'options':
-										FlxG.switchState(new OptionsMenu());
-								}
-							});
-						}
-					});
-				}
-			}
-		}
-
 		super.update(elapsed);
 
-		menuItems.forEach(function(spr:FlxSprite)
+		if (FlxG.keys.justPressed.RIGHT)
 		{
-			spr.screenCenter(X);
-		});
+			if (selectedIndex + 1 < listOfButtons.length)
+			{
+				listOfButtons[selectedIndex].unHighlight();
+				listOfButtons[selectedIndex + 1].highlight();
+				selectedIndex++;
+				trace('selected ' + selectedIndex);
+			}
+			else
+				trace('CANT select ' + selectedIndex);
+		}
+		if (FlxG.keys.justPressed.LEFT)
+		{
+			if (selectedIndex > 0)
+			{
+				listOfButtons[selectedIndex].unHighlight();
+				listOfButtons[selectedIndex - 1].highlight();
+				selectedIndex--;
+				trace('selected ' + selectedIndex);
+			}
+			else
+				trace('CANT select ' + selectedIndex);
+		}
+		
+
+		if (FlxG.keys.justPressed.ENTER && !selectedSmth)
+		{
+			selectedSmth = true;
+			if (!selectingDiff)
+			{
+				listOfButtons[selectedIndex].select();
+			}
+		}
 	}
 
-	function changeItem(huh:Int = 0)
+	override function beatHit() 
 	{
-		curSelected += huh;
-
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-
-		menuItems.forEach(function(spr:FlxSprite)
-		{
-			spr.animation.play('idle');
-
-			if (spr.ID == curSelected)
-			{
-				spr.animation.play('selected');
-				camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y);
-			}
-
-			spr.updateHitbox();
-		});
+		shower.animation.play('idle');
+		super.beatHit();
 	}
 }
