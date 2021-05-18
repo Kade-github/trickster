@@ -22,7 +22,7 @@ class MainMenuState extends MusicBeatState
 	public var listOfButtons:Array<TrickyButton> = 
 	[
 	new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory),
-	new TrickyButton(995, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay)
+	new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay)
 	];
 	var listOfDiff:Array<String> = ['easy','medium','hard'];
 
@@ -52,6 +52,8 @@ class MainMenuState extends MusicBeatState
 		slider.y = 209;
 		slider.setGraphicSize(Std.int(slider.width * 0.65));
 		add(slider);
+
+		transOut = null;
 
 		// figure out who the fuck do I show lol
 
@@ -159,27 +161,33 @@ class MainMenuState extends MusicBeatState
 		PlayState.storyWeek = 7;
 		PlayState.campaignScore = 0;
 
-		FlxG.sound.music.volume = 1;
-
 		FlxG.sound.music.fadeOut();
 
-		new FlxTimer().start(0.4, function(tmr:FlxTimer)
+		trans.animation.play("Close");
+		trans.alpha = 1;
+		var snd = new FlxSound().loadEmbedded(Paths.sound('swipe','clown'));
+		snd.play();
+
+		var once = false;
+
+		new FlxTimer().start(0.01, function(tmr:FlxTimer)
 			{
 
-					trans.animation.play("Close");
-					trans.alpha = 1;
-					var snd = new FlxSound().loadEmbedded(Paths.sound('swipe','clown'));
-					snd.play();
 
-					if (trans.animation.frameIndex == 18)
+					if (trans.animation.frameIndex == 10 && !once)
 					{
+						once = true;
+						FlxG.sound.music.volume = 1;
 						var snd = new FlxSound().loadEmbedded(Paths.sound('clink','clown'));
 						snd.play();
+					}
+					if (trans.animation.frameIndex == 18)
+					{
 						trans.animation.pause();
 						LoadingState.loadAndSwitchState(new PlayState(), true);
 					}
 					else
-						tmr.reset(0.1);
+						tmr.reset(0.01);
 			});
 
 	}
