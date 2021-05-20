@@ -1,0 +1,195 @@
+{
+	"frames": {
+		"EX Tricky DOWN.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 4096,
+				"h": 2048
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4096,
+				"h": 2048
+			},
+			"sourceSize": {
+				"w": 4096,
+				"h": 2048
+			}
+		},
+		"EX Tricky Idle.png": {
+			"frame": {
+				"x": 4099,
+				"y": 1,
+				"w": 4096,
+				"h": 2048
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4096,
+				"h": 2048
+			},
+			"sourceSize": {
+				"w": 4096,
+				"h": 2048
+			}
+		},
+		"EX Tricky LEFT.png": {
+			"frame": {
+				"x": 1,
+				"y": 2051,
+				"w": 4096,
+				"h": 2048
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4096,
+				"h": 2048
+			},
+			"sourceSize": {
+				"w": 4096,
+				"h": 2048
+			}
+		},
+		"EX Tricky RIGHT.png": {
+			"frame": {
+				"x": 4099,
+				"y": 2051,
+				"w": 4096,
+				"h": 2048
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4096,
+				"h": 2048
+			},
+			"sourceSize": {
+				"w": 4096,
+				"h": 2048
+			}
+		},
+		"EX Tricky UP.png": {
+			"frame": {
+				"x": 1,
+				"y": 4101,
+				"w": 4096,
+				"h": 2048
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 4096,
+				"h": 2048
+			},
+			"sourceSize": {
+				"w": 4096,
+				"h": 2048
+			}
+		},
+		"HANK pose.png": {
+			"frame": {
+				"x": 4099,
+				"y": 4101,
+				"w": 3135,
+				"h": 2748
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 3135,
+				"h": 2748
+			},
+			"sourceSize": {
+				"w": 3135,
+				"h": 2748
+			}
+		},
+		"SPAWN animation.png": {
+			"frame": {
+				"x": 8197,
+				"y": 1,
+				"w": 8192,
+				"h": 4096
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 8192,
+				"h": 4096
+			},
+			"sourceSize": {
+				"w": 8192,
+				"h": 4096
+			}
+		},
+		"Spawnhole BACK.png": {
+			"frame": {
+				"x": 8197,
+				"y": 4099,
+				"w": 1024,
+				"h": 128
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1024,
+				"h": 128
+			},
+			"sourceSize": {
+				"w": 1024,
+				"h": 128
+			}
+		},
+		"Spawnhole COVER.png": {
+			"frame": {
+				"x": 9223,
+				"y": 4099,
+				"w": 1024,
+				"h": 256
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1024,
+				"h": 256
+			},
+			"sourceSize": {
+				"w": 1024,
+				"h": 256
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 16390,
+			"h": 6850
+		},
+		"scale": "1"
+	}
+}

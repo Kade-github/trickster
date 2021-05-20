@@ -295,10 +295,9 @@ class TitleState extends MusicBeatState
 
 			FlxG.sound.music.fadeOut(1,0);
 
-			new FlxTimer().start(0.2, function(tmr:FlxTimer)
+			new FlxTimer().start(1.1, function(tmr:FlxTimer)
 			{
 				FlxG.sound.playMusic(Paths.music("Menu-Theme","clown"));
-				FlxG.sound.music.volume = 0.6;
 				Conductor.changeBPM(165);
 				FlxG.switchState(new MainMenuState());
 				

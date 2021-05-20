@@ -1,6 +1,5 @@
 package;
 
-import FreeplayState.SongMetadata;
 import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.addons.display.FlxBackdrop;
@@ -21,7 +20,7 @@ class MainMenuState extends MusicBeatState
 
 	public var listOfButtons:Array<TrickyButton> = 
 	[
-	new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory),
+	new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory,'clown'),
 	new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay)
 	];
 	var listOfDiff:Array<String> = ['easy','medium','hard'];
@@ -52,8 +51,6 @@ class MainMenuState extends MusicBeatState
 		slider.y = 209;
 		slider.setGraphicSize(Std.int(slider.width * 0.65));
 		add(slider);
-
-		transOut = null;
 
 		// figure out who the fuck do I show lol
 
@@ -137,6 +134,7 @@ class MainMenuState extends MusicBeatState
 
 	public static function goToFreeplay()
 	{
+		FreeplayState.diff = curDifficulty;
 		FlxG.switchState(new FreeplayState());
 	}
 
@@ -231,6 +229,8 @@ class MainMenuState extends MusicBeatState
 			selectedSmth = true;
 			if (!selectingDiff)
 			{
+				if (listOfButtons[selectedIndex].pognt == 'clown')
+					transOut = null;
 				listOfButtons[selectedIndex].select();
 			}
 		}

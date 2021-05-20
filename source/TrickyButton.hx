@@ -11,16 +11,19 @@ class TrickyButton extends FlxSprite
 {
     public var spriteOne:FlxSprite;
     public var spriteTwo:FlxSprite;
+    public var pognt:String;
 
     var selected:Bool = false;
 
     var func:Void->Void;
 
-    public function new(x:Int,y:Int,pngOne:String,pngTwo:String, func:Void->Void)
+    public function new(x:Int,y:Int,pngOne:String,pngTwo:String, func:Void->Void, pogn:String = 'button')
     {
         super(-100,-100);
 
         this.func = func;
+
+        pognt = pogn;
 
         spriteOne = new FlxSprite(x,y).loadGraphic(Paths.image(pngOne,"clown"));
         spriteTwo = new FlxSprite(x,y).loadGraphic(Paths.image(pngTwo,"clown"));
@@ -49,7 +52,7 @@ class TrickyButton extends FlxSprite
     {
         var sound:FlxSound = new FlxSound().loadEmbedded(Paths.sound("confirm","clown"));
         sound.play();
-        new FlxTimer().start(2, function(tmr:FlxTimer)
+        new FlxTimer().start(0.2, function(tmr:FlxTimer)
 		{
             func();
         });
