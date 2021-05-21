@@ -15,18 +15,38 @@ class MainMenuState extends MusicBeatState
 	var shower:FlxSprite;
 	public static var curDifficulty:Int = 1;
 	public static var trans:FlxSprite;
+	public static var diffSelectedIndex = 1;
 
 	var clownButton:TrickyButton;
 
+	public static var instance:MainMenuState;
+
 	public var listOfButtons:Array<TrickyButton> = 
 	[
-	new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory,'clown'),
-	new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay)
+		new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory,'clown'),
+		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay),
+		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay),
+		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect),
+		new TrickyButton(975, 460, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions)
 	];
+
+	public var listOfDiffButtons:Array<TrickyButton> = 
+	[
+		new TrickyButton(635,415,'menu/EASY button', 'menu/EASY button confirm', setDiff,'easy'),
+		new TrickyButton(787,415,'menu/MEDIUM button', 'menu/MEDIUM Button confirm', setDiff),
+		new TrickyButton(1015,415,'menu/HARD Button', 'menu/HARD button confirm', setDiff,'hard')
+	];
+
 	var listOfDiff:Array<String> = ['easy','medium','hard'];
 
 	override function create()
 	{
+		FlxG.sound.playMusic(Paths.music("Menu-Theme","clown"), 0);
+		Conductor.changeBPM(165);
+		FlxG.sound.music.fadeIn(4, 0, 0.7);
+
+		instance = this;
+
 		trans = new FlxSprite(-300,-760);
 		trans.frames = Paths.getSparrowAtlas('Jaws','clown');
 		trans.antialiasing = true;
@@ -105,6 +125,20 @@ class MainMenuState extends MusicBeatState
 				add(i.spriteOne);
 				add(i.spriteTwo);
 			}
+
+		var liners:FlxSprite = new FlxSprite(600, 390).loadGraphic(Paths.image("menu/Liners","clown"));
+		liners.setGraphicSize(Std.int(liners.width * 0.7));
+		add(liners);
+
+		for (i in listOfDiffButtons)
+			{
+				// just general compensation since pasc made this on 1920x1080 and we're on 1280x720
+				i.spriteOne.setGraphicSize(Std.int(i.spriteOne.width * 0.7));
+				i.spriteTwo.setGraphicSize(Std.int(i.spriteTwo.width * 0.7));
+				add(i);
+				add(i.spriteOne);
+				add(i.spriteTwo);
+			}
 	
 
 		var redLines:FlxSprite = new FlxSprite(-749,98).loadGraphic(Paths.image("menu/MenuRedLines","clown"));
@@ -123,19 +157,38 @@ class MainMenuState extends MusicBeatState
 		add(credits);
 
 
-
 		add(trans);
 		trans.alpha = 0;
 
 		listOfButtons[0].highlight();
+		listOfDiffButtons[diffSelectedIndex].highlight();
 
 		super.create();
+	}
+
+	public static function setDiff()
+	{
+		curDifficulty = diffSelectedIndex - 1;
+		selectingDiff = false;
+		instance.listOfButtons[0].highlight();
+		selectedIndex = 0;
 	}
 
 	public static function goToFreeplay()
 	{
 		FreeplayState.diff = curDifficulty;
 		FlxG.switchState(new FreeplayState());
+	}
+
+	public static function goToOptions()
+	{
+		FlxG.switchState(new OptionsMenu());
+	}
+
+	public static function startDiffSelect()
+	{
+		selectingDiff = true;
+		instance.listOfButtons[selectedIndex].unHighlight();
 	}
 
 	public static function playStory()
@@ -191,48 +244,91 @@ class MainMenuState extends MusicBeatState
 	}
 	
 	var selectedSmth = false;
-	var selectedIndex = 0;
-	var selectingDiff = false;
+	public static var selectedIndex = 0;
+	public static var selectingDiff = false;
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.RIGHT)
+		if (!selectingDiff)
 		{
-			if (selectedIndex + 1 < listOfButtons.length)
+			if (FlxG.keys.justPressed.RIGHT)
 			{
-				listOfButtons[selectedIndex].unHighlight();
-				listOfButtons[selectedIndex + 1].highlight();
-				selectedIndex++;
-				trace('selected ' + selectedIndex);
+				if (selectedIndex + 1 < listOfButtons.length)
+				{
+					listOfButtons[selectedIndex].unHighlight();
+					listOfButtons[selectedIndex + 1].highlight();
+					selectedIndex++;
+					trace('selected ' + selectedIndex);
+				}
+				else
+					trace('CANT select ' + selectedIndex);
 			}
-			else
-				trace('CANT select ' + selectedIndex);
-		}
-		if (FlxG.keys.justPressed.LEFT)
-		{
-			if (selectedIndex > 0)
+			if (FlxG.keys.justPressed.LEFT)
 			{
-				listOfButtons[selectedIndex].unHighlight();
-				listOfButtons[selectedIndex - 1].highlight();
-				selectedIndex--;
-				trace('selected ' + selectedIndex);
+				if (selectedIndex > 0)
+				{
+					listOfButtons[selectedIndex].unHighlight();
+					listOfButtons[selectedIndex - 1].highlight();
+					selectedIndex--;
+					trace('selected ' + selectedIndex);
+				}
+				else
+					trace('CANT select ' + selectedIndex);
 			}
-			else
-				trace('CANT select ' + selectedIndex);
-		}
-		
+			
 
-		if (FlxG.keys.justPressed.ENTER && !selectedSmth)
-		{
-			selectedSmth = true;
-			if (!selectingDiff)
+			if (FlxG.keys.justPressed.ENTER && !selectedSmth)
 			{
+				selectedSmth = true;
 				if (listOfButtons[selectedIndex].pognt == 'clown')
 					transOut = null;
 				listOfButtons[selectedIndex].select();
 			}
+		}
+		else
+		{
+			if (FlxG.keys.justPressed.ESCAPE)
+			{
+				selectingDiff = false;
+				listOfButtons[0].highlight();
+				curDifficulty = diffSelectedIndex - 1;
+				selectedIndex = 0;
+				selectedSmth = false;
+			}
+
+			if (FlxG.keys.justPressed.RIGHT)
+				{
+					if (diffSelectedIndex + 1 < listOfDiffButtons.length)
+					{
+						listOfDiffButtons[diffSelectedIndex].unHighlight();
+						listOfDiffButtons[diffSelectedIndex + 1].highlight();
+						diffSelectedIndex++;
+						trace('selected ' + diffSelectedIndex);
+					}
+					else
+						trace('CANT select ' + diffSelectedIndex);
+				}
+				if (FlxG.keys.justPressed.LEFT)
+				{
+					if (diffSelectedIndex > 0)
+					{
+						listOfDiffButtons[diffSelectedIndex].unHighlight();
+						listOfDiffButtons[diffSelectedIndex - 1].highlight();
+						diffSelectedIndex--;
+						trace('selected ' + diffSelectedIndex);
+					}
+					else
+						trace('CANT select ' + diffSelectedIndex);
+				}
+				
+	
+				if (FlxG.keys.justPressed.ENTER)
+				{
+					selectedSmth = false;
+					listOfDiffButtons[diffSelectedIndex].select();
+				}
 		}
 	}
 

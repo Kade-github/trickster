@@ -565,11 +565,15 @@ class PlayState extends MusicBeatState
 			// bg.updateHitbox();
 			bg.antialiasing = true;
 			bg.scrollFactor.set(0.9, 0.9);
+			var stageFront:FlxSprite;
 			if (SONG.song.toLowerCase() != 'madness')
+			{
 				add(bg);
+				stageFront = new FlxSprite(-1200, 300).loadGraphic(Paths.image('island_but_dumb','clown'));
+			}
+			else
+				stageFront = new FlxSprite(-1200, 300).loadGraphic(Paths.image('island_but_rocks_float','clown'));
 
-			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('tricky_floor','clown'));
-			stageFront.frames = Paths.getSparrowAtlas('tricky_floor','clown');
 			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
 			stageFront.antialiasing = true;
 			stageFront.scrollFactor.set(0.9, 0.9);
@@ -584,7 +588,7 @@ class PlayState extends MusicBeatState
 			MAINLIGHT.antialiasing = true;
 			MAINLIGHT.scrollFactor.set(1.2, 1.2);
 		}
-		else if (SONG.song.toLowerCase() == 'testsong' || SONG.song.toLowerCase() == 'hellclown')
+		else if (SONG.song.toLowerCase() == 'hellclown')
 		{
 			//trace("line 538");
 			defaultCamZoom = 0.35;
@@ -598,7 +602,34 @@ class PlayState extends MusicBeatState
 
 			tstatic.alpha = 0;
 
-			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('hellclwn/bigFloor','clown'));
+			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('hellclwn/island_but_red','clown'));
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
+			stageFront.antialiasing = true;
+			stageFront.scrollFactor.set(0.9, 0.9);
+			stageFront.active = false;
+			add(stageFront);
+		}
+		else if (SONG.song.toLowerCase() == 'expurgation')
+		{
+			//trace("line 538");
+			defaultCamZoom = 0.35;
+			curStage = 'auditorHell';
+
+			tstatic.antialiasing = true;
+			tstatic.scrollFactor.set(0,0);
+			tstatic.setGraphicSize(Std.int(tstatic.width * 8.3));
+			tstatic.animation.add('static', [0, 1, 2], 24, true);
+			tstatic.animation.play('static');
+
+			tstatic.alpha = 0;
+
+			var bg:FlxSprite = new FlxSprite(-10, -10).loadGraphic(Paths.image('fourth/bg','clown'));
+			bg.antialiasing = true;
+			bg.scrollFactor.set(0.9, 0.9);
+			bg.active = false;
+			add(bg);
+
+			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('fourth/daBackground','clown'));
 			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
 			stageFront.antialiasing = true;
 			stageFront.scrollFactor.set(0.9, 0.9);
@@ -646,6 +677,10 @@ class PlayState extends MusicBeatState
 				gfVersion = 'gf-pixel';
 			case 'schoolEvil':
 				gfVersion = 'gf-pixel';
+			case 'nevadaSpook':
+				gfVersion = 'gf-hell';
+			case 'auditorHell':
+				gfVersion = 'gf-tied';
 		}
 
 		gf = new Character(400, 130, gfVersion);

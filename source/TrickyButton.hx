@@ -1,8 +1,6 @@
 
 import flixel.util.FlxTimer;
 import flixel.system.FlxSound;
-import flixel.FlxG;
-import flixel.FlxState;
 import flixel.FlxSprite;
 
 // this class sucks, I hate myself
