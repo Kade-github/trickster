@@ -216,7 +216,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Down', 24);
 
-				addOffset("idle",475, -425);
+				addOffset("idle",475, -430);
 
 				y -= 2000;
 				x -= 1400;
@@ -229,7 +229,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Up', 24);
 
-				addOffset("idle", 575, -435);
+				addOffset("idle", 575, -450);
 
 				y -= 2000;
 				x -= 1400;
@@ -242,7 +242,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Right', 24);
 
-				addOffset("idle",485, -265);
+				addOffset("idle",485, -285);
 
 				y -= 2000;
 				x -= 1400;
