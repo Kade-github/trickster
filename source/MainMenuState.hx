@@ -13,9 +13,9 @@ class MainMenuState extends MusicBeatState
 	var slider:FlxBackdrop;
 	var show:String = "";
 	var shower:FlxSprite;
-	public static var curDifficulty:Int = 1;
+	public static var curDifficulty:Int = 2;
 	public static var trans:FlxSprite;
-	public static var diffSelectedIndex = 1;
+	public static var diffSelectedIndex = 2;
 
 	var clownButton:TrickyButton;
 
@@ -95,6 +95,7 @@ class MainMenuState extends MusicBeatState
 				shower.frames = Paths.getSparrowAtlas("menu/MenuTricky/MenuTricky","clown");
 				shower.animation.addByPrefix('idle','menutricky');
 				shower.y -= 155;
+				shower.x -= 120;
 			case 'sus':
 				shower.frames = Paths.getSparrowAtlas("menu/Sus/Menu_ALLSUS","clown");
 				shower.animation.addByPrefix('idle','AmongUsIDLE');
@@ -160,7 +161,7 @@ class MainMenuState extends MusicBeatState
 		add(trans);
 		trans.alpha = 0;
 
-		listOfButtons[0].highlight();
+		listOfButtons[selectedIndex].highlight();
 		listOfDiffButtons[diffSelectedIndex].highlight();
 
 		super.create();
@@ -168,7 +169,7 @@ class MainMenuState extends MusicBeatState
 
 	public static function setDiff()
 	{
-		curDifficulty = diffSelectedIndex - 1;
+		curDifficulty = diffSelectedIndex;
 		selectingDiff = false;
 		instance.listOfButtons[0].highlight();
 		selectedIndex = 0;
@@ -176,7 +177,9 @@ class MainMenuState extends MusicBeatState
 
 	public static function goToFreeplay()
 	{
+		curDifficulty = diffSelectedIndex;
 		FreeplayState.diff = curDifficulty;
+		trace(curDifficulty);
 		FlxG.switchState(new FreeplayState());
 	}
 
@@ -223,8 +226,6 @@ class MainMenuState extends MusicBeatState
 
 		new FlxTimer().start(0.01, function(tmr:FlxTimer)
 			{
-
-
 					if (trans.animation.frameIndex == 10 && !once)
 					{
 						once = true;
@@ -293,7 +294,7 @@ class MainMenuState extends MusicBeatState
 			{
 				selectingDiff = false;
 				listOfButtons[0].highlight();
-				curDifficulty = diffSelectedIndex - 1;
+				curDifficulty = diffSelectedIndex;
 				selectedIndex = 0;
 				selectedSmth = false;
 			}
