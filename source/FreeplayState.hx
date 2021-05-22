@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.transition.FlxTransitionableState;
 import AlphabetTricky.TrickyAlphaCharacter;
 import flixel.system.FlxSound;
 import flash.text.TextField;
@@ -26,10 +27,15 @@ class FreeplayState extends MusicBeatState
 
 	override function create() {
 
+		trace(diff);
+
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+
 		songs.push(new TrickyButton(45,120,'menu/freeplay/Improbable Outset Button','menu/freeplay/Improbable Outset Confirm',selectSong,'improbable-outset'));
 		songs.push(new TrickyButton(80,240,'menu/freeplay/Madness Button','menu/freeplay/Madness Confirm',selectSong,'madness'));
 		songs.push(new TrickyButton(80,340,'menu/freeplay/Hellclown Button','menu/freeplay/Hellclown Confirm',selectSong,'hellclown'));
-		songs.push(new TrickyButton(175,480,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation CONFIRM',selectSong,'expurgation'));
+		songs.push(new TrickyButton(175,700,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation CONFIRM',selectSong,'expurgation'));
 
 		var bg:FlxSprite = new FlxSprite(-10,-10).loadGraphic(Paths.image('menu/freeplay/RedBG','clown'));
 		add(bg);
@@ -94,7 +100,7 @@ class FreeplayState extends MusicBeatState
 		{
 			super.update(elapsed);
 	
-			if (FlxG.keys.justPressed.BACKSPACE && !selectedSmth)
+			if (FlxG.keys.justPressed.ESCAPE && !selectedSmth)
 			{
 				selectedSmth = true;
 				FlxG.switchState(new MainMenuState());

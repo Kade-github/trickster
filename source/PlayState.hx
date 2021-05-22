@@ -154,6 +154,8 @@ class PlayState extends MusicBeatState
 
 	public static var daPixelZoom:Float = 6;
 
+	public var hank:FlxSprite;
+
 	public static var theFunne:Bool = true;
 	var funneEffect:FlxSprite;
 	var inCutscene:Bool = false;
@@ -569,10 +571,10 @@ class PlayState extends MusicBeatState
 			if (SONG.song.toLowerCase() != 'madness')
 			{
 				add(bg);
-				stageFront = new FlxSprite(-1200, 300).loadGraphic(Paths.image('island_but_dumb','clown'));
+				stageFront = new FlxSprite(-1100, -460).loadGraphic(Paths.image('island_but_dumb','clown'));
 			}
 			else
-				stageFront = new FlxSprite(-1200, 300).loadGraphic(Paths.image('island_but_rocks_float','clown'));
+				stageFront = new FlxSprite(-1100, -460).loadGraphic(Paths.image('island_but_rocks_float','clown'));
 
 			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
 			stageFront.antialiasing = true;
@@ -602,17 +604,25 @@ class PlayState extends MusicBeatState
 
 			tstatic.alpha = 0;
 
-			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('hellclwn/island_but_red','clown'));
-			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
+			var stageFront:FlxSprite = new FlxSprite(-2000, -400).loadGraphic(Paths.image('hellclwn/island_but_red','clown'));
+			stageFront.setGraphicSize(Std.int(stageFront.width * 2.6));
 			stageFront.antialiasing = true;
 			stageFront.scrollFactor.set(0.9, 0.9);
 			stageFront.active = false;
 			add(stageFront);
+			
+			hank = new FlxSprite(60,-170);
+			hank.frames = Paths.getSparrowAtlas('hellclwn/Hank','clown');
+			hank.animation.addByPrefix('dance','Hank',24);
+			hank.animation.play('dance');
+			hank.setGraphicSize(Std.int(hank.width * 1.55));
+
+			add(hank);
 		}
 		else if (SONG.song.toLowerCase() == 'expurgation')
 		{
 			//trace("line 538");
-			defaultCamZoom = 0.35;
+			defaultCamZoom = 0.1;
 			curStage = 'auditorHell';
 
 			tstatic.antialiasing = true;
@@ -629,8 +639,8 @@ class PlayState extends MusicBeatState
 			bg.active = false;
 			add(bg);
 
-			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('fourth/daBackground','clown'));
-			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
+			var stageFront:FlxSprite = new FlxSprite(-1500, 200).loadGraphic(Paths.image('fourth/daBackground','clown'));
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.7));
 			stageFront.antialiasing = true;
 			stageFront.scrollFactor.set(0.9, 0.9);
 			stageFront.active = false;
@@ -717,7 +727,7 @@ class PlayState extends MusicBeatState
 			case 'trickyMask':
 				camPos.x += 400;
 			case 'trickyH':
-				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 375);
+				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 500);
 				dad.y -= 2000;
 				dad.x -= 1400;
 				gf.x -= 380;
@@ -741,8 +751,16 @@ class PlayState extends MusicBeatState
 		}
 
 
-		
-		boyfriend = new Boyfriend(770, 450, SONG.player1);
+		var bfVersion = SONG.player1;
+
+		switch(curStage)
+		{
+			case 'nevadaSpook':
+				bfVersion = 'bf-hell';
+		}
+
+
+		boyfriend = new Boyfriend(770, 450, bfVersion);
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
@@ -996,8 +1014,14 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (curStage == "nevada")
+		if (curStage == "nevada" || curStage == "nevadaSpook")
 			add(tstatic);
+
+		if (curStage == 'nevadaSpook')
+		{
+			tstatic.setGraphicSize(Std.int(tstatic.width * 12));
+			tstatic.x += 600;
+		}
 
 		super.create();
 	}
@@ -1898,18 +1922,18 @@ class PlayState extends MusicBeatState
 		#end
 
 		var balls = notesHitArray.length-1;
-			while (balls >= 0)
-			{
-				var cock:Date = notesHitArray[balls];
-				if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
-					notesHitArray.remove(cock);
-				else
-					balls = 0;
-				balls--;
-			}
-			nps = notesHitArray.length;
-			if (nps > maxNPS)
-				maxNPS = nps;
+		while (balls >= 0)
+		{
+			var cock:Date = notesHitArray[balls];
+			if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
+				notesHitArray.remove(cock);
+			else
+				balls = 0;
+			balls--;
+		}
+		nps = notesHitArray.length;
+		if (nps > maxNPS)
+			maxNPS = nps;
 
 		if (FlxG.keys.justPressed.NINE)
 		{
@@ -2219,6 +2243,12 @@ class PlayState extends MusicBeatState
 										{
 											createSpookyText(TrickyLinesSing[FlxG.random.int(0,TrickyLinesSing.length)]);
 										}
+								case 'trickyH': // 45% chance
+									if (FlxG.random.bool(45) && !spookyRendered && !daNote.isSustainNote) // create spooky text :flushed:
+										{
+											createSpookyText(TrickyLinesSing[FlxG.random.int(0,TrickyLinesSing.length)]);
+										}
+									FlxG.camera.shake(0.02,0.2);
 							}
 		
 		
@@ -2287,6 +2317,11 @@ class PlayState extends MusicBeatState
 		tStaticSound.play();
 		spookyText = new FlxText((x == -1111111111111 ? FlxG.random.float(dad.x + 40,dad.x + 120) : x), (y == -1111111111111 ? FlxG.random.float(dad.y + 200, dad.y + 300) : y));
 		spookyText.setFormat("Impact", 128, FlxColor.RED);
+		if (curStage == 'nevedaSpook')
+		{
+			spookyText.size = 200;
+			spookyText.x += 250;
+		}
 		spookyText.bold = true;
 		spookyText.text = text;
 		add(spookyText);
@@ -3128,23 +3163,28 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, FlxSort.DESCENDING);
 		}
 
-		if (SONG.notes[Math.floor(curStep / 16)] != null)
-		{
-			if (SONG.notes[Math.floor(curStep / 16)].changeBPM)
-			{
-				Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
-				FlxG.log.add('CHANGED BPM!');
-			}
-			// else
-			// Conductor.changeBPM(SONG.bpm);
+		if (curStage == 'nevedaSpook')
+			hank.animation.play('dance');
 
-			// Dad doesnt interupt his own notes
-			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection && curBeat != lastBeatDadT)
+		if (SONG.notes[Math.floor(curStep / 16)] != null)
 			{
-				lastBeatDadT = curBeat;
-				dad.dance();
+				if (SONG.notes[Math.floor(curStep / 16)].changeBPM)
+				{
+					Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
+					FlxG.log.add('CHANGED BPM!');
+				}
+				// else
+				// Conductor.changeBPM(SONG.bpm);
+	
+				// Dad doesnt interupt his own notes
+				if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
+				{
+					trace('dance lol');
+					dad.dance();
+				}
 			}
-		}
+			
+
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
 
