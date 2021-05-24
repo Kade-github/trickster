@@ -18,3 +18,4 @@ spirit
 tricky
 trickyMask
 trickyH
+trickyEx

@@ -137,7 +137,7 @@ class TitleState extends MusicBeatState
 			// music.loadStream(Paths.music('freakyMenu'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-			FlxG.sound.playMusic(Paths.music('ChickenDance','clown'), 0);
+			FlxG.sound.playMusic(Paths.music('Tiky_Demce','clown'), 0);
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 			Conductor.changeBPM(139);
@@ -444,11 +444,13 @@ class TitleState extends MusicBeatState
 				addMoreText(curWacky[1]);
 			case 27:
 				deleteCoolText();
-				createCoolText(['tricky tricky']);
+				createCoolText(['chicken dance remix']);
 			case 28:
-				deleteCoolText();
-				createCoolText(['da drop']);
+				addMoreText('by Tsuraran');
 			case 30:
+				deleteCoolText();
+				createCoolText(['the drop']);
+			case 31:
 				addMoreText('or smth lol');
 			case 32:
 				deleteCoolText();
@@ -463,6 +465,8 @@ class TitleState extends MusicBeatState
 		if (!skippedIntro)
 		{
 			remove(ngSpr);
+			remove(actualNG);
+			remove(backupMen);
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);

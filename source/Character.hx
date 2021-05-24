@@ -712,9 +712,11 @@ class Character extends FlxSprite
 					dadVar = 6.1;
 				if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
 				{
-					trace('hold timer expired');
-					dance();
-					holdTimer = 0;
+					if (curCharacter != 'trickyHLeft' && curCharacter != 'trickyHRight' && curCharacter != 'trickyHDown' && curCharacter != 'trickyHUp')
+					{
+						dance();
+						holdTimer = 0;
+					}
 				}
 			}
 	

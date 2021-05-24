@@ -604,6 +604,14 @@ class PlayState extends MusicBeatState
 
 			tstatic.alpha = 0;
 
+
+			var bg:FlxSprite = new FlxSprite(-1000, -1000).loadGraphic(Paths.image('fourth/bg','clown'));
+			bg.antialiasing = true;
+			bg.scrollFactor.set(0.9, 0.9);
+			bg.setGraphicSize(Std.int(bg.width * 5));
+			bg.active = false;
+			add(bg);
+
 			var stageFront:FlxSprite = new FlxSprite(-2000, -400).loadGraphic(Paths.image('hellclwn/island_but_red','clown'));
 			stageFront.setGraphicSize(Std.int(stageFront.width * 2.6));
 			stageFront.antialiasing = true;
@@ -2283,10 +2291,16 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									health -= 0.075;
-									vocals.volume = 0;
-									if (theFunne && !daNote.burning)
-										noteMiss(daNote.noteData);
+									
+									if (!daNote.burning)
+									{
+										vocals.volume = 0;
+										if (!daNote.isSustainNote)
+										{
+											health -= 0.075;
+											noteMiss(daNote.noteData);
+										}
+									}
 								}		
 							daNote.active = false;
 							daNote.visible = false;
@@ -2763,7 +2777,33 @@ class PlayState extends MusicBeatState
 							if (mashViolations != 0)
 								mashViolations--;
 							scoreTxt.color = FlxColor.WHITE;
-							goodNoteHit(coolNote);
+							if (coolNote.burning)
+							{
+								health -= 0.2;
+								coolNote.wasGoodHit = true;
+								coolNote.canBeHit = false;
+								coolNote.kill();
+								notes.remove(coolNote, true);
+								coolNote.destroy();
+								playerStrums.forEach(function(spr:FlxSprite)
+								{
+									if (pressArray[spr.ID] )
+									{
+										var smoke:FlxSprite = new FlxSprite(spr.x - spr.width, spr.y - spr.height);
+										smoke.frames = Paths.getSparrowAtlas('Smoke','clown');
+										smoke.animation.addByPrefix('boom','smoke',24,false);
+										smoke.animation.play('boom');
+										smoke.setGraphicSize(Std.int(smoke.width * 0.6));
+										smoke.cameras = [camHUD];
+										add(smoke);
+										smoke.animation.finishCallback = function(name:String) {
+											remove(smoke);	
+										}
+									}
+								});
+							}
+							else
+								goodNoteHit(coolNote);
 						}
 					}
 				}

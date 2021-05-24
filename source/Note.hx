@@ -140,6 +140,9 @@ class Note extends FlxSprite
 				antialiasing = true;
 		}
 
+		if (burning)
+			setGraphicSize(Std.int(width * 0.86));
+
 		switch (noteData)
 		{
 			case 0:
@@ -217,12 +220,23 @@ class Note extends FlxSprite
 		if (mustPress)
 		{
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
-			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
-				canBeHit = true;
+			if (!burning)
+			{
+				if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
+					canBeHit = true;
+				else
+					canBeHit = false;
+			}
 			else
-				canBeHit = false;
-
+			{
+				// make burning notes a lot harder to accidently hit because they're weirdchamp!
+				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.1)
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.1))
+					canBeHit = true;
+				else
+					canBeHit = false;
+			}
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
 		}
