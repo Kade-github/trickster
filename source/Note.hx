@@ -231,8 +231,8 @@ class Note extends FlxSprite
 			else
 			{
 				// make burning notes a lot harder to accidently hit because they're weirdchamp!
-				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.1)
-					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.1))
+				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.6)
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.4)) // also they're almost impossible to hit late!
 					canBeHit = true;
 				else
 					canBeHit = false;

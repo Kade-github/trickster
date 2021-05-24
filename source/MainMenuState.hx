@@ -41,9 +41,6 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		FlxG.sound.playMusic(Paths.music("Menu-Theme","clown"), 0);
-		Conductor.changeBPM(165);
-		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		instance = this;
 
@@ -73,46 +70,109 @@ class MainMenuState extends MusicBeatState
 		add(slider);
 
 		// figure out who the fuck do I show lol
+		// also THIS IS BAD
 
 		var random = FlxG.random.float(0,10000);
 		show = 'bf';
-		if (random >= 6000 && random <= 9998)
+		if (random >= 1000 && random <= 1999)
 			show = 'tricky';
-		else if (random > 9800)
+		if (random >= 2000 && random <= 2999)
+			show = 'hank';
+		if (random >= 3000 && random <= 3999)
+			show = 'jebus';
+		if (random >= 4000 && random <= 4999)
+			show = 'hank';
+		if (random >= 2000 && random <= 2999)
+			show = 'deimos';
+		if (random >= 5000 && random <= 5999)
+			show = 'hank';
+		if (random >= 6000 && random <= 6999)
+			show = 'auditor';
+		if (random >= 7000 && random <= 7999)
+			show = 'mag';
+		if (random > 9800)
 			show = 'sus';
 
 		trace('random ' + random + ' im showin ' + show);
 
 		shower = new FlxSprite(200,280);
 
+		Conductor.changeBPM(165);
+
+
+		
 		switch(show)
 		{
 			case 'bf':
 				shower.frames = Paths.getSparrowAtlas("menu/MenuBF/MenuBF","clown");
 				shower.animation.addByPrefix('idle','BF idle menu');
 				shower.flipX = true;
+				FlxG.sound.playMusic(Paths.music("nexus_bf","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'tricky':
 				shower.frames = Paths.getSparrowAtlas("menu/MenuTricky/MenuTricky","clown");
 				shower.animation.addByPrefix('idle','menutricky');
 				shower.y -= 155;
 				shower.x -= 120;
+				FlxG.sound.playMusic(Paths.music("nexus_tricky","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'sus':
 				shower.frames = Paths.getSparrowAtlas("menu/Sus/Menu_ALLSUS","clown");
 				shower.animation.addByPrefix('idle','AmongUsIDLE');
 				shower.animation.addByPrefix('death','AMONG DEATH');
 				shower.animation.addByPrefix('no','AmongUs NuhUh');
+				FlxG.sound.playMusic(Paths.music("nexus_sussy","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.76));
+			case 'jebus':
+				shower.frames = Paths.getSparrowAtlas("menu/Jebus/Menu_jebus","clown");
+				shower.animation.addByPrefix('idle','Jebus');
+				shower.y -= 240;
+				shower.x -= 145;
+				FlxG.sound.playMusic(Paths.music("nexus_jebus","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.66));
+			case 'hank':
+				shower.frames = Paths.getSparrowAtlas("menu/Hank/Hank_Menu","clown");
+				shower.animation.addByPrefix('idle','Hank');
+				shower.y -= 240;
+				shower.x -= 180;
+				FlxG.sound.playMusic(Paths.music("nexus_hank","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.63));
+			case 'deimos':
+				shower.frames = Paths.getSparrowAtlas("menu/Deimos/Deimos_Menu","clown");
+				shower.animation.addByPrefix('idle','Deimos');
+				FlxG.sound.playMusic(Paths.music("nexus_other","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.68));
+				shower.y -= 65;
+				shower.x -= 145;
+				shower.angle = -8;
+			case 'auditor':
+				shower.frames = Paths.getSparrowAtlas("menu/Auditor/Auditor","clown");
+				shower.animation.addByPrefix('idle','Auditor');
+				FlxG.sound.playMusic(Paths.music("nexus_auditor","clown"), 0);
+				shower.y -= 300;
+				shower.x -= 200;
+				shower.setGraphicSize(Std.int(shower.width * 0.76));
+			case 'mag':
+				shower.frames = Paths.getSparrowAtlas("menu/Torture/Mag_Agent_Torture_Menu","clown");
+				shower.animation.addByPrefix('idle','Mag Agent Torture');
+				FlxG.sound.playMusic(Paths.music("nexus_other","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.66));
+				shower.y -= 310;
+				shower.x -= 500;
 		}
 		
-
-		shower.setGraphicSize(Std.int(shower.width * 0.76));
+		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		shower.animation.play('idle');
 
+	
+
 		add(shower);
 
-		var bgCover:FlxSprite = new FlxSprite(-10,-445).loadGraphic(Paths.image('menu/BGCover','clown'));
+		var bgCover:FlxSprite = new FlxSprite(-455,-327).loadGraphic(Paths.image('menu/BGCover','clown'));
+		bgCover.setGraphicSize(Std.int(bgCover.width * 0.7));
 		add(bgCover);
-
+		
 		var hedgeCover:FlxSprite = new FlxSprite(-750,-414).loadGraphic(Paths.image('menu/Hedgecover','clown'));
 		hedgeCover.setGraphicSize(Std.int(hedgeCover.width * 0.65));
 		add(hedgeCover);
@@ -264,7 +324,12 @@ class MainMenuState extends MusicBeatState
 					trace('selected ' + selectedIndex);
 				}
 				else
-					trace('CANT select ' + selectedIndex);
+				{
+					listOfButtons[selectedIndex].unHighlight();
+					selectedIndex = 0;
+					listOfButtons[selectedIndex].highlight();
+					trace('selected ' + selectedIndex);
+				}
 			}
 			if (FlxG.keys.justPressed.LEFT)
 			{
@@ -276,7 +341,12 @@ class MainMenuState extends MusicBeatState
 					trace('selected ' + selectedIndex);
 				}
 				else
-					trace('CANT select ' + selectedIndex);
+				{
+					listOfButtons[selectedIndex].unHighlight();
+					listOfButtons[listOfButtons.length - 1].highlight();
+					selectedIndex = listOfButtons.length - 1;
+					trace('selected ' + selectedIndex);
+				}
 			}
 			
 

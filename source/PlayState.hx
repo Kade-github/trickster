@@ -2295,9 +2295,6 @@ class PlayState extends MusicBeatState
 									
 									if (!daNote.burning)
 									{
-										// this if conditon makes me want to die
-										if (daNote.isSustainNote && daNote.alpha != 0.2 || !daNote.isSustainNote && daNote.alpha != 0.2)
-											vocals.volume = 0;
 										if (!daNote.isSustainNote)
 										{
 											health -= 0.075;
@@ -2305,29 +2302,12 @@ class PlayState extends MusicBeatState
 										}
 										else
 										{
-											var stop = false;
-											for (i in notes)
-											{
-												if (stop)
-													continue;
-												if (!i.prevNote.mustPress)
-													continue;
-												if (i.prevNote.isSustainNote)
-												{
-													i.prevNote.alpha = 0.2;
-												}
-												else if (!i.isSustainNote)
-												{
-													stop = true;
-												}
-											}
+											health -= 0.005;
 										}
 									}
 								}		
 							daNote.active = false;
 							daNote.visible = false;
-		
-							if(daNote.burning) { songScore += 100; }
 		
 							daNote.kill();
 							notes.remove(daNote, true);
@@ -2718,7 +2698,7 @@ class PlayState extends MusicBeatState
 			{
 				notes.forEachAlive(function(daNote:Note)
 				{
-					if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData] && daNote.alpha != 0.2)
+					if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData] && daNote.alpha != 0.1)
 						goodNoteHit(daNote);
 				});
 			}
@@ -2801,7 +2781,7 @@ class PlayState extends MusicBeatState
 							scoreTxt.color = FlxColor.WHITE;
 							if (coolNote.burning)
 							{
-								health -= 0.2;
+								health -= 0.45;
 								coolNote.wasGoodHit = true;
 								coolNote.canBeHit = false;
 								coolNote.kill();
@@ -2809,9 +2789,9 @@ class PlayState extends MusicBeatState
 								coolNote.destroy();
 								playerStrums.forEach(function(spr:FlxSprite)
 								{
-									if (pressArray[spr.ID] )
+									if (pressArray[spr.ID] && spr.ID == coolNote.noteData)
 									{
-										var smoke:FlxSprite = new FlxSprite(spr.x - spr.width, spr.y - spr.height);
+										var smoke:FlxSprite = new FlxSprite(spr.x - spr.width + 15, spr.y - spr.height);
 										smoke.frames = Paths.getSparrowAtlas('Smoke','clown');
 										smoke.animation.addByPrefix('boom','smoke',24,false);
 										smoke.animation.play('boom');
@@ -3020,9 +3000,6 @@ class PlayState extends MusicBeatState
 
 				function goodNoteHit(note:Note, resetMashViolation = true):Void
 					{
-		
-						if (note.isSustainNote && note.alpha == 0.2)
-							return;
 
 						if (mashing != 0)
 							mashing = 0;
