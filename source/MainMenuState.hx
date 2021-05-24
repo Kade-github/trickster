@@ -161,8 +161,8 @@ class MainMenuState extends MusicBeatState
 		add(trans);
 		trans.alpha = 0;
 
-		listOfButtons[selectedIndex].highlight();
-		listOfDiffButtons[diffSelectedIndex].highlight();
+		listOfButtons[selectedIndex].highlight(false);
+		listOfDiffButtons[diffSelectedIndex].highlight(false);
 
 		super.create();
 	}

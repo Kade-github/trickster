@@ -2295,11 +2295,32 @@ class PlayState extends MusicBeatState
 									
 									if (!daNote.burning)
 									{
-										vocals.volume = 0;
-										if (!daNote.isSustainNote || curStage != 'nevedaSpook') // remove held note damage for hellclown as a balance thing
+										// this if conditon makes me want to die
+										if (daNote.isSustainNote && daNote.alpha != 0.2 || !daNote.isSustainNote && daNote.alpha != 0.2)
+											vocals.volume = 0;
+										if (!daNote.isSustainNote)
 										{
 											health -= 0.075;
 											noteMiss(daNote.noteData);
+										}
+										else
+										{
+											var stop = false;
+											for (i in notes)
+											{
+												if (stop)
+													continue;
+												if (!i.prevNote.mustPress)
+													continue;
+												if (i.prevNote.isSustainNote)
+												{
+													i.prevNote.alpha = 0.2;
+												}
+												else if (!i.isSustainNote)
+												{
+													stop = true;
+												}
+											}
 										}
 									}
 								}		
@@ -2697,7 +2718,7 @@ class PlayState extends MusicBeatState
 			{
 				notes.forEachAlive(function(daNote:Note)
 				{
-					if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData])
+					if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData] && daNote.alpha != 0.2)
 						goodNoteHit(daNote);
 				});
 			}
@@ -2838,10 +2859,7 @@ class PlayState extends MusicBeatState
 			playerStrums.forEach(function(spr:FlxSprite)
 			{
 				if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
-				{
-					trace('poggers');
 					spr.animation.play('pressed');
-				}
 				if (!holdArray[spr.ID])
 					spr.animation.play('static');
 	 
@@ -3003,6 +3021,9 @@ class PlayState extends MusicBeatState
 				function goodNoteHit(note:Note, resetMashViolation = true):Void
 					{
 		
+						if (note.isSustainNote && note.alpha == 0.2)
+							return;
+
 						if (mashing != 0)
 							mashing = 0;
 		

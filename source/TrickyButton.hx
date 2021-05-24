@@ -34,8 +34,13 @@ class TrickyButton extends FlxSprite
         super.update(elapsed);
     }
 
-    public function highlight()
+    public function highlight(playSound:Bool = true)
     {
+        if (playSound)
+        {
+            var sound:FlxSound = new FlxSound().loadEmbedded(Paths.sound("Hover","clown"));
+            sound.play();
+        }
         spriteTwo.alpha = 1;
         spriteOne.alpha = 0;
     }

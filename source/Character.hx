@@ -216,7 +216,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Down', 24);
 
-				addOffset("idle",475, -430);
+				addOffset("idle",475, -450);
 
 				y -= 2000;
 				x -= 1400;
@@ -242,7 +242,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Right', 24);
 
-				addOffset("idle",485, -285);
+				addOffset("idle",485, -300);
 
 				y -= 2000;
 				x -= 1400;
@@ -583,7 +583,23 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
+			case 'Alldeath':
+				frames = Paths.getSparrowAtlas('Alldeath','clown');
+				animation.addByPrefix('firstDeath', 'BF dies', 24, false);
+				animation.addByPrefix('deathLoop', 'BF Dead Loop', 24, false);
+				animation.addByPrefix('deathConfirm', 'BF Dead confirm', 24, false);
+				
+				playAnim('firstDeath');
 
+				addOffset('firstDeath');
+				addOffset('deathLoop');
+				addOffset('deathConfirm', 0, 30);
+
+				animation.pause();
+
+				updateHitbox();
+				antialiasing = false;
+				flipX = true;
 			case 'senpai':
 				frames = Paths.getSparrowAtlas('weeb/senpai');
 				animation.addByPrefix('idle', 'Senpai Idle', 24, false);
@@ -679,7 +695,7 @@ class Character extends FlxSprite
 			flipX = !flipX;
 
 			// Doesn't flip for BF, since his are already in the right place???
-			if (!curCharacter.startsWith('bf'))
+			if (!curCharacter.startsWith('bf') && !curCharacter.contains('death'))
 			{
 				// var animArray
 				var oldRight = animation.getByName('singRIGHT').frames;
