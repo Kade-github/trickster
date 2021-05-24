@@ -623,6 +623,7 @@ class PlayState extends MusicBeatState
 			hank.frames = Paths.getSparrowAtlas('hellclwn/Hank','clown');
 			hank.animation.addByPrefix('dance','Hank',24);
 			hank.animation.play('dance');
+			hank.scrollFactor.set(0.9, 0.9);
 			hank.setGraphicSize(Std.int(hank.width * 1.55));
 
 			add(hank);
@@ -2295,7 +2296,7 @@ class PlayState extends MusicBeatState
 									if (!daNote.burning)
 									{
 										vocals.volume = 0;
-										if (!daNote.isSustainNote)
+										if (!daNote.isSustainNote || curStage != 'nevedaSpook') // remove held note damage for hellclown as a balance thing
 										{
 											health -= 0.075;
 											noteMiss(daNote.noteData);
