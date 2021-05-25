@@ -583,8 +583,8 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
-			case 'Alldeath':
-				frames = Paths.getSparrowAtlas('Alldeath','clown');
+			case 'signDeath':
+				frames = Paths.getSparrowAtlas('signDeath','clown');
 				animation.addByPrefix('firstDeath', 'BF dies', 24, false);
 				animation.addByPrefix('deathLoop', 'BF Dead Loop', 24, false);
 				animation.addByPrefix('deathConfirm', 'BF Dead confirm', 24, false);
@@ -593,7 +593,7 @@ class Character extends FlxSprite
 
 				addOffset('firstDeath');
 				addOffset('deathLoop');
-				addOffset('deathConfirm', 0, 30);
+				addOffset('deathConfirm', 0, 40);
 
 				animation.pause();
 
@@ -695,7 +695,7 @@ class Character extends FlxSprite
 			flipX = !flipX;
 
 			// Doesn't flip for BF, since his are already in the right place???
-			if (!curCharacter.startsWith('bf') && !curCharacter.contains('death'))
+			if (!curCharacter.startsWith('bf') && !curCharacter.toLowerCase().contains('death'))
 			{
 				// var animArray
 				var oldRight = animation.getByName('singRIGHT').frames;

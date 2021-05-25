@@ -2787,6 +2787,7 @@ class PlayState extends MusicBeatState
 								coolNote.kill();
 								notes.remove(coolNote, true);
 								coolNote.destroy();
+								FlxG.sound.play(Paths.sound('burnSound','clown'));
 								playerStrums.forEach(function(spr:FlxSprite)
 								{
 									if (pressArray[spr.ID] && spr.ID == coolNote.noteData)
