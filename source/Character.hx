@@ -127,13 +127,20 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 
 			case 'gf-tied':
-				tex = Paths.getSparrowAtlas('fourth/Ex Tricky GF','clown');
+				tex = Paths.getSparrowAtlas('fourth/EX Tricky GF','clown');
 				frames = tex;
+
+				trace(frames.frames.length);
 
 				animation.addByIndices('danceLeft','GF Ex Tricky',[0,1,2,3,4,5,6,7,8], "", 24, false);
 				animation.addByIndices('danceRight','GF Ex Tricky',[9,10,11,12,13,14,15,16,17,18,19], "", 24, false);
 
-				playAnim('danceright');
+				addOffset('danceLeft', 0);
+				addOffset('danceRight', 0);
+
+				playAnim('danceRight');
+
+				trace(animation.curAnim);
 			case 'gf-pixel':
 				tex = Paths.getSparrowAtlas('weeb/gfPixel');
 				frames = tex;
@@ -611,11 +618,17 @@ class Character extends FlxSprite
 			case 'exTricky':
 				frames = Paths.getSparrowAtlas('fourth/EXCLOWN','clown');
 
-				animation.addByPrefix('idle', 'Idle', 24, false);
-				animation.addByPrefix('singUP', 'Sing Up', 24, false);
-				animation.addByPrefix('singLEFT', 'Sing Left', 24, false);
-				animation.addByPrefix('singRIGHT', 'Sing Right', 24, false);
-				animation.addByPrefix('singDOWN', 'Sing Down', 24, false);
+				animation.addByPrefix('idle', 'Idle', 24);
+				animation.addByPrefix('singUP', 'Sing Up', 24);
+				animation.addByPrefix('singLEFT', 'Sing Left', 24);
+				animation.addByPrefix('singRIGHT', 'Sing Right', 24);
+				animation.addByPrefix('singDOWN', 'Sing Down', 24);
+
+				addOffset('idle');
+				addOffset("singUP", 0, 100);
+				addOffset("singRIGHT", -209,-29);
+				addOffset("singLEFT",127,20);
+				addOffset("singDOWN",-100,-210);
 
 				playAnim('idle');
 

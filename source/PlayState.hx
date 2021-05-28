@@ -646,12 +646,13 @@ class PlayState extends MusicBeatState
 			bg.antialiasing = true;
 			bg.scrollFactor.set(0.9, 0.9);
 			bg.active = false;
+			bg.setGraphicSize(Std.int(bg.width * 4));
 			add(bg);
 
-			var stageFront:FlxSprite = new FlxSprite(-1500, 200).loadGraphic(Paths.image('fourth/daBackground','clown'));
-			stageFront.setGraphicSize(Std.int(stageFront.width * 1.7));
+			var stageFront:FlxSprite = new FlxSprite(-350, -400).loadGraphic(Paths.image('fourth/daBackground','clown'));
 			stageFront.antialiasing = true;
 			stageFront.scrollFactor.set(0.9, 0.9);
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.55));
 			stageFront.active = false;
 			add(stageFront);
 		}

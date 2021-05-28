@@ -17,6 +17,7 @@ class AnimationDebug extends FlxState
 	public static var staticVar:AnimationDebug = null;
 	var bf:Boyfriend;
 	public static var dad:Character;
+	var onion:Character;
 	var char:Character;
 	var textAnim:FlxText;
 	var dumbTexts:FlxTypedGroup<FlxText>;
@@ -50,7 +51,12 @@ class AnimationDebug extends FlxState
 		{
 			dad = new Character(PlayState.dad.x, PlayState.dad.y, daAnim, false, true);
 			dad.setGraphicSize(Std.int(dad.width * 0.7));
+			onion = new Character(PlayState.dad.x,PlayState.dad.y,daAnim, false, true);
+			onion.setGraphicSize(Std.int(onion.width * 0.7));
 			dad.debugMode = true;
+			onion.debugMode = true;
+			onion.alpha = 0.5;
+			add(onion);
 			add(dad);
 
 			char = dad;
