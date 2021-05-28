@@ -126,6 +126,14 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
+			case 'gf-tied':
+				tex = Paths.getSparrowAtlas('fourth/Ex Tricky GF','clown');
+				frames = tex;
+
+				animation.addByIndices('danceLeft','GF Ex Tricky',[0,1,2,3,4,5,6,7,8], "", 24, false);
+				animation.addByIndices('danceRight','GF Ex Tricky',[9,10,11,12,13,14,15,16,17,18,19], "", 24, false);
+
+				playAnim('danceright');
 			case 'gf-pixel':
 				tex = Paths.getSparrowAtlas('weeb/gfPixel');
 				frames = tex;
@@ -600,6 +608,17 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
+			case 'exTricky':
+				frames = Paths.getSparrowAtlas('fourth/EXCLOWN','clown');
+
+				animation.addByPrefix('idle', 'Idle', 24, false);
+				animation.addByPrefix('singUP', 'Sing Up', 24, false);
+				animation.addByPrefix('singLEFT', 'Sing Left', 24, false);
+				animation.addByPrefix('singRIGHT', 'Sing Right', 24, false);
+				animation.addByPrefix('singDOWN', 'Sing Down', 24, false);
+
+				playAnim('idle');
+
 			case 'senpai':
 				frames = Paths.getSparrowAtlas('weeb/senpai');
 				animation.addByPrefix('idle', 'Senpai Idle', 24, false);
@@ -800,6 +819,16 @@ class Character extends FlxSprite
 								playAnim('danceLeft');
 						}
 					case 'gf-hell':
+						if (!animation.curAnim.name.startsWith('hair'))
+							{
+								danced = !danced;
+		
+								if (danced)
+									playAnim('danceRight');
+								else
+									playAnim('danceLeft');
+							}
+					case 'gf-tied':
 						if (!animation.curAnim.name.startsWith('hair'))
 							{
 								danced = !danced;
