@@ -1111,7 +1111,7 @@ class PlayState extends MusicBeatState
 		super.create();
 	}
 
-	function doStopSign(sign:Int = 0)
+	function doStopSign(sign:Int = 0, fuck:Bool = false)
 	{
 		trace('sign ' + sign);
 		var daSign:FlxSprite = new FlxSprite(0,0);
@@ -1136,7 +1136,7 @@ class PlayState extends MusicBeatState
 				daSign.angle = -90;*/ // this one just doesn't work???
 			case 2:
 				daSign.animation.addByPrefix('sign','Signature Stop Sign 3',24, false);
-				daSign.x = FlxG.width - 800;
+				daSign.x = FlxG.width - 780;
 				daSign.angle = -90;
 				daSign.y = -1000;
 			case 3:
@@ -1146,6 +1146,7 @@ class PlayState extends MusicBeatState
 				daSign.y = -145;
 		}
 		add(daSign);
+		daSign.flipX = fuck;
 		daSign.animation.play('sign');
 		daSign.animation.finishCallback = function(pog:String)
 			{
@@ -3321,12 +3322,42 @@ class PlayState extends MusicBeatState
 				case 1218:
 					doStopSign(0);
 				case 1235:
-					doStopSign(0);
+					doStopSign(0, true);
 				case 1200:
 					doStopSign(3);
 				case 1328:
-					doStopSign(0);
+					doStopSign(0, true);
 					doStopSign(2);
+				case 1439:
+					doStopSign(3, true);
+				case 1567:
+					doStopSign(0);
+				case 1584:
+					doStopSign(0, true);
+				case 1600:
+					doStopSign(2);
+				case 1706:
+					doStopSign(3);
+				case 1917:
+					doStopSign(0);
+				case 1923:
+					doStopSign(0, true);
+				case 1927:
+					doStopSign(0);
+				case 1932:
+					doStopSign(0, true);
+				case 2032:
+					doStopSign(2);
+					doStopSign(0);
+				case 2036:
+					doStopSign(0, true);
+				case 2162:
+					doStopSign(2);
+					doStopSign(3);
+				case 2193:
+					doStopSign(0);
+				case 2202:
+					doStopSign(0,true);
 			}
 			stepOfLast = curStep;
 		}
