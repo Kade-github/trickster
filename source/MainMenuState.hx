@@ -76,12 +76,10 @@ class MainMenuState extends MusicBeatState
 		show = 'bf';
 		if (random >= 1000 && random <= 1999)
 			show = 'tricky';
-		if (random >= 2000 && random <= 2999)
-			show = 'hank';
 		if (random >= 3000 && random <= 3999)
 			show = 'jebus';
 		if (random >= 4000 && random <= 4999)
-			show = 'hank';
+			show = 'sanford';
 		if (random >= 2000 && random <= 2999)
 			show = 'deimos';
 		if (random >= 5000 && random <= 5999)
@@ -100,7 +98,6 @@ class MainMenuState extends MusicBeatState
 		Conductor.changeBPM(165);
 
 
-		
 		switch(show)
 		{
 			case 'bf':
@@ -159,6 +156,13 @@ class MainMenuState extends MusicBeatState
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 310;
 				shower.x -= 500;
+			case 'sanford':
+				shower.frames = Paths.getSparrowAtlas("menu/Sanford/Menu_Sanford","clown");
+				shower.animation.addByPrefix('idle','Sanford');
+				FlxG.sound.playMusic(Paths.music("nexus_other","clown"), 0);
+				shower.setGraphicSize(Std.int(shower.width * 0.66));
+				shower.y -= 180;
+				shower.x -= 275;
 		}
 		
 		FlxG.sound.music.fadeIn(4, 0, 0.7);

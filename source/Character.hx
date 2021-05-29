@@ -1,5 +1,6 @@
 package;
 
+import flixel.animation.FlxAnimationController;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -16,6 +17,10 @@ class Character extends FlxSprite
 	public var curCharacter:String = 'bf';
 
 	public var holdTimer:Float = 0;
+
+	public var animations:Array<FlxAnimationController> = [];
+
+	public var exSpikes:FlxSprite;
 
 	public var otherFrames:Array<Character>;
 
@@ -193,9 +198,12 @@ class Character extends FlxSprite
 				playAnim('idle');
 				
 			case 'trickyH':
-				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Idle', 'clown');
+				tex = CachedFrames.cachedInstance.fromSparrow('idle','hellclwn/Tricky/Idle');
 
 				frames = tex;
+
+				graphic.persist = true;
+				graphic.destroyOnNoUse = false;
 
 				animation.addByPrefix('idle','Phase 3 Tricky Idle', 24);
 				
@@ -211,23 +219,21 @@ class Character extends FlxSprite
 				otherFrames.push(new Character(100, 100, 'trickyHUp'));
 				otherFrames.push(new Character(100, 100, 'trickyHDown'));
 
-				trace('poggers');
-
+				animations.push(animation);
 				for (i in otherFrames)
-					{
-						if (!isDebug)
-							PlayState.staticVar.add(i);
-						else
-							AnimationDebug.staticVar.add(i);
-						i.visible = false;
-					}
+					animations.push(animation);
+
+				trace('poggers');
 
 				addOffset("idle", 325, 0);
 				playAnim('idle');
 			case 'trickyHDown':
-				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Down', 'clown');
+				tex = CachedFrames.cachedInstance.fromSparrow('down','hellclwn/Tricky/Down');
 
 				frames = tex;
+
+				graphic.persist = true;
+				graphic.destroyOnNoUse = false;
 
 				animation.addByPrefix('idle','Proper Down', 24);
 
@@ -238,9 +244,13 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'trickyHUp':
-				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Up', 'clown');
+				tex = CachedFrames.cachedInstance.fromSparrow('up','hellclwn/Tricky/Up');
+
 
 				frames = tex;
+
+				graphic.persist = true;
+				graphic.destroyOnNoUse = false;
 
 				animation.addByPrefix('idle','Proper Up', 24);
 
@@ -251,9 +261,12 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'trickyHRight':
-				tex = Paths.getSparrowAtlas('hellclwn/Tricky/right', 'clown');
+				tex = CachedFrames.cachedInstance.fromSparrow('right','hellclwn/Tricky/right');
 
 				frames = tex;
+
+				graphic.persist = true;
+				graphic.destroyOnNoUse = false;
 
 				animation.addByPrefix('idle','Proper Right', 24);
 
@@ -264,9 +277,12 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'trickyHLeft':
-				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Left', 'clown');
+				tex = CachedFrames.cachedInstance.fromSparrow('left','hellclwn/Tricky/Left');
 
 				frames = tex;
+
+				graphic.persist = true;
+				graphic.destroyOnNoUse = false;
 
 				animation.addByPrefix('idle','Proper Left', 24);
 
@@ -617,6 +633,11 @@ class Character extends FlxSprite
 				flipX = true;
 			case 'exTricky':
 				frames = Paths.getSparrowAtlas('fourth/EXCLOWN','clown');
+				exSpikes = new FlxSprite(x - 350,y - 170);
+				exSpikes.frames = Paths.getSparrowAtlas('fourth/FloorSpikes','clown');
+				exSpikes.visible = false;
+
+				exSpikes.animation.addByPrefix('spike','Floor Spikes', 24, false);
 
 				animation.addByPrefix('idle', 'Idle', 24);
 				animation.addByPrefix('singUP', 'Sing Up', 24);
@@ -628,7 +649,7 @@ class Character extends FlxSprite
 				addOffset("singUP", 0, 100);
 				addOffset("singRIGHT", -209,-29);
 				addOffset("singLEFT",127,20);
-				addOffset("singDOWN",-100,-210);
+				addOffset("singDOWN",-100,-360);
 
 				playAnim('idle');
 
@@ -745,6 +766,16 @@ class Character extends FlxSprite
 		}
 	}
 
+	public function addOtherFrames()
+	{
+		
+		for (i in otherFrames)
+			{
+				PlayState.staticVar.add(i);
+				i.visible = false;
+			}
+	}
+
 	override function update(elapsed:Float)
 		{
 			if (!curCharacter.startsWith('bf') && animation.curAnim != null)
@@ -773,6 +804,12 @@ class Character extends FlxSprite
 				case 'gf':
 					if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
 						playAnim('danceRight');
+				case 'exTricky':
+					if (exSpikes.animation.frameIndex >= 3 && animation.curAnim.name == 'singUP')
+					{
+						trace('paused');
+						exSpikes.animation.pause();
+					}
 			}
 	
 			super.update(elapsed);
@@ -864,6 +901,8 @@ class Character extends FlxSprite
 			}
 		}
 	
+		// other frames implementation is messy but who cares lol!
+
 		public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 		{
 
@@ -899,7 +938,7 @@ class Character extends FlxSprite
 						}
 					}
 				}
-				else if (otherFrames != null && PlayState.dad != null)
+				else if (otherFrames != null && PlayState.dad != null && PlayState.generatedMusic)
 					{
 						visible = false;
 						for(i in otherFrames)
@@ -926,8 +965,9 @@ class Character extends FlxSprite
 								otherFrames[3].playAnim('idle', Force, Reversed, Frame);
 							default:
 								visible = true;
+
 								animation.play(AnimName, Force, Reversed, Frame);
-		
+
 								var daOffset = animOffsets.get(AnimName);
 								if (animOffsets.exists(AnimName))
 									offset.set(daOffset[0], daOffset[1]);
@@ -935,9 +975,41 @@ class Character extends FlxSprite
 									offset.set(0, 0);
 						}
 					}
+					else if (otherFrames != null && PlayState.dad != null)
+					{
+						visible = true;
+						animation.play('idle', Force, Reversed, Frame);
+						
+						var daOffset = animOffsets.get('idle');
+						if (animOffsets.exists('idle'))
+							offset.set(daOffset[0], daOffset[1]);
+						else
+							offset.set(0, 0);
+					}
 			else
 			{
 				animation.play(AnimName, Force, Reversed, Frame);
+
+				if (curCharacter == 'exTricky')
+				{
+					if (AnimName == 'singUP')
+					{
+						trace('spikes');
+						exSpikes.visible = true;
+						if (exSpikes.animation.finished)
+							exSpikes.animation.play('spike');
+					}
+					else if (!exSpikes.animation.finished)
+					{
+						exSpikes.animation.resume();
+						trace('go back spikes');
+						exSpikes.animation.finishCallback = function(pog:String) {
+							trace('finished');
+							exSpikes.visible = false;
+							exSpikes.animation.finishCallback = null;
+						}
+					}
+				}
 
 				var daOffset = animOffsets.get(AnimName);
 				if (animOffsets.exists(AnimName))

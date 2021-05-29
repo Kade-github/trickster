@@ -80,6 +80,11 @@ class TitleState extends MusicBeatState
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
+		loadText  = new FlxText(FlxG.width / 2 - 250, FlxG.height / 2 - 200,0,"Loading BIG Assets...",42);
+		add(loadText);
+
+		CachedFrames.loadEverything();
+
 		Highscore.load();
 
 		if (FlxG.save.data.weekUnlocked != null)
@@ -103,7 +108,10 @@ class TitleState extends MusicBeatState
 		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
-			startIntro();
+			if (CachedFrames.cachedInstance.loaded)
+				startIntro();
+			else
+				tmr.reset(1);
 		});
 		#end
 	}
@@ -112,6 +120,7 @@ class TitleState extends MusicBeatState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
+	var loadText:FlxText;
 
 	function startIntro()
 	{
@@ -260,8 +269,25 @@ class TitleState extends MusicBeatState
 
 	var transitioning:Bool = false;
 
+	var oop = false;
+	var movi = false;
+
 	override function update(elapsed:Float)
 	{
+		if (!CachedFrames.cachedInstance.loaded)
+		{
+			if (!oop && !movi)
+			{
+				FlxTween.tween(loadText, {alpha: 0.5}, 0.4, {ease: FlxEase.expoInOut, onComplete: function(complete:FlxTween) {oop = !oop; movi = false;}});
+				movi = true;
+			}
+			else if (!movi)
+			{
+				FlxTween.tween(loadText, {alpha: 1}, 0.4, {ease: FlxEase.expoInOut, onComplete: function(complete:FlxTween) {oop = !oop; movi = false;}});
+				movi = true;
+			}
+		}
+
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
@@ -323,7 +349,7 @@ class TitleState extends MusicBeatState
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
-		if (pressedEnter && !skippedIntro)
+		if (pressedEnter && !skippedIntro && CachedFrames.cachedInstance.loaded)
 		{
 			skipIntro();
 		}
