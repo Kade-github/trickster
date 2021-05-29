@@ -96,16 +96,28 @@ class CachedFrames
         trace('Loaded ' + id);
     }
 
+    public var toBeLoaded:Map<String,String> = new Map<String,String>();
+
+
+    public var progress:Float = 0;
+
     public function loadFrames()
     {
         sys.thread.Thread.create(() -> {
+            toBeLoaded.set('sign','fourth/mech/Sign_Post_Mechanic');
+            toBeLoaded.set('left','hellclwn/Tricky/Left');
+            toBeLoaded.set('right','hellclwn/Tricky/right');
+            toBeLoaded.set('up','hellclwn/Tricky/Up');
+            toBeLoaded.set('down','hellclwn/Tricky/Down');
+            toBeLoaded.set('idle','hellclwn/Tricky/Idle');
             // all the big sprites
-            load('sign','fourth/mech/Sign_Post_Mechanic');
-            load('left','hellclwn/Tricky/Left');
-            load('right','hellclwn/Tricky/right');
-            load('up','hellclwn/Tricky/Up');
-            load('down','hellclwn/Tricky/Down');
-            load('idle','hellclwn/Tricky/Idle');
+            var numba = 0;
+            for(i in toBeLoaded.keys())
+            {
+                load(i,toBeLoaded.get(i));
+                numba++;
+                progress = HelperFunctions.truncateFloat(numba / Lambda.count(toBeLoaded) * 100,2);
+            }
             trace('loaded everythin');
             loaded = true;
         });

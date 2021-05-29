@@ -80,7 +80,9 @@ class TitleState extends MusicBeatState
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
-		loadText  = new FlxText(FlxG.width / 2 - 250, FlxG.height / 2 - 200,0,"Loading BIG Assets...",42);
+		loadText  = new FlxText(FlxG.width / 2 - 125, FlxG.height / 2 - 100,0,"Loading...",42);
+		loadText.alpha = 0;
+		loadText.alignment = FlxTextAlign.CENTER;
 		add(loadText);
 
 		CachedFrames.loadEverything();
@@ -269,25 +271,19 @@ class TitleState extends MusicBeatState
 
 	var transitioning:Bool = false;
 
-	var oop = false;
-	var movi = false;
-
 	override function update(elapsed:Float)
 	{
 		if (!CachedFrames.cachedInstance.loaded)
 		{
-			if (!oop && !movi)
-			{
-				FlxTween.tween(loadText, {alpha: 0.5}, 0.4, {ease: FlxEase.expoInOut, onComplete: function(complete:FlxTween) {oop = !oop; movi = false;}});
-				movi = true;
-			}
-			else if (!movi)
-			{
-				FlxTween.tween(loadText, {alpha: 1}, 0.4, {ease: FlxEase.expoInOut, onComplete: function(complete:FlxTween) {oop = !oop; movi = false;}});
-				movi = true;
-			}
+			loadText.text = 'Loading...';
+			trace(CachedFrames.cachedInstance.progress);
+			FlxTween.tween(loadText, {alpha: CachedFrames.cachedInstance.progress / 100}, 0.1, {ease: FlxEase.expoInOut});
 		}
-
+		else
+		{
+			loadText.text = 'Done!';
+			loadText.x = FlxG.width / 2 - 90;
+		}
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
