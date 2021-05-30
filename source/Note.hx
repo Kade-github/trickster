@@ -127,12 +127,24 @@ class Note extends FlxSprite
 				animation.addByPrefix('bluehold', 'blue hold piece');
 
 				if(burning){
-					frames = Paths.getSparrowAtlas('NOTE_fire', "clown");
-					animation.addByPrefix('greenScroll', 'green fire');
-					animation.addByPrefix('redScroll', 'red fire');
-					animation.addByPrefix('blueScroll', 'blue fire');
-					animation.addByPrefix('purpleScroll', 'purple fire');
-					x -= 50;
+					if (daStage == 'auditorHell')
+					{
+						frames = Paths.getSparrowAtlas('fourth/mech/ALL_deathnotes', "clown");
+						animation.addByPrefix('greenScroll', 'Green Arrow');
+						animation.addByPrefix('redScroll', 'Red Arrow');
+						animation.addByPrefix('blueScroll', 'Blue Arrow');
+						animation.addByPrefix('purpleScroll', 'Purple Arrow');
+						x -= 165;
+					}
+					else
+					{
+						frames = Paths.getSparrowAtlas('NOTE_fire', "clown");
+						animation.addByPrefix('greenScroll', 'green fire');
+						animation.addByPrefix('redScroll', 'red fire');
+						animation.addByPrefix('blueScroll', 'blue fire');
+						animation.addByPrefix('purpleScroll', 'purple fire');
+						x -= 50;
+					}
 				}
 
 				setGraphicSize(Std.int(width * 0.7));
@@ -230,12 +242,23 @@ class Note extends FlxSprite
 			}
 			else
 			{
-				// make burning notes a lot harder to accidently hit because they're weirdchamp!
-				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.6)
-					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.4)) // also they're almost impossible to hit late!
-					canBeHit = true;
+				if (PlayState.curStage == 'auditorHell') // these though, REALLY hard to hit.
+				{
+					if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.3)
+						&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.2)) // also they're almost impossible to hit late!
+						canBeHit = true;
+					else
+						canBeHit = false;
+				}
 				else
-					canBeHit = false;
+				{
+				// make burning notes a lot harder to accidently hit because they're weirdchamp!
+					if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 0.6)
+						&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.4)) // also they're almost impossible to hit late!
+						canBeHit = true;
+					else
+						canBeHit = false;
+				}
 			}
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;

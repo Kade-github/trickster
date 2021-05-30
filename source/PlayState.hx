@@ -1193,7 +1193,7 @@ class PlayState extends MusicBeatState
 		gramlan.cameras = [camHUD];
 
 		gramlan.x = iconP1.x;
-		gramlan.y = healthBarBG.y - 350;
+		gramlan.y = healthBarBG.y - 325;
 
 		gramlan.animation.addByIndices('come','HP Gremlin ANIMATION',[0,1], "", 24, false);
 		gramlan.animation.addByIndices('grab','HP Gremlin ANIMATION',[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], "", 24, false);
@@ -1893,7 +1893,7 @@ class PlayState extends MusicBeatState
 		if (SONG.song.toLowerCase() == 'expurgation') // start the grem time
 		{
 			new FlxTimer().start(25, function(tmr:FlxTimer) {
-				if (curStep < 2655)
+				if (curStep < 2400)
 				{
 					if (canPause && !paused && health >= 1.5 && !grabbed)
 						doGremlin(40,3);
@@ -2576,14 +2576,14 @@ class PlayState extends MusicBeatState
 									
 									if (!daNote.burning)
 									{
-										if (!daNote.isSustainNote)
+										if (!daNote.isSustainNote || curStage != 'nevedaSpook')
 										{
 											health -= 0.075;
 											totalDamageTaken += 0.075;
 											interupt = true;
 											noteMiss(daNote.noteData);
 										}
-										else
+										else if (daNote.isSustainNote && curStage == 'nevedaSpook') // nerf long notes on hellclown cuz they're too op
 										{
 											interupt = true;
 											health -= 0.005;
@@ -3073,31 +3073,39 @@ class PlayState extends MusicBeatState
 							scoreTxt.color = FlxColor.WHITE;
 							if (coolNote.burning)
 							{
-								health -= 0.45;
-								totalDamageTaken += 0.45;
-								interupt = true;
-								coolNote.wasGoodHit = true;
-								coolNote.canBeHit = false;
-								coolNote.kill();
-								notes.remove(coolNote, true);
-								coolNote.destroy();
-								FlxG.sound.play(Paths.sound('burnSound','clown'));
-								playerStrums.forEach(function(spr:FlxSprite)
+								if (curStage == 'auditorHell')
 								{
-									if (pressArray[spr.ID] && spr.ID == coolNote.noteData)
+									// lol death
+									health = 0;
+								}
+								else
+								{
+									health -= 0.45;
+									totalDamageTaken += 0.45;
+									interupt = true;
+									coolNote.wasGoodHit = true;
+									coolNote.canBeHit = false;
+									coolNote.kill();
+									notes.remove(coolNote, true);
+									coolNote.destroy();
+									FlxG.sound.play(Paths.sound('burnSound','clown'));
+									playerStrums.forEach(function(spr:FlxSprite)
 									{
-										var smoke:FlxSprite = new FlxSprite(spr.x - spr.width + 15, spr.y - spr.height);
-										smoke.frames = Paths.getSparrowAtlas('Smoke','clown');
-										smoke.animation.addByPrefix('boom','smoke',24,false);
-										smoke.animation.play('boom');
-										smoke.setGraphicSize(Std.int(smoke.width * 0.6));
-										smoke.cameras = [camHUD];
-										add(smoke);
-										smoke.animation.finishCallback = function(name:String) {
-											remove(smoke);	
+										if (pressArray[spr.ID] && spr.ID == coolNote.noteData)
+										{
+											var smoke:FlxSprite = new FlxSprite(spr.x - spr.width + 15, spr.y - spr.height);
+											smoke.frames = Paths.getSparrowAtlas('Smoke','clown');
+											smoke.animation.addByPrefix('boom','smoke',24,false);
+											smoke.animation.play('boom');
+											smoke.setGraphicSize(Std.int(smoke.width * 0.6));
+											smoke.cameras = [camHUD];
+											add(smoke);
+											smoke.animation.finishCallback = function(name:String) {
+												remove(smoke);	
+											}
 										}
-									}
-								});
+									});
+								}
 							}
 							else
 								goodNoteHit(coolNote);
