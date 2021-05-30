@@ -182,8 +182,8 @@ class PlayState extends MusicBeatState
 			transIn = null;
 
 		var cover:FlxSprite = new FlxSprite(-180,755).loadGraphic(Paths.image('fourth/cover','clown'));
-		var hole:FlxSprite = new FlxSprite(50,560).loadGraphic(Paths.image('fourth/Spawnhole_Ground_BACK','clown'));
-		var converHole:FlxSprite = new FlxSprite(50,595).loadGraphic(Paths.image('fourth/Spawnhole_Ground_COVER','clown'));
+		var hole:FlxSprite = new FlxSprite(50,530).loadGraphic(Paths.image('fourth/Spawnhole_Ground_BACK','clown'));
+		var converHole:FlxSprite = new FlxSprite(7,578).loadGraphic(Paths.image('fourth/Spawnhole_Ground_COVER','clown'));
 
 		sicks = 0;
 		bads = 0;
@@ -662,7 +662,7 @@ class PlayState extends MusicBeatState
 			converHole.antialiasing = true;
 			converHole.scrollFactor.set(0.9, 0.9);
 			converHole.setGraphicSize(Std.int(converHole.width * 1.3));
-			hole.setGraphicSize(Std.int(hole.width * 1.3));
+			hole.setGraphicSize(Std.int(hole.width * 1.55));
 
 			cover.antialiasing = true;
 			cover.scrollFactor.set(0.9, 0.9);
@@ -858,6 +858,20 @@ class PlayState extends MusicBeatState
 
 		if (curStage == 'auditorHell')
 		{
+			// Clown init
+			cloneOne = new FlxSprite(0,0);
+			cloneTwo = new FlxSprite(0,0);
+			cloneOne.frames = CachedFrames.cachedInstance.fromSparrow('cln','fourth/Clone');
+			cloneTwo.frames = CachedFrames.cachedInstance.fromSparrow('cln','fourth/Clone');
+			cloneOne.alpha = 0;
+			cloneTwo.alpha = 0;
+			cloneOne.animation.addByPrefix('clone','Clone',24,false);
+			cloneTwo.animation.addByPrefix('clone','Clone',24,false);
+
+			// cover crap
+
+			add(cloneOne);
+			add(cloneTwo);
 			add(cover);
 			add(converHole);
 			add(dad.exSpikes);
@@ -1102,6 +1116,9 @@ class PlayState extends MusicBeatState
 		if (curStage == "nevada" || curStage == "nevadaSpook" || curStage == 'auditorHell')
 			add(tstatic);
 
+		if (curStage == 'auditorHell')
+			tstatic.alpha = 0.1;
+
 		if (curStage == 'nevadaSpook' || curStage == 'auditorHell')
 		{
 			tstatic.setGraphicSize(Std.int(tstatic.width * 12));
@@ -1225,7 +1242,6 @@ class PlayState extends MusicBeatState
 							if (pp <= 0)
 								pp = 0.1;
 							health = pp;
-							trace('putting health to $health (${tween.percent})'); 
 						}
 					},
 					onComplete: function(tween:FlxTween)
@@ -1239,6 +1255,8 @@ class PlayState extends MusicBeatState
 						{
 							trace('oh shit');
 							gramlan.animation.play('release');
+							if (persist && totalDamageTaken >= 0.7)
+								health -= totalDamageTaken; // just a simple if you take a lot of damage wtih this, you'll loose probably.
 							gramlan.animation.finishCallback = function(pog:String) { remove(gramlan);}
 							grabbed = false;
 						}
@@ -1246,6 +1264,35 @@ class PlayState extends MusicBeatState
 				});
 			}});
 		});
+	}
+
+	var cloneOne:FlxSprite;
+	var cloneTwo:FlxSprite;
+
+	function doClone(side:Int)
+	{
+		switch(side)
+		{
+			case 0:
+				if (cloneOne.alpha == 1)
+					return;
+				cloneOne.x = dad.x - 20;
+				cloneOne.y = dad.y + 140;
+				cloneOne.alpha = 1;
+
+				cloneOne.animation.play('clone');
+				cloneOne.animation.finishCallback = function(pog:String) {cloneOne.alpha = 0;}
+			case 1:
+				if (cloneTwo.alpha == 1)
+					return;
+				cloneTwo.x = dad.x + 390;
+				cloneTwo.y = dad.y + 140;
+				cloneTwo.alpha = 1;
+
+				cloneTwo.animation.play('clone');
+				cloneTwo.animation.finishCallback = function(pog:String) {cloneTwo.alpha = 0;}
+		}
+
 	}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
@@ -2157,6 +2204,8 @@ class PlayState extends MusicBeatState
 		#if !debug
 		perfectMode = false;
 		#end
+
+		tStaticSound.volume = FlxG.sound.volume;
 
 		var balls = notesHitArray.length-1;
 		while (balls >= 0)
@@ -3529,6 +3578,8 @@ class PlayState extends MusicBeatState
 				spookyRendered = false;
 			}
 			tstatic.alpha = 0;
+			if (curStage == 'auditorHell')
+				tstatic.alpha = 0.1;
 		}
 
 		super.stepHit();
@@ -3539,6 +3590,7 @@ class PlayState extends MusicBeatState
 
 	var lastBeatT:Int = 0;
 	var lastBeatDadT:Int = 0;
+	var beatOfFuck:Int = 0;
 
 	override function beatHit()
 	{
@@ -3569,6 +3621,12 @@ class PlayState extends MusicBeatState
 				}
 			}
 			
+
+		if (curBeat % 8 == 4 && beatOfFuck != curBeat)
+		{
+			beatOfFuck = curBeat;
+			doClone(FlxG.random.int(0,1));
+		}
 
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
