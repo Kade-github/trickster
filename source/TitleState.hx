@@ -80,10 +80,87 @@ class TitleState extends MusicBeatState
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
-		loadText  = new FlxText(FlxG.width / 2 - 125, FlxG.height / 2 - 100,0,"Loading...",42);
-		loadText.alpha = 0;
-		loadText.alignment = FlxTextAlign.CENTER;
-		add(loadText);
+
+		
+		loadingImage = new FlxSprite(0,0).loadGraphic(Paths.image('loadingButNotDone','clown'));
+		loadingDone = new FlxSprite(0,0).loadGraphic(Paths.image('loadingButDone','clown'));
+		loadingImage.alpha = 0;
+		loadingDone.alpha = 0;
+		add(loadingImage);
+		add(loadingDone);
+
+
+		logoBl = new FlxSprite(-200, -160);
+		logoBl.frames = Paths.getSparrowAtlas('TrickyLogo','clown');
+		logoBl.antialiasing = true;
+		logoBl.animation.addByPrefix('bump', 'Logo', 34);
+		logoBl.animation.play('bump');
+		logoBl.setGraphicSize(Std.int(logoBl.width * 0.5));
+		logoBl.updateHitbox();
+		// logoBl.screenCenter();
+		// logoBl.color = FlxColor.BLACK;
+
+		gfDance = new FlxSprite(FlxG.width * 0.23, FlxG.height * 0.07);
+		gfDance.frames = Paths.getSparrowAtlas('DJ_Tricky','clown');
+		gfDance.animation.addByPrefix('dance', 'mixtape',24, true);
+		gfDance.antialiasing = true;
+		gfDance.setGraphicSize(Std.int(gfDance.width * 0.6));
+
+
+		titleText = new FlxSprite(100, FlxG.height * 0.8);
+		titleText.frames = Paths.getSparrowAtlas('titleEnter');
+		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
+		titleText.antialiasing = true;
+		titleText.animation.play('idle');
+		titleText.updateHitbox();
+		// titleText.screenCenter(X);
+
+		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
+		logo.screenCenter();
+		logo.antialiasing = true;
+		// add(logo);
+
+		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
+		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
+
+		credGroup = new FlxGroup();
+		textGroup = new FlxGroup();
+
+		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		credGroup.add(blackScreen);
+
+		credTextShit = new Alphabet(0, 0, "ninjamuffin99\nPhantomArcade\nkawaisprite\nevilsk8er", true);
+		credTextShit.screenCenter();
+
+		// credTextShit.alignment = CENTER;
+
+		credTextShit.visible = false;
+
+		ngSpr = new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('ThePalsV2','clown'));
+		ngSpr.visible = false;
+		ngSpr.setGraphicSize(Std.int(ngSpr.width * 1.1));
+		ngSpr.updateHitbox();
+		ngSpr.screenCenter(X);
+		ngSpr.y -= 100;
+		ngSpr.antialiasing = true;
+
+		actualNG= new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('newgrounds_logo','clown'));
+		actualNG.visible = false;
+		actualNG.setGraphicSize(Std.int(actualNG.width * 1.1));
+		actualNG.updateHitbox();
+		actualNG.screenCenter(X);
+		actualNG.y -= 70;
+		actualNG.antialiasing = true;
+
+		backupMen= new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('TheBackupMen','clown'));
+		backupMen.visible = false;
+		backupMen.setGraphicSize(Std.int(backupMen.width * 1.1));
+		backupMen.updateHitbox();
+		backupMen.screenCenter(X);
+		backupMen.y -= 100;
+		backupMen.antialiasing = true;
+
 
 		CachedFrames.loadEverything();
 
@@ -108,13 +185,6 @@ class TitleState extends MusicBeatState
 		#elseif CHARTING
 		FlxG.switchState(new ChartingState());
 		#else
-		new FlxTimer().start(1, function(tmr:FlxTimer)
-		{
-			if (CachedFrames.cachedInstance.loaded)
-				startIntro();
-			else
-				tmr.reset(1);
-		});
 		#end
 	}
 
@@ -122,7 +192,8 @@ class TitleState extends MusicBeatState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
-	var loadText:FlxText;
+	var loadingImage:FlxSprite;
+	var loadingDone:FlxSprite;
 
 	function startIntro()
 	{
@@ -161,84 +232,15 @@ class TitleState extends MusicBeatState
 		// bg.antialiasing = true;
 		// bg.setGraphicSize(Std.int(bg.width * 0.6));
 		// bg.updateHitbox();
+
 		add(bg);
-
-		logoBl = new FlxSprite(-200, -160);
-		logoBl.frames = Paths.getSparrowAtlas('TrickyLogo','clown');
-		logoBl.antialiasing = true;
-		logoBl.animation.addByPrefix('bump', 'Logo', 34);
-		logoBl.animation.play('bump');
-		logoBl.setGraphicSize(Std.int(logoBl.width * 0.5));
-		logoBl.updateHitbox();
-		// logoBl.screenCenter();
-		// logoBl.color = FlxColor.BLACK;
-
-		gfDance = new FlxSprite(FlxG.width * 0.23, FlxG.height * 0.07);
-		gfDance.frames = Paths.getSparrowAtlas('DJ_Tricky','clown');
-		gfDance.animation.addByPrefix('dance', 'mixtape',24, true);
-		gfDance.antialiasing = true;
-		gfDance.setGraphicSize(Std.int(gfDance.width * 0.6));
 		add(gfDance);
 		add(logoBl);
-
-		titleText = new FlxSprite(100, FlxG.height * 0.8);
-		titleText.frames = Paths.getSparrowAtlas('titleEnter');
-		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-		titleText.antialiasing = true;
-		titleText.animation.play('idle');
-		titleText.updateHitbox();
-		// titleText.screenCenter(X);
 		add(titleText);
-
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
-		logo.screenCenter();
-		logo.antialiasing = true;
-		// add(logo);
-
-		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
-		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
-
-		credGroup = new FlxGroup();
 		add(credGroup);
-		textGroup = new FlxGroup();
-
-		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		credGroup.add(blackScreen);
-
-		credTextShit = new Alphabet(0, 0, "ninjamuffin99\nPhantomArcade\nkawaisprite\nevilsk8er", true);
-		credTextShit.screenCenter();
-
-		// credTextShit.alignment = CENTER;
-
-		credTextShit.visible = false;
-
-		ngSpr = new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('ThePalsV2','clown'));
 		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 1.1));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
-		ngSpr.y -= 100;
-		ngSpr.antialiasing = true;
-
-		actualNG= new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('newgrounds_logo','clown'));
 		add(actualNG);
-		actualNG.visible = false;
-		actualNG.setGraphicSize(Std.int(actualNG.width * 1.1));
-		actualNG.updateHitbox();
-		actualNG.screenCenter(X);
-		actualNG.y -= 70;
-		actualNG.antialiasing = true;
-
-		backupMen= new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('TheBackupMen','clown'));
 		add(backupMen);
-		backupMen.visible = false;
-		backupMen.setGraphicSize(Std.int(backupMen.width * 1.1));
-		backupMen.updateHitbox();
-		backupMen.screenCenter(X);
-		backupMen.y -= 100;
-		backupMen.antialiasing = true;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
@@ -271,18 +273,26 @@ class TitleState extends MusicBeatState
 
 	var transitioning:Bool = false;
 
+	var once:Bool = false;
+
 	override function update(elapsed:Float)
 	{
 		if (!CachedFrames.cachedInstance.loaded)
 		{
-			loadText.text = 'Loading...';
-			trace(CachedFrames.cachedInstance.progress);
-			FlxTween.tween(loadText, {alpha: CachedFrames.cachedInstance.progress / 100}, 0.1, {ease: FlxEase.expoInOut});
+			loadingImage.alpha = CachedFrames.cachedInstance.progress / 100;
 		}
-		else
+		else if (!once)
 		{
-			loadText.text = 'Done!';
-			loadText.x = FlxG.width / 2 - 90;
+			once = true;
+			var snd:FlxSound = new FlxSound().loadEmbedded(Paths.sound('complete','clown'));
+			snd.play();
+			loadingImage.alpha = 0;
+			loadingDone.alpha = 1;
+			FlxTween.tween(loadingDone,{alpha: 0}, 1);
+			new FlxTimer().start(1.2, function(tmr:FlxTimer)
+				{
+					startIntro();
+				});
 		}
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;

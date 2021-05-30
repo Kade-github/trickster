@@ -110,6 +110,7 @@ class CachedFrames
             toBeLoaded.set('up','hellclwn/Tricky/Up');
             toBeLoaded.set('down','hellclwn/Tricky/Down');
             toBeLoaded.set('idle','hellclwn/Tricky/Idle');
+            toBeLoaded.set('grem','fourth/mech/HP GREMLIN');
             // all the big sprites
             var numba = 0;
             for(i in toBeLoaded.keys())

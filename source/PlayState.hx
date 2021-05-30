@@ -183,7 +183,7 @@ class PlayState extends MusicBeatState
 
 		var cover:FlxSprite = new FlxSprite(-180,755).loadGraphic(Paths.image('fourth/cover','clown'));
 		var hole:FlxSprite = new FlxSprite(50,560).loadGraphic(Paths.image('fourth/Spawnhole_Ground_BACK','clown'));
-		var converHole:FlxSprite = new FlxSprite(50,570).loadGraphic(Paths.image('fourth/Spawnhole_Ground_COVER','clown'));
+		var converHole:FlxSprite = new FlxSprite(50,595).loadGraphic(Paths.image('fourth/Spawnhole_Ground_COVER','clown'));
 
 		sicks = 0;
 		bads = 0;
@@ -1119,7 +1119,7 @@ class PlayState extends MusicBeatState
 
 		daSign.frames = CachedFrames.cachedInstance.fromSparrow('sign','fourth/mech/Sign_Post_Mechanic');
 
-		daSign.setGraphicSize(Std.int(daSign.width * 0.8));
+		daSign.setGraphicSize(Std.int(daSign.width * 0.67));
 
 		daSign.cameras = [camHUD];
 
@@ -1138,10 +1138,10 @@ class PlayState extends MusicBeatState
 				daSign.animation.addByPrefix('sign','Signature Stop Sign 3',24, false);
 				daSign.x = FlxG.width - 780;
 				daSign.angle = -90;
-				daSign.y = -1000;
+				daSign.y = -980;
 			case 3:
 				daSign.animation.addByPrefix('sign','Signature Stop Sign 4',24, false);
-				daSign.x = FlxG.width - 1090;
+				daSign.x = FlxG.width - 1070;
 				daSign.angle = -90;
 				daSign.y = -145;
 		}
@@ -1153,6 +1153,99 @@ class PlayState extends MusicBeatState
 				trace('ended sign');
 				remove(daSign);
 			}
+	}
+
+	var totalDamageTaken:Float = 0;
+
+	var interupt = false;
+
+	function doGremlin(hpToTake:Int, duration:Int,persist:Bool = false)
+	{
+		interupt = false;
+
+		grabbed = true;
+		
+		totalDamageTaken = 0;
+
+		var gramlan:FlxSprite = new FlxSprite(0,0);
+
+		gramlan.frames = CachedFrames.cachedInstance.fromSparrow('grem','fourth/mech/HP GREMLIN');
+
+		gramlan.setGraphicSize(Std.int(gramlan.width * 0.76));
+
+		gramlan.cameras = [camHUD];
+
+		gramlan.x = iconP1.x;
+		gramlan.y = healthBarBG.y - 350;
+
+		gramlan.animation.addByIndices('come','HP Gremlin ANIMATION',[0,1], "", 24, false);
+		gramlan.animation.addByIndices('grab','HP Gremlin ANIMATION',[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], "", 24, false);
+		gramlan.animation.addByIndices('hold','HP Gremlin ANIMATION',[25,26,27,28],"",24);
+		gramlan.animation.addByIndices('release','HP Gremlin ANIMATION',[29,30,31,32,33],"",24,false);
+
+		add(gramlan);
+
+		// over use of flxtween :)
+
+		var startHealth = health;
+		var toHealth = (hpToTake / 100) * startHealth; // simple math, convert it to a percentage then get the percentage of the health
+
+		var perct = toHealth / 2 * 100;
+
+		trace('start: $startHealth\nto: $toHealth\nwhich is prect: $perct');
+
+		var onc:Bool = false;
+
+		var snd:FlxSound = new FlxSound().loadEmbedded(Paths.sound('fourth/GremlinWoosh','clown'));
+		snd.play();
+
+		gramlan.animation.play('come');
+		new FlxTimer().start(0.14, function(tmr:FlxTimer) {
+			gramlan.animation.play('grab');
+			FlxTween.tween(gramlan,{x: iconP1.x - 140},1,{ease: FlxEase.elasticIn, onComplete: function(tween:FlxTween) {
+				trace('I got em');
+				gramlan.animation.play('hold');
+				FlxTween.tween(gramlan,{
+					x: (healthBar.x + 
+					(healthBar.width * (FlxMath.remapToRange(perct, 0, 100, 100, 0) * 0.01) 
+					- 26)) - 75}, duration,
+				{
+					onUpdate: function(tween:FlxTween) { 
+						// lerp the health so it looks pog
+						if (interupt && !onc && !persist)
+						{
+							onc = true;
+							trace('oh shit');
+							gramlan.animation.play('release');
+							gramlan.animation.finishCallback = function(pog:String) { gramlan.alpha = 0;}
+						}
+						else if (!interupt || persist)
+						{
+							var pp = FlxMath.lerp(startHealth,toHealth, tween.percent + 0.1);
+							if (pp <= 0)
+								pp = 0.1;
+							health = pp;
+							trace('putting health to $health (${tween.percent})'); 
+						}
+					},
+					onComplete: function(tween:FlxTween)
+					{
+						if (interupt && !persist)
+						{
+							remove(gramlan);
+							grabbed = false;
+						}
+						else
+						{
+							trace('oh shit');
+							gramlan.animation.play('release');
+							gramlan.animation.finishCallback = function(pog:String) { remove(gramlan);}
+							grabbed = false;
+						}
+					}
+				});
+			}});
+		});
 	}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
@@ -1749,7 +1842,22 @@ class PlayState extends MusicBeatState
 			swagCounter += 1;
 			// generateSong('fresh');
 		}, 5);
+
+		if (SONG.song.toLowerCase() == 'expurgation') // start the grem time
+		{
+			new FlxTimer().start(25, function(tmr:FlxTimer) {
+				if (curStep < 2655)
+				{
+					if (canPause && !paused && health >= 1.5 && !grabbed)
+						doGremlin(40,3);
+					trace('checka ' + health);
+					tmr.reset(25);
+				}
+			});
+		}
 	}
+
+	var grabbed = false;
 
 	var previousFrameTime:Int = 0;
 	var lastReportedPlayheadPosition:Int = 0;
@@ -2310,7 +2418,6 @@ class PlayState extends MusicBeatState
 		// this is where I overuse FlxG.Random :)
 		if (spookyRendered) // move shit around all spooky like
 			{
-				trace('this is funny!!!');
 				spookyText.angle = FlxG.random.int(-5,5); // change its angle between -5 and 5 so it starts shaking violently.
 				//tstatic.x = tstatic.x + FlxG.random.int(-2,2); // move it back and fourth to repersent shaking.
 				if (tstatic.alpha != 0)
@@ -2423,11 +2530,15 @@ class PlayState extends MusicBeatState
 										if (!daNote.isSustainNote)
 										{
 											health -= 0.075;
+											totalDamageTaken += 0.075;
+											interupt = true;
 											noteMiss(daNote.noteData);
 										}
 										else
 										{
+											interupt = true;
 											health -= 0.005;
+											totalDamageTaken += 0.005;
 										}
 									}
 								}		
@@ -2595,6 +2706,8 @@ class PlayState extends MusicBeatState
 					combo = 0;
 					misses++;
 					health -= 0.2;
+					totalDamageTaken += 0.2;
+					interupt = true;
 					ss = false;
 					shits++;
 					if (FlxG.save.data.accuracyMod == 0)
@@ -2603,6 +2716,8 @@ class PlayState extends MusicBeatState
 					daRating = 'bad';
 					score = 0;
 					health -= 0.06;
+					totalDamageTaken += 0.06;
+					interupt = true;
 					ss = false;
 					bads++;
 					if (FlxG.save.data.accuracyMod == 0)
@@ -2612,12 +2727,12 @@ class PlayState extends MusicBeatState
 					score = 200;
 					ss = false;
 					goods++;
-					if (health < 2)
+					if (health < 2 && !grabbed)
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.75;
 				case 'sick':
-					if (health < 2)
+					if (health < 2 && !grabbed)
 						health += 0.1;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 1;
@@ -2910,6 +3025,8 @@ class PlayState extends MusicBeatState
 							if (coolNote.burning)
 							{
 								health -= 0.45;
+								totalDamageTaken += 0.45;
+								interupt = true;
 								coolNote.wasGoodHit = true;
 								coolNote.canBeHit = false;
 								coolNote.kill();
@@ -2988,10 +3105,9 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			if (theFunne)
-				health -= 0.13;
-			else
-				health -= 0.04;
+			health -= 0.04;
+			totalDamageTaken += 0.04;
+			interupt = true;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -3358,6 +3474,42 @@ class PlayState extends MusicBeatState
 					doStopSign(0);
 				case 2202:
 					doStopSign(0,true);
+				case 2239:
+					doStopSign(2,true);
+				case 2258:
+					doStopSign(0, true);
+				case 2304:
+					doStopSign(0, true);
+					doStopSign(0);	
+				case 2326:
+					doStopSign(0, true);
+				case 2336:
+					doStopSign(3);
+				case 2447:
+					doStopSign(2);
+					doStopSign(0, true);
+					doStopSign(0);	
+				case 2480:
+					doStopSign(0, true);
+					doStopSign(0);	
+				case 2512:
+					doStopSign(2);
+					doStopSign(0, true);
+					doStopSign(0);
+				case 2544:
+					doStopSign(0, true);
+					doStopSign(0);	
+				case 2575:
+					doStopSign(2);
+					doStopSign(0, true);
+					doStopSign(0);
+				case 2608:
+					doStopSign(0, true);
+					doStopSign(0);	
+				case 2604:
+					doStopSign(0, true);
+				case 2655:
+					doGremlin(20,13,true);
 			}
 			stepOfLast = curStep;
 		}
@@ -3413,7 +3565,6 @@ class PlayState extends MusicBeatState
 				// Dad doesnt interupt his own notes
 				if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
 				{
-					trace('dance lol');
 					dad.dance();
 				}
 			}
