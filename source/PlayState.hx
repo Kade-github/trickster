@@ -1202,6 +1202,11 @@ class PlayState extends MusicBeatState
 
 		add(gramlan);
 
+		if(FlxG.save.data.downscroll){
+			gramlan.flipY = true;
+			gramlan.y -= 150;
+		}
+		
 		// over use of flxtween :)
 
 		var startHealth = health;
