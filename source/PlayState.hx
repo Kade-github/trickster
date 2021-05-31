@@ -1254,7 +1254,7 @@ class PlayState extends MusicBeatState
 						}
 						else if (!interupt || persist)
 						{
-							var pp = FlxMath.lerp(startHealth,toHealth, tween.percent + 0.1);
+							var pp = FlxMath.lerp(startHealth,toHealth, tween.percent);
 							if (pp <= 0)
 								pp = 0.1;
 							health = pp;

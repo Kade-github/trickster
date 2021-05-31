@@ -77,11 +77,12 @@ class KadeEngineData
 
 		if (FlxG.save.data.beatEx == null)
 			FlxG.save.data.beatEx = false;
-		
+
 		Conductor.recalculateTimings();
 
 		KeyBinds.keyCheck();
-
+		PlayerSettings.player1.controls.loadKeyBinds();
+		
 		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }
