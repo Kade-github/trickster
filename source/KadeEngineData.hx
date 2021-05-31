@@ -69,10 +69,19 @@ class KadeEngineData
 		if (FlxG.save.data.botplay == null)
 			FlxG.save.data.botplay = false;
 
+		if (FlxG.save.data.beatenHard == null)
+			FlxG.save.data.beatenHard = false;
+		
+		if (FlxG.save.data.beaten == null)
+			FlxG.save.data.beaten = false;
+
+		if (FlxG.save.data.beatEx == null)
+			FlxG.save.data.beatEx = false;
+		
 		Conductor.recalculateTimings();
 
 		KeyBinds.keyCheck();
-		
+
 		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }

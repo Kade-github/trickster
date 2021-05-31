@@ -2670,19 +2670,12 @@ class PlayState extends MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
-				if (song.toLowerCase() == 'hellclown')
-					LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new StoryMenuState()));
-				else
-					FlxG.switchState(new StoryMenuState());
+				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new MainMenuState()));
 
-				// if ()
-				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
-
-				if (SONG.validScore)
-				{
-					NGio.unlockMedal(60961);
-					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
-				}
+				if (storyDifficulty == 2)
+					FlxG.save.data.hardBeaten = true;
+				if (storyDifficulty >= 1)
+					FlxG.save.data.beaten = true;
 
 				FlxG.save.data.weekUnlocked = StoryMenuState.weekUnlocked;
 				FlxG.save.flush();
@@ -2733,6 +2726,8 @@ class PlayState extends MusicBeatState
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
+			if (song == "expurgation")
+				FlxG.save.data.beatEx = true;
 			FlxG.switchState(new FreeplayState());
 		}
 	}

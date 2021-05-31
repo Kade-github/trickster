@@ -1,5 +1,7 @@
 package;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.addons.display.FlxBackdrop;
@@ -27,7 +29,7 @@ class MainMenuState extends MusicBeatState
 		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay),
 		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay),
 		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect),
-		new TrickyButton(975, 460, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions)
+		new TrickyButton(975, 455, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions)
 	];
 
 	public var listOfDiffButtons:Array<TrickyButton> = 
@@ -137,7 +139,7 @@ class MainMenuState extends MusicBeatState
 			case 'deimos':
 				shower.frames = Paths.getSparrowAtlas("menu/Deimos/Deimos_Menu","clown");
 				shower.animation.addByPrefix('idle','Deimos');
-				FlxG.sound.playMusic(Paths.music("nexus_other","clown"), 0);
+				FlxG.sound.playMusic(Paths.music("nexus_deimos","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.68));
 				shower.y -= 65;
 				shower.x -= 145;
@@ -152,14 +154,14 @@ class MainMenuState extends MusicBeatState
 			case 'mag':
 				shower.frames = Paths.getSparrowAtlas("menu/Torture/Mag_Agent_Torture_Menu","clown");
 				shower.animation.addByPrefix('idle','Mag Agent Torture');
-				FlxG.sound.playMusic(Paths.music("nexus_other","clown"), 0);
+				FlxG.sound.playMusic(Paths.music("nexus_torture","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 310;
 				shower.x -= 500;
 			case 'sanford':
 				shower.frames = Paths.getSparrowAtlas("menu/Sanford/Menu_Sanford","clown");
 				shower.animation.addByPrefix('idle','Sanford');
-				FlxG.sound.playMusic(Paths.music("nexus_other","clown"), 0);
+				FlxG.sound.playMusic(Paths.music("nexus_sanford","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 180;
 				shower.x -= 275;
@@ -210,8 +212,17 @@ class MainMenuState extends MusicBeatState
 		redLines.setGraphicSize(Std.int(redLines.width * 0.7));
 		add(redLines);
 
-		var logo:FlxSprite = new FlxSprite(75,-15).loadGraphic(Paths.image("menu/Mainlogo","clown"));
+		var logo:FlxSprite = new FlxSprite(-50,-15).loadGraphic(Paths.image("menu/Mainlogo","clown"));
 		add(logo);
+
+		var troph:FlxSprite = new FlxSprite(740, -235).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
+		if (FlxG.save.data.beatenHard)
+			troph = new FlxSprite(740, -235).loadGraphic(Paths.image("menu/Gold_Trophy","clown"));
+
+		troph.setGraphicSize(Std.int(troph.width * 0.33));
+
+		if (FlxG.save.data.beaten)
+			add(troph);
 
 		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/Menu Shade","clown"));
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
@@ -225,8 +236,21 @@ class MainMenuState extends MusicBeatState
 		add(trans);
 		trans.alpha = 0;
 
-		listOfButtons[selectedIndex].highlight(false);
+		/*switch(selectedIndex)
+		{
+			case 0:
+				FlxTween.tween(listOfButtons[selectedIndex],{y: 160},1,{ease: FlxEase.expoInOut});
+				listOfButtons[selectedIndex].highlight(false);
+			case 1:
+				FlxTween.tween(listOfButtons[selectedIndex],{y: 165},1,{ease: FlxEase.expoInOut});
+				listOfButtons[selectedIndex].highlight(false);
+			case 4:
+				FlxTween.tween(listOfButtons[selectedIndex],{y: 460},1,{ease: FlxEase.expoInOut});
+				listOfButtons[selectedIndex].highlight(false);
+		}*/
+
 		listOfDiffButtons[diffSelectedIndex].highlight(false);
+
 
 		super.create();
 	}
@@ -312,6 +336,32 @@ class MainMenuState extends MusicBeatState
 	public static var selectedIndex = 0;
 	public static var selectingDiff = false;
 
+	function doTweens()
+		{
+			switch(selectedIndex)
+			{
+				case 0:
+					FlxTween.tween(listOfButtons[selectedIndex],{y: 160},1,{ease: FlxEase.expoInOut});
+				case 1:
+					FlxTween.tween(listOfButtons[selectedIndex],{y: 165},1,{ease: FlxEase.expoInOut});
+				case 4:
+					FlxTween.tween(listOfButtons[selectedIndex],{y: 460},1,{ease: FlxEase.expoInOut});
+			}
+		}
+
+	function doTweensReverse()
+	{
+		switch(selectedIndex)
+		{
+			case 0:
+				FlxTween.tween(listOfButtons[selectedIndex],{y: 50},1,{ease: FlxEase.expoInOut});
+			case 1:
+				FlxTween.tween(listOfButtons[selectedIndex],{y: 50},1,{ease: FlxEase.expoInOut});
+			case 4:
+				FlxTween.tween(listOfButtons[selectedIndex],{y: 500},1,{ease: FlxEase.expoInOut});
+		}
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -324,13 +374,17 @@ class MainMenuState extends MusicBeatState
 				{
 					listOfButtons[selectedIndex].unHighlight();
 					listOfButtons[selectedIndex + 1].highlight();
+					//doTweensReverse();
 					selectedIndex++;
+					//doTweens();
 					trace('selected ' + selectedIndex);
 				}
 				else
 				{
+					//doTweensReverse();
 					listOfButtons[selectedIndex].unHighlight();
 					selectedIndex = 0;
+					//doTweens();
 					listOfButtons[selectedIndex].highlight();
 					trace('selected ' + selectedIndex);
 				}
@@ -341,14 +395,18 @@ class MainMenuState extends MusicBeatState
 				{
 					listOfButtons[selectedIndex].unHighlight();
 					listOfButtons[selectedIndex - 1].highlight();
+					//doTweensReverse();
 					selectedIndex--;
+					//doTweens();
 					trace('selected ' + selectedIndex);
 				}
 				else
 				{
+					//doTweensReverse();
 					listOfButtons[selectedIndex].unHighlight();
 					listOfButtons[listOfButtons.length - 1].highlight();
 					selectedIndex = listOfButtons.length - 1;
+					//doTweens();
 					trace('selected ' + selectedIndex);
 				}
 			}
