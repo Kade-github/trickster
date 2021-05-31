@@ -2603,6 +2603,7 @@ class PlayState extends MusicBeatState
 											health -= 0.005;
 											totalDamageTaken += 0.005;
 										}
+										vocals.volume = 0;
 									}
 								}		
 							daNote.active = false;
