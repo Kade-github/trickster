@@ -52,10 +52,10 @@ class FreeplayState extends MusicBeatState
 		add(bars);
 
 		if (FlxG.save.data.beatenHard)
-			songs.push(new TrickyButton(300,470,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation CONFIRM',selectSong,'expurgation'));
+			songs.push(new TrickyButton(300,470,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation Confirm',selectSong,'expurgation'));
 		else
 		{
-			var locked:FlxSprite = new FlxSprite(300,470).loadGraphic(Paths.image('menu/freeplay/Expurgation LOCKED','clown'));
+			var locked:FlxSprite = new FlxSprite(300,470).loadGraphic(Paths.image('menu/freeplay/Expurgation Locked','clown'));
 			add(locked);
 		}
 

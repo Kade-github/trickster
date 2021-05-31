@@ -44,6 +44,8 @@ class MainMenuState extends MusicBeatState
 
 	var listOfDiff:Array<String> = ['easy','medium','hard'];
 
+	var tinyMan:FlxSprite;
+
 	override function create()
 	{
 
@@ -108,6 +110,7 @@ class MainMenuState extends MusicBeatState
 
 		shower = new FlxSprite(200,280);
 
+		
 		Conductor.changeBPM(165);
 
 		switch(show)
@@ -128,6 +131,7 @@ class MainMenuState extends MusicBeatState
 					FlxG.sound.playMusic(Paths.music("nexus_tricky","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'sus':
+				FlxG.mouse.visible = true;
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('sus','menu/Sus/Menu_ALLSUS');
 				shower.animation.addByPrefix('idle','AmongUsIDLE');
 				shower.animation.addByPrefix('death','AMONG DEATH');
@@ -186,6 +190,8 @@ class MainMenuState extends MusicBeatState
 				shower.x -= 275;
 		}
 		
+		shower.antialiasing = true;
+
 		if (reRoll)
 		{
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
@@ -236,14 +242,43 @@ class MainMenuState extends MusicBeatState
 		var logo:FlxSprite = new FlxSprite(-50,-15).loadGraphic(Paths.image("menu/Mainlogo","clown"));
 		add(logo);
 
-		var troph:FlxSprite = new FlxSprite(740, -235).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
-		if (FlxG.save.data.beatenHard)
-			troph = new FlxSprite(740, -235).loadGraphic(Paths.image("menu/Gold_Trophy","clown"));
-
-		troph.setGraphicSize(Std.int(troph.width * 0.33));
-
 		if (FlxG.save.data.beaten)
+		{
+			var troph:FlxSprite = new FlxSprite(875, -20).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
+			if (FlxG.save.data.beatenHard)
+			{
+
+
+				troph = new FlxSprite(875, -20).loadGraphic(Paths.image("menu/Gold_Trophy","clown"));
+
+				//if (FlxG.save.data.beatEx)
+				//{
+					FlxG.mouse.visible = true;
+					tinyMan = new FlxSprite(980,-100);
+			
+					tinyMan.frames = Paths.getSparrowAtlas('menu/Fixed_Tiny_Desk_Tricky','clown');
+			
+					tinyMan.animation.addByPrefix('idle','Tiny Desk Tricky Idle',24);
+					tinyMan.animation.addByPrefix('click','Tiny Desk Tricky Click',24, false);
+					tinyMan.animation.addByPrefix('meow','Tiny Desk Tricky Meow',24, false);
+
+					tinyMan.animation.play('idle');
+
+					tinyMan.setGraphicSize(Std.int(tinyMan.width * 0.66));
+
+					tinyMan.antialiasing = true;
+
+					add(tinyMan);
+				//}
+			}
+
+			troph.antialiasing = true;
+			troph.setGraphicSize(Std.int(troph.width * 0.8));
+
+
 			add(troph);
+		}
+
 
 		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/Menu Shade","clown"));
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
@@ -289,6 +324,7 @@ class MainMenuState extends MusicBeatState
 
 	public static function goToFreeplay()
 	{
+		FlxG.mouse.visible = false;
 		curDifficulty = diffSelectedIndex;
 		FreeplayState.diff = curDifficulty;
 		trace(curDifficulty);
@@ -297,6 +333,7 @@ class MainMenuState extends MusicBeatState
 
 	public static function goToOptions()
 	{
+		FlxG.mouse.visible = false;
 		FlxG.switchState(new OptionsMenu());
 	}
 
@@ -308,6 +345,7 @@ class MainMenuState extends MusicBeatState
 
 	public static function playStory()
 	{
+		FlxG.mouse.visible = false;
 		PlayState.storyPlaylist = ['Improbable Outset', 'Madness', 'Hellclown'];
 		PlayState.isStoryMode = true;
 
