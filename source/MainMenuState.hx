@@ -214,14 +214,17 @@ class MainMenuState extends MusicBeatState
 
 		var bgCover:FlxSprite = new FlxSprite(-455,-327).loadGraphic(Paths.image('menu/BGCover','clown'));
 		bgCover.setGraphicSize(Std.int(bgCover.width * 0.7));
+		bgCover.antialiasing = true;
 		add(bgCover);
 		
 		var hedgeCover:FlxSprite = new FlxSprite(-750,-414).loadGraphic(Paths.image('menu/Hedgecover','clown'));
 		hedgeCover.setGraphicSize(Std.int(hedgeCover.width * 0.65));
+		hedgeCover.antialiasing = true;
 		add(hedgeCover);
 
 		var liners:FlxSprite = new FlxSprite(600, 390).loadGraphic(Paths.image("menu/Liners","clown"));
 		liners.setGraphicSize(Std.int(liners.width * 0.7));
+		liners.antialiasing = true;
 		add(liners);
 
 		for (i in listOfDiffButtons)
@@ -237,9 +240,11 @@ class MainMenuState extends MusicBeatState
 
 		var redLines:FlxSprite = new FlxSprite(-749,98).loadGraphic(Paths.image("menu/MenuRedLines","clown"));
 		redLines.setGraphicSize(Std.int(redLines.width * 0.7));
+		redLines.antialiasing = true;
 		add(redLines);
 
 		var logo:FlxSprite = new FlxSprite(-50,-15).loadGraphic(Paths.image("menu/Mainlogo","clown"));
+		logo.antialiasing = true;
 		add(logo);
 
 		if (FlxG.save.data.beaten)
@@ -282,10 +287,11 @@ class MainMenuState extends MusicBeatState
 
 		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/Menu Shade","clown"));
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
+		menuShade.antialiasing = true;
 		add(menuShade);
 
 		var credits:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.image("menu/CreditsOverlay","clown"));
-		//credits.setGraphicSize(Std.int(credits.width * 0.65));
+		credits.antialiasing = true;
 		add(credits);
 
 
