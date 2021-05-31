@@ -632,7 +632,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 				flipX = true;
 			case 'exTricky':
-				frames = Paths.getSparrowAtlas('fourth/EXCLOWN','clown');
+				frames = Paths.getSparrowAtlas('fourth/EXTRICKY','clown');
 				exSpikes = new FlxSprite(x - 350,y - 170);
 				exSpikes.frames = Paths.getSparrowAtlas('fourth/FloorSpikes','clown');
 				exSpikes.visible = false;

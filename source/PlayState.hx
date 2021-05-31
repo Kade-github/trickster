@@ -171,6 +171,8 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		KeyBinds.keyCheck();
+
 		generatedMusic = false;
 		theFunne = FlxG.save.data.newInput;
 		if (FlxG.sound.music != null)
