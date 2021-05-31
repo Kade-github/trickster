@@ -741,6 +741,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 		}
 
+		antialiasing = true;
+
 		dance();
 
 		if (isPlayer)

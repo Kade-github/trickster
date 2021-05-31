@@ -14,16 +14,18 @@ class TrickyButton extends FlxSprite
     public var spriteTwo:FlxSprite;
     public var pognt:String;
 
-    var selected:Bool = false;
-    var tween:FlxTween;
+    public var selected:Bool = false;
+    public var tween:FlxTween;
 
-    var trueX:Float;
-    var trueY:Float;
-    var tweenDistance:Float;
+    public var trueX:Float;
+    public var trueY:Float;
+    public var tweenX:Float;
+    public var tweenY:Float;
+    
 
-    var func:Void->Void;
+    public var func:Void->Void;
 
-    public function new(_x:Int,_y:Int,pngOne:String,pngTwo:String, func:Void->Void, tweenDistance:Float = 0, pogn:String = 'button')
+    public function new(_x:Int,_y:Int,pngOne:String,pngTwo:String, func:Void->Void, pogn:String = 'button', tweenDistanceX:Float = 0, tweenDistanceY:Float = 0)
     {
         super(-100,-100);
 
@@ -33,12 +35,16 @@ class TrickyButton extends FlxSprite
 
         trueX = _x;
         trueY = _y;
-        this.tweenDistance = tweenDistance;
+        tweenX = tweenDistanceX;
+        tweenY = tweenDistanceY;
 
         pognt = pogn;
 
-        spriteOne = new FlxSprite(trueX, trueY - tweenDistance).loadGraphic(Paths.image(pngOne,"clown"));
-        spriteTwo = new FlxSprite(trueX, trueY - tweenDistance).loadGraphic(Paths.image(pngTwo,"clown"));
+        spriteOne = new FlxSprite(trueX + tweenX, trueY + tweenY).loadGraphic(Paths.image(pngOne,"clown"));
+        spriteTwo = new FlxSprite(trueX + tweenX, trueY + tweenY).loadGraphic(Paths.image(pngTwo,"clown"));
+
+        spriteOne.antialiasing = true;
+        spriteTwo.antialiasing = true;
         
         spriteTwo.alpha = 0;
     }
@@ -61,7 +67,7 @@ class TrickyButton extends FlxSprite
         spriteOne.alpha = 0;
 
         tween.cancel();
-        tween = FlxTween.tween(spriteOne, {y: trueY}, 0.4, {ease: FlxEase.quintOut});
+        tween = FlxTween.tween(spriteOne, {y: trueY, x: trueX}, 0.4, {ease: FlxEase.quintOut});
     }
 
     public function unHighlight()
@@ -70,7 +76,7 @@ class TrickyButton extends FlxSprite
         spriteOne.alpha = 1;
 
         tween.cancel();
-        tween = FlxTween.tween(spriteOne, {y: trueY - tweenDistance}, 0.5, {ease: FlxEase.quintOut});
+        tween = FlxTween.tween(spriteOne, {y: trueY + tweenY, x: trueX + tweenX, }, 0.5, {ease: FlxEase.quintOut});
     }
 
     public function select()

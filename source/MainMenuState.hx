@@ -28,18 +28,18 @@ class MainMenuState extends MusicBeatState
 
 	public var listOfButtons:Array<TrickyButton> = 
 	[
-		new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory, 40,'clown'),
-		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay, 40),
-		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay, 0),
-		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect, 0),
-		new TrickyButton(975, 460, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions, -45)
+		new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory,'clown', 0, -40),
+		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay, "free", 0, -40),
+		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay),
+		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect),
+		new TrickyButton(975, 460, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions, "options", 0, 45)
 	];
 
 	public var listOfDiffButtons:Array<TrickyButton> = 
 	[
-		new TrickyButton(635,415,'menu/EASY button', 'menu/EASY button confirm', setDiff, 0,'easy'),
-		new TrickyButton(787,415,'menu/MEDIUM button', 'menu/MEDIUM Button confirm', setDiff, 0),
-		new TrickyButton(1015,415,'menu/HARD Button', 'menu/HARD button confirm', setDiff, 0,'hard')
+		new TrickyButton(635,415,'menu/EASY button', 'menu/EASY button confirm', setDiff, 'easy'),
+		new TrickyButton(787,415,'menu/MEDIUM button', 'menu/MEDIUM Button confirm', setDiff),
+		new TrickyButton(1015,415,'menu/HARD Button', 'menu/HARD button confirm', setDiff, 'hard')
 	];
 
 	var listOfDiff:Array<String> = ['easy','medium','hard'];

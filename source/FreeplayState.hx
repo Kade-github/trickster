@@ -23,21 +23,39 @@ class FreeplayState extends MusicBeatState
 	var selectedSmth = false;
 	public static var diff = 0;
 	public static var diffAndScore:FlxText;
-	
+
+	var debug:Bool = false;
+
+	var songFour:TrickyButton;
 	
 	public static var diffText:AlphabetTricky;
 
 	override function create() {
 
 		trace(diff);
+	
+		#if debug
+		debug = true;
+		#end
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		songs.push(new TrickyButton(45,120,'menu/freeplay/Improbable Outset Button','menu/freeplay/Improbable Outset Confirm',selectSong,'Improbable-Outset'));
-		songs.push(new TrickyButton(80,240,'menu/freeplay/Madness Button','menu/freeplay/Madness Confirm',selectSong,'Madness'));
-		songs.push(new TrickyButton(80,340,'menu/freeplay/Hellclown Button','menu/freeplay/Hellclown Confirm',selectSong,'Hellclown'));
+		songs.push(new TrickyButton(80,120,'menu/freeplay/Improbable Outset Button','menu/freeplay/Improbable Outset Confirm',selectSong, 'Improbable-Outset', -30));
+		songs.push(new TrickyButton(80,240,'menu/freeplay/Madness Button','menu/freeplay/Madness Confirm',selectSong, 'Madness', -30));
+		songs.push(new TrickyButton(80,360,'menu/freeplay/Hellclown Button','menu/freeplay/Hellclown Confirm',selectSong, 'Hellclown', -30));
+		songFour = new TrickyButton(300,420,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation Confirm',selectSong, 'expurgation', 0, 15);
 
+		songFour.spriteOne = new FlxSprite(songFour.trueX + songFour.tweenX, songFour.trueY + songFour.tweenY).loadGraphic(Paths.image('menu/freeplay/Expurgation Button',"clown"), true, 800, 200);
+        songFour.spriteTwo = new FlxSprite(songFour.trueX + songFour.tweenX, songFour.trueY + songFour.tweenY).loadGraphic(Paths.image('menu/freeplay/Expurgation Confirm',"clown"), true, 800, 200);
+        songFour.spriteTwo.alpha = 0;
+		songFour.spriteOne.animation.add("static", [0, 1, 2, 3], 12, true);
+		songFour.spriteTwo.animation.add("static", [0, 1, 2, 3], 12, true);
+		songFour.spriteOne.animation.play("static");
+		songFour.spriteTwo.animation.play("static");
+
+		songFour.spriteOne.screenCenter(X);
+		songFour.trueX = songFour.spriteOne.x;
 			
 		var bg:FlxSprite = new FlxSprite(-10,-10).loadGraphic(Paths.image('menu/freeplay/RedBG','clown'));
 		add(bg);
@@ -51,11 +69,14 @@ class FreeplayState extends MusicBeatState
 		bars.setGraphicSize(Std.int(bars.width * 0.65));
 		add(bars);
 
-		if (FlxG.save.data.beatenHard)
-			songs.push(new TrickyButton(300,470,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation Confirm',selectSong,'expurgation'));
+		if (FlxG.save.data.beatenHard || debug)
+			songs.push(songFour);
 		else
 		{
-			var locked:FlxSprite = new FlxSprite(300,470).loadGraphic(Paths.image('menu/freeplay/Expurgation Locked','clown'));
+			var locked:FlxSprite = new FlxSprite(songFour.trueX, songFour.trueY).loadGraphic(Paths.image('menu/freeplay/Expurgation Locked','clown'), true, 900, 200);
+			locked.animation.add("static", [0, 1, 2, 3], 12, true);
+			locked.animation.play("static");
+			locked.screenCenter(X);
 			add(locked);
 		}
 
