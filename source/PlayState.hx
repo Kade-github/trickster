@@ -2588,7 +2588,7 @@ class PlayState extends MusicBeatState
 								else
 								{
 									
-									if (!daNote.burning)
+									if (!daNote.burning && daNote.mustPress)
 									{
 										if (!daNote.isSustainNote || curStage != 'nevedaSpook')
 										{
