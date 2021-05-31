@@ -1176,6 +1176,8 @@ class PlayState extends MusicBeatState
 
 	var totalDamageTaken:Float = 0;
 
+	var shouldBeDead:Bool = false;
+
 	var interupt = false;
 
 	// basic explanation of this is:
@@ -1259,6 +1261,9 @@ class PlayState extends MusicBeatState
 								pp = 0.1;
 							health = pp;
 						}
+
+						if (shouldBeDead)
+							health = 0;
 					},
 					onComplete: function(tween:FlxTween)
 					{
@@ -2670,6 +2675,8 @@ class PlayState extends MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
+				MainMenuState.reRoll = true;
+
 				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new MainMenuState()));
 
 				if (storyDifficulty == 2)
@@ -2725,10 +2732,10 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			trace('WENT BACK TO FREEPLAY??');
 			if (song == "expurgation")
 				FlxG.save.data.beatEx = true;
-			FlxG.switchState(new FreeplayState());
+			MainMenuState.reRoll = true;
+			FlxG.switchState(new MainMenuState());
 		}
 	}
 
@@ -3089,6 +3096,7 @@ class PlayState extends MusicBeatState
 								{
 									// lol death
 									health = 0;
+									shouldBeDead = true;
 									FlxG.sound.play(Paths.sound('death','clown'));
 								}
 								else
