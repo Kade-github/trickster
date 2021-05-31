@@ -89,6 +89,8 @@ class FreeplayState extends MusicBeatState
 
 	function diffGet()
 	{
+		if (songs[selectedIndex].pognt == 'expurgation')
+			return "UNFAIR";
 		switch (diff)
 		{
 			case 0:
