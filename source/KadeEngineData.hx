@@ -71,6 +71,8 @@ class KadeEngineData
 
 		Conductor.recalculateTimings();
 
+		KeyBinds.keyCheck();
+		
 		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }
