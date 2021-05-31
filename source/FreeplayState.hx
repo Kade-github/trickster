@@ -22,6 +22,8 @@ class FreeplayState extends MusicBeatState
 	var selectedIndex = 0;
 	var selectedSmth = false;
 	public static var diff = 0;
+	public static var diffAndScore:FlxText;
+	
 	
 	public static var diffText:AlphabetTricky;
 
@@ -32,11 +34,11 @@ class FreeplayState extends MusicBeatState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		songs.push(new TrickyButton(45,120,'menu/freeplay/Improbable Outset Button','menu/freeplay/Improbable Outset Confirm',selectSong,'improbable-outset'));
-		songs.push(new TrickyButton(80,240,'menu/freeplay/Madness Button','menu/freeplay/Madness Confirm',selectSong,'madness'));
-		songs.push(new TrickyButton(80,340,'menu/freeplay/Hellclown Button','menu/freeplay/Hellclown Confirm',selectSong,'hellclown'));
-		songs.push(new TrickyButton(300,470,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation CONFIRM',selectSong,'expurgation'));
+		songs.push(new TrickyButton(45,120,'menu/freeplay/Improbable Outset Button','menu/freeplay/Improbable Outset Confirm',selectSong,'Improbable-Outset'));
+		songs.push(new TrickyButton(80,240,'menu/freeplay/Madness Button','menu/freeplay/Madness Confirm',selectSong,'Madness'));
+		songs.push(new TrickyButton(80,340,'menu/freeplay/Hellclown Button','menu/freeplay/Hellclown Confirm',selectSong,'Hellclown'));
 
+			
 		var bg:FlxSprite = new FlxSprite(-10,-10).loadGraphic(Paths.image('menu/freeplay/RedBG','clown'));
 		add(bg);
 		var hedge:FlxSprite = new FlxSprite(-810,-335).loadGraphic(Paths.image('menu/freeplay/hedge','clown'));
@@ -48,6 +50,14 @@ class FreeplayState extends MusicBeatState
 		var bars:FlxSprite = new FlxSprite(-225,-395).loadGraphic(Paths.image('menu/freeplay/theBox','clown'));
 		bars.setGraphicSize(Std.int(bars.width * 0.65));
 		add(bars);
+
+		if (FlxG.save.data.beatenHard)
+			songs.push(new TrickyButton(300,470,'menu/freeplay/Expurgation Button','menu/freeplay/Expurgation CONFIRM',selectSong,'expurgation'));
+		else
+		{
+			var locked:FlxSprite = new FlxSprite(300,470).loadGraphic(Paths.image('menu/freeplay/Expurgation LOCKED','clown'));
+			add(locked);
+		}
 
 		for (i in songs)
 			{
@@ -62,6 +72,13 @@ class FreeplayState extends MusicBeatState
 		//diffText = new AlphabetTricky(80,500,"Current Difficulty is " + diffGet());
 		//add(diffText);
 
+		var score = Highscore.getScore(songs[selectedIndex].pognt,diff);
+
+		diffAndScore = new FlxText(125,600,0,diffGet() + " - " + score);
+		diffAndScore.setFormat("tahoma-bold.ttf",42,FlxColor.RED);
+
+		add(diffAndScore);
+
 		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/freeplay/Menu Shade","clown"));
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
 		add(menuShade);
@@ -75,11 +92,11 @@ class FreeplayState extends MusicBeatState
 		switch (diff)
 		{
 			case 0:
-				return "easy";
+				return "EASY";
 			case 1:
-				return "normal";
+				return "MEDIUM";
 			case 2:
-				return "hard";
+				return "HARD";
 		}
 		return "what";
 	}
@@ -90,7 +107,10 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.SONG = Song.loadFromJson(poop, songs[selectedIndex].pognt.toLowerCase());
 		PlayState.isStoryMode = false;
-		PlayState.storyDifficulty = diff;
+		if (songs[selectedIndex].pognt == 'expurgation')
+			PlayState.storyDifficulty = 2;
+		else
+			PlayState.storyDifficulty = diff;
 		PlayState.storyWeek = 7;
 
 		LoadingState.loadAndSwitchState(new PlayState());
@@ -100,36 +120,74 @@ class FreeplayState extends MusicBeatState
 		{
 			super.update(elapsed);
 	
+			var score = Highscore.getScore(songs[selectedIndex].pognt,diff);
+			diffAndScore.text = diffGet() + " - " + score; 
+
 			if (FlxG.keys.justPressed.ESCAPE && !selectedSmth)
 			{
 				selectedSmth = true;
+				MainMenuState.curDifficulty = diff;
 				FlxG.switchState(new MainMenuState());
 			}
 
+			if (FlxG.keys.justPressed.RIGHT)
+			{
+				FlxG.sound.play(Paths.sound('Hover','clown'));
+				diff += 1;
+			}
+			if (FlxG.keys.justPressed.LEFT)
+			{
+				FlxG.sound.play(Paths.sound('Hover','clown'));
+				diff -= 1;
+			}
+
+			if (diff >= 3)
+				diff = 0;
+			if (diff < 0)
+				diff = 2;
+
 			if (FlxG.keys.justPressed.DOWN)
-			{
-				if (selectedIndex + 1 < songs.length)
 				{
-					songs[selectedIndex].unHighlight();
-					songs[selectedIndex + 1].highlight();
-					selectedIndex++;
-					trace('selected ' + selectedIndex);
+					if (selectedIndex + 1 < songs.length)
+					{
+						songs[selectedIndex].unHighlight();
+						songs[selectedIndex + 1].highlight();
+						//doTweensReverse();
+						selectedIndex++;
+						//doTweens();
+						trace('selected ' + selectedIndex);
+					}
+					else
+					{
+						//doTweensReverse();
+						songs[selectedIndex].unHighlight();
+						selectedIndex = 0;
+						//doTweens();
+						songs[selectedIndex].highlight();
+						trace('selected ' + selectedIndex);
+					}
 				}
-				else
-					trace('CANT select ' + selectedIndex);
-			}
-			if (FlxG.keys.justPressed.UP)
-			{
-				if (selectedIndex > 0)
+				if (FlxG.keys.justPressed.UP)
 				{
-					songs[selectedIndex].unHighlight();
-					songs[selectedIndex - 1].highlight();
-					selectedIndex--;
-					trace('selected ' + selectedIndex);
+					if (selectedIndex > 0)
+					{
+						songs[selectedIndex].unHighlight();
+						songs[selectedIndex - 1].highlight();
+						//doTweensReverse();
+						selectedIndex--;
+						//doTweens();
+						trace('selected ' + selectedIndex);
+					}
+					else
+					{
+						//doTweensReverse();
+						songs[selectedIndex].unHighlight();
+						songs[songs.length - 1].highlight();
+						selectedIndex = songs.length - 1;
+						//doTweens();
+						trace('selected ' + selectedIndex);
+					}
 				}
-				else
-					trace('CANT select ' + selectedIndex);
-			}
 			
 	
 			if (FlxG.keys.justPressed.ENTER && !selectedSmth)

@@ -19,6 +19,9 @@ class MainMenuState extends MusicBeatState
 	public static var trans:FlxSprite;
 	public static var diffSelectedIndex = 2;
 
+	public static var lastRoll:String = "bf";
+	public static var reRoll:Bool = true;
+
 	var clownButton:TrickyButton;
 
 	public static var instance:MainMenuState;
@@ -74,100 +77,120 @@ class MainMenuState extends MusicBeatState
 		// figure out who the fuck do I show lol
 		// also THIS IS BAD
 
-		var random = FlxG.random.float(0,10000);
-		show = 'bf';
-		if (random >= 1000 && random <= 1999)
-			show = 'tricky';
-		if (random >= 3000 && random <= 3999)
-			show = 'jebus';
-		if (random >= 4000 && random <= 4999)
-			show = 'sanford';
-		if (random >= 2000 && random <= 2999)
-			show = 'deimos';
-		if (random >= 5000 && random <= 5999)
-			show = 'hank';
-		if (random >= 6000 && random <= 6999)
-			show = 'auditor';
-		if (random >= 7000 && random <= 7999)
-			show = 'mag';
-		if (random > 9800)
-			show = 'sus';
+		
 
-		trace('random ' + random + ' im showin ' + show);
+		if (reRoll)
+		{
+			FlxG.sound.music.stop();
+			var random = FlxG.random.float(0,10000);
+			show = 'bf';
+			if (random >= 1000 && random <= 1999)
+				show = 'tricky';
+			if (random >= 3000 && random <= 3999)
+				show = 'jebus';
+			if (random >= 4000 && random <= 4999)
+				show = 'sanford';
+			if (random >= 2000 && random <= 2999)
+				show = 'deimos';
+			if (random >= 5000 && random <= 5999)
+				show = 'hank';
+			if (random >= 6000 && random <= 6999)
+				show = 'auditor';
+			if (random >= 7000 && random <= 7999)
+				show = 'mag';
+			if (random > 9800)
+				show = 'sus';
+			lastRoll = show;
+			trace('random ' + random + ' im showin ' + show);
+		}
+		else
+			show = lastRoll;
 
 		shower = new FlxSprite(200,280);
 
 		Conductor.changeBPM(165);
 
-
 		switch(show)
 		{
 			case 'bf':
-				shower.frames = Paths.getSparrowAtlas("menu/MenuBF/MenuBF","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('bf','menu/MenuBF/MenuBF');
 				shower.animation.addByPrefix('idle','BF idle menu');
 				shower.flipX = true;
-				FlxG.sound.playMusic(Paths.music("nexus_bf","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_bf","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'tricky':
-				shower.frames = Paths.getSparrowAtlas("menu/MenuTricky/MenuTricky","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('tricky','menu/MenuTricky/MenuTricky');
 				shower.animation.addByPrefix('idle','menutricky');
 				shower.y -= 155;
 				shower.x -= 120;
-				FlxG.sound.playMusic(Paths.music("nexus_tricky","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_tricky","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'sus':
-				shower.frames = Paths.getSparrowAtlas("menu/Sus/Menu_ALLSUS","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('sus','menu/Sus/Menu_ALLSUS');
 				shower.animation.addByPrefix('idle','AmongUsIDLE');
 				shower.animation.addByPrefix('death','AMONG DEATH');
 				shower.animation.addByPrefix('no','AmongUs NuhUh');
-				FlxG.sound.playMusic(Paths.music("nexus_sussy","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_sussy","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'jebus':
-				shower.frames = Paths.getSparrowAtlas("menu/Jebus/Menu_jebus","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('jebus','menu/Jebus/Menu_jebus');
 				shower.animation.addByPrefix('idle','Jebus');
 				shower.y -= 240;
 				shower.x -= 145;
-				FlxG.sound.playMusic(Paths.music("nexus_jebus","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_jebus","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 			case 'hank':
-				shower.frames = Paths.getSparrowAtlas("menu/Hank/Hank_Menu","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('hank','menu/Hank/Hank_Menu');
 				shower.animation.addByPrefix('idle','Hank');
 				shower.y -= 240;
 				shower.x -= 180;
-				FlxG.sound.playMusic(Paths.music("nexus_hank","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_hank","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.63));
 			case 'deimos':
-				shower.frames = Paths.getSparrowAtlas("menu/Deimos/Deimos_Menu","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('deimos','menu/Deimos/Deimos_Menu');
 				shower.animation.addByPrefix('idle','Deimos');
-				FlxG.sound.playMusic(Paths.music("nexus_deimos","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_deimos","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.68));
 				shower.y -= 65;
 				shower.x -= 145;
 				shower.angle = -8;
 			case 'auditor':
-				shower.frames = Paths.getSparrowAtlas("menu/Auditor/Auditor","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('auditor','menu/Auditor/Auditor');
 				shower.animation.addByPrefix('idle','Auditor');
-				FlxG.sound.playMusic(Paths.music("nexus_auditor","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_auditor","clown"), 0);
 				shower.y -= 300;
 				shower.x -= 200;
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
 			case 'mag':
-				shower.frames = Paths.getSparrowAtlas("menu/Torture/Mag_Agent_Torture_Menu","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('torture','menu/Torture/Mag_Agent_Torture_Menu');
 				shower.animation.addByPrefix('idle','Mag Agent Torture');
-				FlxG.sound.playMusic(Paths.music("nexus_torture","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_torture","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 310;
 				shower.x -= 500;
 			case 'sanford':
-				shower.frames = Paths.getSparrowAtlas("menu/Sanford/Menu_Sanford","clown");
+				shower.frames = CachedFrames.cachedInstance.fromSparrow('sanford','menu/Sanford/Menu_Sanford');
 				shower.animation.addByPrefix('idle','Sanford');
-				FlxG.sound.playMusic(Paths.music("nexus_sanford","clown"), 0);
+				if (!FlxG.sound.music.playing)
+					FlxG.sound.playMusic(Paths.music("nexus_sanford","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 180;
 				shower.x -= 275;
 		}
 		
-		FlxG.sound.music.fadeIn(4, 0, 0.7);
+		if (reRoll)
+		{
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
+			reRoll = false;
+		}
 
 		shower.animation.play('idle');
 
@@ -246,6 +269,8 @@ class MainMenuState extends MusicBeatState
 				FlxTween.tween(listOfButtons[selectedIndex],{y: 460},1,{ease: FlxEase.expoInOut});
 				listOfButtons[selectedIndex].highlight(false);
 		}*/
+
+		diffSelectedIndex = curDifficulty;
 
 		listOfDiffButtons[diffSelectedIndex].highlight(false);
 

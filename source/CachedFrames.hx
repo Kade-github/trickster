@@ -112,6 +112,15 @@ class CachedFrames
             toBeLoaded.set('idle','hellclwn/Tricky/Idle');
             toBeLoaded.set('grem','fourth/mech/HP GREMLIN');
             toBeLoaded.set('cln','fourth/Clone');
+            toBeLoaded.set('sanford','menu/Sanford/Menu_Sanford');
+            toBeLoaded.set('torture','menu/Torture/Mag_Agent_Torture_Menu');
+            toBeLoaded.set('auditor','menu/Auditor/Auditor');
+            toBeLoaded.set('deimos','menu/Deimos/Deimos_Menu');
+            toBeLoaded.set('hank','menu/Hank/Hank_Menu');
+            toBeLoaded.set('jebus','menu/Jebus/Menu_jebus');
+            toBeLoaded.set('sus','menu/Sus/Menu_ALLSUS');
+            toBeLoaded.set('tricky','menu/MenuTricky/MenuTricky');
+            toBeLoaded.set('bf','menu/MenuBF/MenuBF');
             // all the big sprites
             var numba = 0;
             for(i in toBeLoaded.keys())
