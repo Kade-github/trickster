@@ -19,7 +19,8 @@ using StringTools;
 class VideoState extends MusicBeatState
 {
 	public var leSource:String = "";
-	public var transClass:FlxState;
+	//public var transClass:FlxState;
+	public var transFunction:Void->Void;
 	public var txt:FlxText;
 	public var fuckingVolume:Float = 1;
 	public var notDone:Bool = true;
@@ -32,12 +33,13 @@ class VideoState extends MusicBeatState
 	public var doShit:Bool = false;
 	public var pauseText:String = "Press P To Pause/Unpause";
 
-	public function new(source:String, toTrans:FlxState)
+	public function new(source:String, toTrans:Void->Void)
 	{
 		super();
 		
 		leSource = source;
-		transClass = toTrans;
+		//transClass = toTrans;
+		transFunction = toTrans;
 	}
 	
 	override function create()
@@ -74,8 +76,11 @@ class VideoState extends MusicBeatState
 
 		if (GlobalVideo.isWebm)
 		{
-			useSound = true;
-			vidSound = FlxG.sound.play(leSource.replace(".webm", ".ogg"));
+			if (Assets.exists(leSource.replace(".webm", ".ogg"), MUSIC) || Assets.exists(leSource.replace(".webm", ".ogg"), SOUND))
+			{
+				useSound = true;
+				vidSound = FlxG.sound.play(leSource.replace(".webm", ".ogg"));
+			}
 		}
 
 		GlobalVideo.get().source(leSource);
@@ -88,7 +93,6 @@ class VideoState extends MusicBeatState
 		if (GlobalVideo.isWebm)
 		{
 			GlobalVideo.get().restart();
-			useSound = true;
 		} else {
 			GlobalVideo.get().play();
 		}
@@ -193,7 +197,8 @@ class VideoState extends MusicBeatState
 			FlxG.sound.music.volume = fuckingVolume;
 			txt.text = pauseText;
 			FlxG.autoPause = true;
-			FlxG.switchState(transClass);
+			//FlxG.switchState(transClass);
+			transFunction();
 		}
 		
 		if (GlobalVideo.get().played || GlobalVideo.get().restarted)
