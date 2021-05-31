@@ -499,7 +499,7 @@ class TitleState extends MusicBeatState
 			remove(ngSpr);
 			remove(actualNG);
 			remove(backupMen);
-
+			PlayerSettings.player1.controls.loadKeyBinds();
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
 			skippedIntro = true;

@@ -139,10 +139,20 @@ class Note extends FlxSprite
 					else
 					{
 						frames = Paths.getSparrowAtlas('NOTE_fire', "clown");
-						animation.addByPrefix('greenScroll', 'green fire');
+						if(!FlxG.save.data.downscroll){
+							animation.addByPrefix('blueScroll', 'blue fire');
+							animation.addByPrefix('greenScroll', 'green fire');
+						}
+						else{
+							animation.addByPrefix('greenScroll', 'blue fire');
+							animation.addByPrefix('blueScroll', 'green fire');
+						}
 						animation.addByPrefix('redScroll', 'red fire');
-						animation.addByPrefix('blueScroll', 'blue fire');
 						animation.addByPrefix('purpleScroll', 'purple fire');
+
+						if(FlxG.save.data.downscroll)
+							flipY = true;
+
 						x -= 50;
 					}
 				}
