@@ -43,6 +43,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		bf.animation.resume();
 	}
 
+	var playedMic:Bool = false;
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -68,6 +70,13 @@ class GameOverSubstate extends MusicBeatSubstate
 			FlxG.sound.playMusic(Paths.music('gameOver','clown'));
 			bf.playAnim('deathLoop', true);
 		}
+
+		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.frameIndex == 28 && !playedMic)
+		{
+			playedMic = true;
+			FlxG.sound.play(Paths.sound('Micdrop','clown'));
+		}
+
 		else if (bf.animation.curAnim.finished && bf.animation.curAnim.name != 'deathConfirm')
 		{
 			bf.playAnim('deathLoop', true);

@@ -14,14 +14,14 @@ class HealthIcon extends FlxSprite
 		super();
 		switch(char)
 		{
-			case 'trickyMash' | 'tricky':
+			case 'trickyMask' | 'tricky':
 				loadGraphic(Paths.image('IconGridTricky','clown'), true, 150, 150);
 
 				antialiasing = true;
 				animation.add('tricky', [2, 3], 0, false, isPlayer);
 				animation.add('trickyMask', [0, 1], 0, false, isPlayer);
 			case 'trickyH':
-				loadGraphic(Paths.image('IconGridTricky','clown'), true, 150, 150);
+				loadGraphic(Paths.image('hellclwn/hellclownIcon','clown'), true, 150, 150);
 				animation.add('trickyH', [0, 1], 0, false, isPlayer);
 			case 'exTricky':
 				loadGraphic(Paths.image('fourth/exTrickyIcons','clown'), true, 150, 150);

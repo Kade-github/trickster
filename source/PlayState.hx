@@ -1176,6 +1176,16 @@ class PlayState extends MusicBeatState
 
 	var interupt = false;
 
+	// basic explanation of this is:
+	// get the health to go to
+	// tween the gremlin to the icon
+	// play the grab animation and do some funny maths,
+	// to figure out where to tween to.
+	// lerp the health with the tween progress
+	// if you loose any health, cancel the tween.
+	// and fall off.
+	// Once it finishes, fall off.
+
 	function doGremlin(hpToTake:Int, duration:Int,persist:Bool = false)
 	{
 		interupt = false;
@@ -1218,8 +1228,7 @@ class PlayState extends MusicBeatState
 
 		var onc:Bool = false;
 
-		var snd:FlxSound = new FlxSound().loadEmbedded(Paths.sound('fourth/GremlinWoosh','clown'));
-		snd.play();
+		FlxG.sound.play(Paths.sound('fourth/GremlinWoosh','clown'));
 
 		gramlan.animation.play('come');
 		new FlxTimer().start(0.14, function(tmr:FlxTimer) {
@@ -2210,8 +2219,6 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
-		tStaticSound.volume = FlxG.sound.volume;
-
 		var balls = notesHitArray.length-1;
 		while (balls >= 0)
 		{
@@ -2620,7 +2627,7 @@ class PlayState extends MusicBeatState
 		spookySteps = curStep;
 		spookyRendered = true;
 		tstatic.alpha = 0.5;
-		tStaticSound.play();
+		FlxG.sound.play(Paths.sound('staticSound','clown'));
 		spookyText = new FlxText((x == -1111111111111 ? FlxG.random.float(dad.x + 40,dad.x + 120) : x), (y == -1111111111111 ? FlxG.random.float(dad.y + 200, dad.y + 300) : y));
 		spookyText.setFormat("Impact", 128, FlxColor.RED);
 		if (curStage == 'nevedaSpook')
@@ -2974,19 +2981,21 @@ class PlayState extends MusicBeatState
 	var noteHit:Int = 0;
 	private function keyShit():Void // I've invested in emma stocks
 		{
+			var control = PlayerSettings.player1.controls;
+
 			// control arrays, order L D R U
-			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
+			var holdArray:Array<Bool> = [control.LEFT, control.DOWN, control.UP, control.RIGHT];
 			var pressArray:Array<Bool> = [
-				controls.LEFT_P,
-				controls.DOWN_P,
-				controls.UP_P,
-				controls.RIGHT_P
+				control.LEFT_P,
+				control.DOWN_P,
+				control.UP_P,
+				control.RIGHT_P
 			];
 			var releaseArray:Array<Bool> = [
-				controls.LEFT_R,
-				controls.DOWN_R,
-				controls.UP_R,
-				controls.RIGHT_R
+				control.LEFT_R,
+				control.DOWN_R,
+				control.UP_R,
+				control.RIGHT_R
 			];
 	 
 	 
@@ -3082,6 +3091,7 @@ class PlayState extends MusicBeatState
 								{
 									// lol death
 									health = 0;
+									FlxG.sound.play(Paths.sound('death','clown'));
 								}
 								else
 								{
@@ -3464,7 +3474,7 @@ class PlayState extends MusicBeatState
 		spookySteps = curStep;
 		spookyRendered = true;
 		tstatic.alpha = 0.5;
-		tStaticSound.play();
+		FlxG.sound.play(Paths.sound('staticSound','clown'));
 		resetSpookyText = true;
 	}
 
@@ -3634,11 +3644,13 @@ class PlayState extends MusicBeatState
 				}
 			}
 			
-
-		if (curBeat % 8 == 4 && beatOfFuck != curBeat)
+		if (curStage == 'auditorHell')
 		{
-			beatOfFuck = curBeat;
-			doClone(FlxG.random.int(0,1));
+			if (curBeat % 8 == 4 && beatOfFuck != curBeat)
+			{
+				beatOfFuck = curBeat;
+				doClone(FlxG.random.int(0,1));
+			}
 		}
 
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
