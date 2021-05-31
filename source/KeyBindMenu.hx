@@ -88,6 +88,10 @@ class KeyBindMenu extends MusicBeatState
         keyWarning.alpha = 0;
         add(keyWarning);
 
+		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/freeplay/Menu Shade","clown"));
+		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
+		add(menuShade);
+
         warningTween = FlxTween.tween(keyWarning, {alpha: 0}, 0);
 
         textUpdate();

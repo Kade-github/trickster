@@ -57,6 +57,8 @@ class OptionsMenu extends MusicBeatState
 
 	var currentSelectedCat:OptionCatagory;
 
+	var menuShade:FlxSprite;
+
 	override function create()
 	{
 	
@@ -93,6 +95,10 @@ class OptionsMenu extends MusicBeatState
 
 		currentOptions[0].color = FlxColor.WHITE;
 
+		menuShade = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/freeplay/Menu Shade","clown"));
+		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
+		add(menuShade);
+
 		super.create();
 	}
 
@@ -122,6 +128,8 @@ class OptionsMenu extends MusicBeatState
 						add(text);
 						currentOptions.push(text);
 					}
+				remove(menuShade);
+				add(menuShade);
 				curSelected = 0;
 				currentOptions[curSelected].color = FlxColor.WHITE;
 			}
@@ -190,6 +198,8 @@ class OptionsMenu extends MusicBeatState
 								add(text);
 								currentOptions.push(text);
 							}
+							remove(menuShade);
+							add(menuShade);
 							trace('done');
 						currentOptions[curSelected].color = FlxColor.WHITE;
 					}
@@ -214,6 +224,8 @@ class OptionsMenu extends MusicBeatState
 							add(text);
 							currentOptions.push(text);
 						}
+						remove(menuShade);
+						add(menuShade);
 					curSelected = 0;
 					currentOptions[curSelected].color = FlxColor.WHITE;
 				}
