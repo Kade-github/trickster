@@ -25,18 +25,18 @@ class MainMenuState extends MusicBeatState
 
 	public var listOfButtons:Array<TrickyButton> = 
 	[
-		new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory,'clown'),
-		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay),
-		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay),
-		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect),
-		new TrickyButton(975, 455, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions)
+		new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory, 40,'clown'),
+		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay, 40),
+		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay, 0),
+		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect, 0),
+		new TrickyButton(975, 460, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions, -45)
 	];
 
 	public var listOfDiffButtons:Array<TrickyButton> = 
 	[
-		new TrickyButton(635,415,'menu/EASY button', 'menu/EASY button confirm', setDiff,'easy'),
-		new TrickyButton(787,415,'menu/MEDIUM button', 'menu/MEDIUM Button confirm', setDiff),
-		new TrickyButton(1015,415,'menu/HARD Button', 'menu/HARD button confirm', setDiff,'hard')
+		new TrickyButton(635,415,'menu/EASY button', 'menu/EASY button confirm', setDiff, 0,'easy'),
+		new TrickyButton(787,415,'menu/MEDIUM button', 'menu/MEDIUM Button confirm', setDiff, 0),
+		new TrickyButton(1015,415,'menu/HARD Button', 'menu/HARD button confirm', setDiff, 0,'hard')
 	];
 
 	var listOfDiff:Array<String> = ['easy','medium','hard'];
@@ -171,17 +171,7 @@ class MainMenuState extends MusicBeatState
 
 		shower.animation.play('idle');
 
-	
-
 		add(shower);
-
-		var bgCover:FlxSprite = new FlxSprite(-455,-327).loadGraphic(Paths.image('menu/BGCover','clown'));
-		bgCover.setGraphicSize(Std.int(bgCover.width * 0.7));
-		add(bgCover);
-		
-		var hedgeCover:FlxSprite = new FlxSprite(-750,-414).loadGraphic(Paths.image('menu/Hedgecover','clown'));
-		hedgeCover.setGraphicSize(Std.int(hedgeCover.width * 0.65));
-		add(hedgeCover);
 
 		for (i in listOfButtons)
 			{
@@ -192,6 +182,14 @@ class MainMenuState extends MusicBeatState
 				add(i.spriteOne);
 				add(i.spriteTwo);
 			}
+
+		var bgCover:FlxSprite = new FlxSprite(-455,-327).loadGraphic(Paths.image('menu/BGCover','clown'));
+		bgCover.setGraphicSize(Std.int(bgCover.width * 0.7));
+		add(bgCover);
+		
+		var hedgeCover:FlxSprite = new FlxSprite(-750,-414).loadGraphic(Paths.image('menu/Hedgecover','clown'));
+		hedgeCover.setGraphicSize(Std.int(hedgeCover.width * 0.65));
+		add(hedgeCover);
 
 		var liners:FlxSprite = new FlxSprite(600, 390).loadGraphic(Paths.image("menu/Liners","clown"));
 		liners.setGraphicSize(Std.int(liners.width * 0.7));
@@ -228,8 +226,8 @@ class MainMenuState extends MusicBeatState
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
 		add(menuShade);
 
-		var credits:FlxSprite = new FlxSprite(-340,585).loadGraphic(Paths.image("menu/Credits","clown"));
-		credits.setGraphicSize(Std.int(credits.width * 0.65));
+		var credits:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.image("menu/CreditsOverlay","clown"));
+		//credits.setGraphicSize(Std.int(credits.width * 0.65));
 		add(credits);
 
 
@@ -251,6 +249,7 @@ class MainMenuState extends MusicBeatState
 
 		listOfDiffButtons[diffSelectedIndex].highlight(false);
 
+		listOfButtons[selectedIndex].highlight();
 
 		super.create();
 	}
