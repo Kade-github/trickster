@@ -2670,14 +2670,9 @@ class PlayState extends MusicBeatState
 
 			if (storyPlaylist.length <= 0)
 			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-
-				transIn = FlxTransitionableState.defaultTransIn;
-				transOut = FlxTransitionableState.defaultTransOut;
-
 				MainMenuState.reRoll = true;
 
-				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new MainMenuState()));
+				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",toMenu));
 
 				if (storyDifficulty == 2)
 					FlxG.save.data.hardBeaten = true;
@@ -2722,9 +2717,9 @@ class PlayState extends MusicBeatState
 				switch(song.toLowerCase())
 				{
 					case 'improbable-outset':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm",new PlayState()));
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm",toPlay));
 					case 'madness':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",new PlayState()));
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",toPlay));
 					default:
 						LoadingState.loadAndSwitchState(new PlayState());
 				}
@@ -2738,6 +2733,10 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 		}
 	}
+
+	
+	function toPlay() {FlxG.switchState(new PlayState());}
+	function toMenu() {FlxG.switchState(new MainMenuState());}
 
 	var endingSong:Bool = false;
 
