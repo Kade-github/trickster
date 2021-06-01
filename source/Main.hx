@@ -68,6 +68,11 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
+		
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+
+		addChild(game);
+
 
 		var ourSource:String = "assets/videos/DO NOT DELETE OR GAME WILL CRASH/dontDelete.webm";
         
@@ -90,9 +95,6 @@ class Main extends Sprite
         GlobalVideo.setWebm(webmHandle);
         #end 
 
-		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
-
-		addChild(game);
 
 		#if !mobile
 		fpsCounter = new FPS(10, 3, 0xFFFFFF);

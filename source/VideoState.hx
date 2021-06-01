@@ -11,6 +11,7 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import flixel.system.FlxSound;
 import openfl.utils.Assets;
+import openfl.utils.AssetType;
 
 import openfl.Lib;
 
@@ -19,8 +20,7 @@ using StringTools;
 class VideoState extends MusicBeatState
 {
 	public var leSource:String = "";
-	//public var transClass:FlxState;
-	public var transFunction:Void->Void;
+	public var transClass:FlxState;
 	public var txt:FlxText;
 	public var fuckingVolume:Float = 1;
 	public var notDone:Bool = true;
@@ -33,13 +33,12 @@ class VideoState extends MusicBeatState
 	public var doShit:Bool = false;
 	public var pauseText:String = "Press P To Pause/Unpause";
 
-	public function new(source:String, toTrans:Void->Void)
+	public function new(source:String, toTrans:FlxState)
 	{
 		super();
 		
 		leSource = source;
-		//transClass = toTrans;
-		transFunction = toTrans;
+		transClass = toTrans;
 	}
 	
 	override function create()
@@ -197,8 +196,7 @@ class VideoState extends MusicBeatState
 			FlxG.sound.music.volume = fuckingVolume;
 			txt.text = pauseText;
 			FlxG.autoPause = true;
-			//FlxG.switchState(transClass);
-			transFunction();
+			FlxG.switchState(transClass);
 		}
 		
 		if (GlobalVideo.get().played || GlobalVideo.get().restarted)

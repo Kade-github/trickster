@@ -2661,6 +2661,8 @@ class PlayState extends MusicBeatState
 			#end
 		}
 		
+		FlxTransitionableState.skipNextTransIn = true;
+		FlxTransitionableState.skipNextTransOut = true;
 
 		if (isStoryMode)
 		{
@@ -2672,7 +2674,7 @@ class PlayState extends MusicBeatState
 			{
 				MainMenuState.reRoll = true;
 
-				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",toMenu));
+				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new MainMenuState()));
 
 				if (storyDifficulty == 2)
 					FlxG.save.data.hardBeaten = true;
@@ -2706,8 +2708,6 @@ class PlayState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('Lights_Shut_off'));
 				}
 
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
 				prevCamFollow = camFollow;
 
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
@@ -2717,9 +2717,9 @@ class PlayState extends MusicBeatState
 				switch(song.toLowerCase())
 				{
 					case 'improbable-outset':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm",toPlay));
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm", new PlayState()));
 					case 'madness':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",toPlay));
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",new PlayState()));
 					default:
 						LoadingState.loadAndSwitchState(new PlayState());
 				}
