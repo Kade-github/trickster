@@ -126,14 +126,20 @@ class FreeplayState extends MusicBeatState
 
 	function selectSong()
 	{
-		var poop:String = Highscore.formatSong(songs[selectedIndex].pognt.toLowerCase(), diff);
+		var diffToUse = diff;
+
+		if (songs[selectedIndex].pognt == 'expurgation')
+		{
+			PlayState.storyDifficulty = 2;
+			diffToUse = 2;
+		}
+		else
+			PlayState.storyDifficulty = diff;
+
+		var poop:String = Highscore.formatSong(songs[selectedIndex].pognt.toLowerCase(), diffToUse);
 
 		PlayState.SONG = Song.loadFromJson(poop, songs[selectedIndex].pognt.toLowerCase());
 		PlayState.isStoryMode = false;
-		if (songs[selectedIndex].pognt == 'expurgation')
-			PlayState.storyDifficulty = 2;
-		else
-			PlayState.storyDifficulty = diff;
 		PlayState.storyWeek = 7;
 
 		LoadingState.loadAndSwitchState(new PlayState());
