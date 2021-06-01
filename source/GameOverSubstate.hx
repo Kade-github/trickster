@@ -30,6 +30,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(camFollow);
 
 		FlxG.sound.play(Paths.sound('BF_Deathsound','clown'));
+		FlxG.sound.play(Paths.sound('Micdrop','clown'));
 		Conductor.changeBPM(200);
 
 		// FlxG.camera.followLerp = 1;
@@ -66,12 +67,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			FlxG.sound.playMusic(Paths.music('gameOver','clown'));
 			bf.playAnim('deathLoop', true);
-		}
-
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.frameIndex == 15 && !playedMic)
-		{
-			playedMic = true;
-			FlxG.sound.play(Paths.sound('Micdrop','clown'));
 		}
 
 		else if (bf.animation.curAnim.finished && bf.animation.curAnim.name != 'deathConfirm')
