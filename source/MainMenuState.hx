@@ -58,8 +58,8 @@ class MainMenuState extends MusicBeatState
 
 		if (FlxG.save.data.beatenHard)
 		{
-			listOfButtons[1].spriteOne = new FlxSprite(listOfButtons[1].spriteOne.x,listOfButtons[1].spriteOne.y).loadGraphic(Paths.image("menu/FreePlayEX"));
-			listOfButtons[1].spriteTwo = new FlxSprite(listOfButtons[1].spriteTwo.x,listOfButtons[1].spriteTwo.y).loadGraphic(Paths.image("menu/FreePlayEX_Confirm"));
+			listOfButtons[1].spriteOne = new FlxSprite(listOfButtons[1].spriteOne.x,listOfButtons[1].spriteOne.y).loadGraphic(Paths.image("menu/FreePlayEX","clown"));
+			listOfButtons[1].spriteTwo = new FlxSprite(listOfButtons[1].spriteTwo.x,listOfButtons[1].spriteTwo.y).loadGraphic(Paths.image("menu/FreePlayEX_Confirm","clown"));
 		}
 
 		trans = new FlxSprite(-300,-760);
