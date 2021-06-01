@@ -2827,6 +2827,11 @@ class PlayState extends MusicBeatState
 
 			var daRating = daNote.rating;
 
+			var healthDrain:Float = 0;
+
+			if (SONG.song.toLowerCase() == 'hellclown')
+				healthDrain = 0.5;
+
 			switch(daRating)
 			{
 				case 'shit':
@@ -2858,12 +2863,12 @@ class PlayState extends MusicBeatState
 					if (health < 2 && !grabbed)
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit += 0.75;
+						totalNotesHit += 0.75 - healthDrain;
 				case 'sick':
 					if (health < 2 && !grabbed)
 						health += 0.1;
 					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit += 1;
+						totalNotesHit += 1 - healthDrain;
 					sicks++;
 			}
 
