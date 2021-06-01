@@ -2661,11 +2661,12 @@ class PlayState extends MusicBeatState
 			#end
 		}
 		
-		FlxTransitionableState.skipNextTransIn = true;
-		FlxTransitionableState.skipNextTransOut = true;
 
 		if (isStoryMode)
 		{
+			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
+			
 			campaignScore += songScore;
 
 			storyPlaylist.remove(storyPlaylist[0]);
