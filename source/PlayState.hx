@@ -2830,7 +2830,7 @@ class PlayState extends MusicBeatState
 			var healthDrain:Float = 0;
 
 			if (SONG.song.toLowerCase() == 'hellclown')
-				healthDrain = 0.5;
+				healthDrain = 0.07;
 
 			switch(daRating)
 			{
@@ -2863,12 +2863,12 @@ class PlayState extends MusicBeatState
 					if (health < 2 && !grabbed)
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit += 0.75 - healthDrain;
+						totalNotesHit += 0.75;
 				case 'sick':
 					if (health < 2 && !grabbed)
-						health += 0.1;
+						health += 0.1 - healthDrain;
 					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit += 1 - healthDrain;
+						totalNotesHit += 1;
 					sicks++;
 			}
 
