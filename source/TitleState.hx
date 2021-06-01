@@ -291,6 +291,7 @@ class TitleState extends MusicBeatState
 			FlxTween.tween(loadingDone,{alpha: 0}, 1);
 			new FlxTimer().start(1.2, function(tmr:FlxTimer)
 				{
+					canSkip = true;
 					startIntro();
 				});
 		}
@@ -355,13 +356,15 @@ class TitleState extends MusicBeatState
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
-		if (pressedEnter && !skippedIntro && CachedFrames.cachedInstance.loaded && FlxG.sound.music.playing)
+		if (pressedEnter && !skippedIntro && CachedFrames.cachedInstance.loaded && canSkip)
 		{
 			skipIntro();
 		}
 
 		super.update(elapsed);
 	}
+
+	var canSkip = false;
 
 	function createCoolText(textArray:Array<String>, yOffset:Float = 0)
 	{
