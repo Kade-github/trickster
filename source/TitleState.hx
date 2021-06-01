@@ -355,7 +355,7 @@ class TitleState extends MusicBeatState
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
-		if (pressedEnter && !skippedIntro && CachedFrames.cachedInstance.loaded)
+		if (pressedEnter && !skippedIntro && CachedFrames.cachedInstance.loaded && FlxG.sound.music.playing)
 		{
 			skipIntro();
 		}
