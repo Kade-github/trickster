@@ -2830,7 +2830,7 @@ class PlayState extends MusicBeatState
 			var healthDrain:Float = 0;
 
 			if (SONG.song.toLowerCase() == 'hellclown')
-				healthDrain = 0.07;
+				healthDrain = 0.04;
 
 			switch(daRating)
 			{
