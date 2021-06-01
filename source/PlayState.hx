@@ -1561,8 +1561,29 @@ class PlayState extends MusicBeatState
 
 					if (startFading)
 					{
-						endSong();
-						FlxG.camera.stopFX();
+						sounders.fadeOut();
+						trace('do the fade out and the text');
+						if (black.alpha != 1)
+						{
+							tmr.reset(0.1);
+							black.alpha += 0.02;
+
+							if (black.alpha >= 0.7 && !roarPlayed)
+							{
+								roar.play();
+								roarPlayed = true;
+							}
+						}
+						else if (done)
+						{
+							endSong();
+							FlxG.camera.stopFX();
+						}
+						else
+						{
+							done = true;
+							tmr.reset(5);
+						}
 					}
 				}
 			});
@@ -2680,7 +2701,7 @@ class PlayState extends MusicBeatState
 		{
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
-			
+
 			campaignScore += songScore;
 
 			storyPlaylist.remove(storyPlaylist[0]);
@@ -2742,7 +2763,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			if (song == "expurgation")
+			if (song.toLowerCase() == "expurgation")
 				FlxG.save.data.beatEx = true;
 			MainMenuState.reRoll = true;
 			FlxG.switchState(new MainMenuState());
