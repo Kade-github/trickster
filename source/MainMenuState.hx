@@ -116,8 +116,6 @@ class MainMenuState extends MusicBeatState
 
 		shower = new FlxSprite(200,280);
 
-		
-		show = 'sus';
 
 		Conductor.changeBPM(165);
 
@@ -307,8 +305,8 @@ class MainMenuState extends MusicBeatState
 
 				troph = new FlxSprite(875, -20).loadGraphic(Paths.image("menu/Gold_Trophy","clown"));
 
-				//if (FlxG.save.data.beatEx)
-				//{
+				if (FlxG.save.data.beatEx)
+				{
 					FlxG.mouse.visible = true;
 					tinyMan = new FlxSprite(980,-100);
 			
@@ -325,7 +323,7 @@ class MainMenuState extends MusicBeatState
 					tinyMan.antialiasing = true;
 
 					add(tinyMan);
-				//}
+				}
 			}
 
 			troph.antialiasing = true;
