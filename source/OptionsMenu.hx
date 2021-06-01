@@ -105,9 +105,28 @@ class OptionsMenu extends MusicBeatState
 	var isCat:Bool = false;
 	
 
+	function resyncVocals():Void
+		{
+			MusicMenu.Vocals.pause();
+	
+			FlxG.sound.music.play();
+			MusicMenu.Vocals.time = FlxG.sound.music.time;
+			MusicMenu.Vocals.play();
+		}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (MusicMenu.Vocals != null)
+		{
+			if (MusicMenu.Vocals.playing)
+			{
+				if (FlxG.sound.music.time > MusicMenu.Vocals.time + 20 || FlxG.sound.music.time < MusicMenu.Vocals.time - 20)
+                    resyncVocals();
+			}
+		}
+
 
 			if (controls.BACK && !isCat)
 				FlxG.switchState(new MainMenuState());

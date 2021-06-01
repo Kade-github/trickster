@@ -1034,6 +1034,19 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
+		if (curStage == "nevada" || curStage == "nevadaSpook" || curStage == 'auditorHell')
+			add(tstatic);
+
+		if (curStage == 'auditorHell')
+			tstatic.alpha = 0.1;
+
+		if (curStage == 'nevadaSpook' || curStage == 'auditorHell')
+		{
+			tstatic.setGraphicSize(Std.int(tstatic.width * 12));
+			tstatic.x += 600;
+		}
+
+
 		if (isStoryMode)
 		{
 			switch (curSong.toLowerCase())
@@ -1075,7 +1088,13 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'improbable-outset':
 					camFollow.setPosition(boyfriend.getMidpoint().x + 70, boyfriend.getMidpoint().y - 50);
-					trickyCutscene();
+					if (playCutscene)
+					{
+						trickyCutscene();
+						playCutscene = false;
+					}
+					else
+						startCountdown();
 				default:
 					startCountdown();
 			}
@@ -1118,18 +1137,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (curStage == "nevada" || curStage == "nevadaSpook" || curStage == 'auditorHell')
-			add(tstatic);
-
-		if (curStage == 'auditorHell')
-			tstatic.alpha = 0.1;
-
-		if (curStage == 'nevadaSpook' || curStage == 'auditorHell')
-		{
-			tstatic.setGraphicSize(Std.int(tstatic.width * 12));
-			tstatic.x += 600;
-		}
-
 		super.create();
 	}
 
@@ -1160,7 +1167,10 @@ class PlayState extends MusicBeatState
 				daSign.animation.addByPrefix('sign','Signature Stop Sign 3',24, false);
 				daSign.x = FlxG.width - 780;
 				daSign.angle = -90;
-				daSign.y = -980;
+				if (FlxG.save.data.downscroll)
+					daSign.y = -395;
+				else
+					daSign.y = -980;
 			case 3:
 				daSign.animation.addByPrefix('sign','Signature Stop Sign 4',24, false);
 				daSign.x = FlxG.width - 1070;
@@ -1590,10 +1600,15 @@ class PlayState extends MusicBeatState
 		}
 
 
+		public static var playCutscene:Bool = true;
+
 		function trickyCutscene():Void // god this function is terrible
 		{
 			trace('starting cutscene');
 
+			var playonce:Bool = false;
+
+			
 			trans = new FlxSprite(-400,-760);
 			trans.frames = Paths.getSparrowAtlas('Jaws','clown');
 			trans.antialiasing = true;
@@ -1723,8 +1738,17 @@ class PlayState extends MusicBeatState
 								case 84:
 									metal.play();
 								case 170:
+									if (!playonce)
+									{
+										resetSpookyText = false;
+										createSpookyText('OMFG CLOWN!!!!', 260, FlxG.height * 0.9);
+										playonce = true;
+									}
 									cloth.play();
 								case 192:
+									resetSpookyTextManual();
+									if (tstatic.alpha != 0)
+										manuallymanuallyresetspookytextmanual();
 									buildUp.fadeIn();
 								case 219:
 									trace('reset thingy');
@@ -2640,7 +2664,7 @@ class PlayState extends MusicBeatState
 										else if (daNote.isSustainNote && curStage == 'nevedaSpook') // nerf long notes on hellclown cuz they're too op
 										{
 											interupt = true;
-											health -= 0.005;
+											health -= 0.035;
 											totalDamageTaken += 0.005;
 										}
 										vocals.volume = 0;
@@ -2713,7 +2737,7 @@ class PlayState extends MusicBeatState
 				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new MainMenuState()));
 
 				if (storyDifficulty == 2)
-					FlxG.save.data.hardBeaten = true;
+					FlxG.save.data.beatenHard = true;
 				if (storyDifficulty >= 1)
 					FlxG.save.data.beaten = true;
 
@@ -3512,11 +3536,19 @@ class PlayState extends MusicBeatState
 
 	function resetSpookyTextManual():Void
 	{
+		trace('reset spooky');
 		spookySteps = curStep;
 		spookyRendered = true;
 		tstatic.alpha = 0.5;
 		FlxG.sound.play(Paths.sound('staticSound','clown'));
 		resetSpookyText = true;
+	}
+
+	function manuallymanuallyresetspookytextmanual()
+	{
+		remove(spookyText);
+		spookyRendered = false;
+		tstatic.alpha = 0;
 	}
 
 	var stepOfLast = 0;

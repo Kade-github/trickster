@@ -23,6 +23,7 @@ class HealthIcon extends FlxSprite
 			case 'trickyH':
 				loadGraphic(Paths.image('hellclwn/hellclownIcon','clown'), true, 150, 150);
 				animation.add('trickyH', [0, 1], 0, false, isPlayer);
+				y -= 25;
 			case 'exTricky':
 				loadGraphic(Paths.image('fourth/exTrickyIcons','clown'), true, 150, 150);
 				animation.add('exTricky', [0, 1], 0, false, isPlayer);

@@ -58,10 +58,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			FlxG.sound.music.stop();
 
-			if (PlayState.isStoryMode)
-				FlxG.switchState(new StoryMenuState());
-			else
-				FlxG.switchState(new FreeplayState());
+			FlxG.switchState(new MainMenuState());
 			PlayState.loadRep = false;
 		}
 
@@ -71,7 +68,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			bf.playAnim('deathLoop', true);
 		}
 
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.frameIndex == 28 && !playedMic)
+		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.frameIndex == 15 && !playedMic)
 		{
 			playedMic = true;
 			FlxG.sound.play(Paths.sound('Micdrop','clown'));

@@ -128,6 +128,12 @@ class FreeplayState extends MusicBeatState
 	{
 		var diffToUse = diff;
 
+		FlxG.sound.music.fadeOut();
+
+		if (MusicMenu.Vocals != null)
+			if (MusicMenu.Vocals.playing)
+				MusicMenu.Vocals.stop();
+
 		if (songs[selectedIndex].pognt == 'expurgation')
 		{
 			PlayState.storyDifficulty = 2;
@@ -145,9 +151,28 @@ class FreeplayState extends MusicBeatState
 		LoadingState.loadAndSwitchState(new PlayState());
 	}
 
-	override function update(elapsed:Float)
+	function resyncVocals():Void
 		{
-			super.update(elapsed);
+			MusicMenu.Vocals.pause();
+	
+			FlxG.sound.music.play();
+			MusicMenu.Vocals.time = FlxG.sound.music.time;
+			MusicMenu.Vocals.play();
+		}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		if (MusicMenu.Vocals != null)
+		{
+			if (MusicMenu.Vocals.playing)
+			{
+				if (FlxG.sound.music.time > MusicMenu.Vocals.time + 20 || FlxG.sound.music.time < MusicMenu.Vocals.time - 20)
+                    resyncVocals();
+			}
+		}
+
 	
 			var score = Highscore.getScore(songs[selectedIndex].pognt,diff);
 			diffAndScore.text = diffGet() + " - " + score; 

@@ -35,7 +35,7 @@ class MainMenuState extends MusicBeatState
 	[
 		new TrickyButton(800, 160, 'menu/Clown Mode Button', 'menu/Clown Mode Button CONFIRM', playStory,'clown', 0, -40),
 		new TrickyButton(1010, 165, 'menu/FreePlayButton', 'menu/FreePlayButton CONFIRM', goToFreeplay, "free", 0, -40),
-		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToFreeplay),
+		new TrickyButton(925, 265, 'menu/MUSIC Button', 'menu/MUSIC button confirm', goToMusic),
 		new TrickyButton(685, 330, 'menu/DIFFICULTY', 'menu/DIFFICULTY CONFIRM', startDiffSelect),
 		new TrickyButton(975, 460, 'menu/OPTIONS Button', 'menu/OPTIONS Button CONFIRM', goToOptions, "options", 0, 45)
 	];
@@ -298,7 +298,7 @@ class MainMenuState extends MusicBeatState
 
 		if (FlxG.save.data.beaten)
 		{
-			var troph:FlxSprite = new FlxSprite(875, -20).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
+			var troph:FlxSprite = new FlxSprite(875, -5).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
 			if (FlxG.save.data.beatenHard)
 			{
 
@@ -389,6 +389,13 @@ class MainMenuState extends MusicBeatState
 		FlxG.switchState(new FreeplayState());
 	}
 
+	public static function goToMusic()
+		{
+			FlxG.mouse.visible = false;
+			FlxG.switchState(new MusicMenu());
+		}
+	
+
 	public static function goToOptions()
 	{
 		FlxG.mouse.visible = false;
@@ -425,10 +432,17 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.sound.music.fadeOut();
 
+		if (MusicMenu.Vocals != null)
+			if (MusicMenu.Vocals.playing)
+				MusicMenu.Vocals.stop();
+
+		PlayState.playCutscene = true;
+
 		trans.animation.play("Close");
 		trans.alpha = 1;
 		var snd = new FlxSound().loadEmbedded(Paths.sound('swipe','clown'));
 		snd.play();
+
 
 		var once = false;
 
@@ -455,6 +469,7 @@ class MainMenuState extends MusicBeatState
 	var selectedSmth = false;
 	public static var selectedIndex = 0;
 	public static var selectingDiff = false;
+
 
 	function doTweens()
 		{
@@ -496,9 +511,27 @@ class MainMenuState extends MusicBeatState
 		FlxTween.tween(hand, {alpha: 1, x: selected.x + 10, y: selected.y - 10}, 0.6, {ease: FlxEase.expoInOut});
 	}
 
+	function resyncVocals():Void
+		{
+			MusicMenu.Vocals.pause();
+	
+			FlxG.sound.music.play();
+			MusicMenu.Vocals.time = FlxG.sound.music.time;
+			MusicMenu.Vocals.play();
+		}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (MusicMenu.Vocals != null)
+		{
+			if (MusicMenu.Vocals.playing)
+			{
+				if (FlxG.sound.music.time > MusicMenu.Vocals.time + 20 || FlxG.sound.music.time < MusicMenu.Vocals.time - 20)
+                    resyncVocals();
+			}
+		}
 
 		if (tinyMan != null)
 		{
