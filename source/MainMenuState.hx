@@ -1,5 +1,8 @@
 package;
 
+import openfl.text.TextFormatAlign;
+import flixel.util.FlxColor;
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
@@ -13,7 +16,9 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	var slider:FlxBackdrop;
+	public static var killed:Bool = false;
 	var show:String = "";
+	var hand:FlxSprite;
 	var shower:FlxSprite;
 	public static var curDifficulty:Int = 2;
 	public static var trans:FlxSprite;
@@ -102,6 +107,7 @@ class MainMenuState extends MusicBeatState
 				show = 'mag';
 			if (random > 9800)
 				show = 'sus';
+			killed = false;
 			lastRoll = show;
 			trace('random ' + random + ' im showin ' + show);
 		}
@@ -111,6 +117,8 @@ class MainMenuState extends MusicBeatState
 		shower = new FlxSprite(200,280);
 
 		
+		show = 'sus';
+
 		Conductor.changeBPM(165);
 
 		switch(show)
@@ -122,6 +130,9 @@ class MainMenuState extends MusicBeatState
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_bf","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
+
+				lines.push('THE KID IS WEAK...');
+
 			case 'tricky':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('tricky','menu/MenuTricky/MenuTricky');
 				shower.animation.addByPrefix('idle','menutricky');
@@ -130,15 +141,28 @@ class MainMenuState extends MusicBeatState
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_tricky","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
+
+				lines.push('MY LESSER FORM...');
 			case 'sus':
 				FlxG.mouse.visible = true;
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('sus','menu/Sus/Menu_ALLSUS');
-				shower.animation.addByPrefix('idle','AmongUsIDLE');
-				shower.animation.addByPrefix('death','AMONG DEATH');
-				shower.animation.addByPrefix('no','AmongUs NuhUh');
+				shower.animation.addByPrefix('idle','AmongUsIDLE', 24);
+				shower.animation.addByPrefix('death','AMONG DEATH', 24, false);
+				shower.animation.addByIndices('deathPost','AMONG DEATH', [5], "", 24, false);
+				shower.animation.addByPrefix('no','AmongUs NuhUh', 24, false);
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_sussy","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
+
+				shower.y += 35;
+
+				hand = new FlxSprite(shower.x + 75,shower.y + 50).loadGraphic(Paths.image('menu/Sus/AmongHand','clown'));
+				hand.setGraphicSize(Std.int(hand.width * 0.67));
+				hand.antialiasing = true;
+				hand.alpha = 0;
+
+				lines.push('A DESPICABLE THING LURKS HERE');
+				
 			case 'jebus':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('jebus','menu/Jebus/Menu_jebus');
 				shower.animation.addByPrefix('idle','Jebus');
@@ -147,6 +171,9 @@ class MainMenuState extends MusicBeatState
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_jebus","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
+
+				lines.push('HE CAUSED THIS');
+
 			case 'hank':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('hank','menu/Hank/Hank_Menu');
 				shower.animation.addByPrefix('idle','Hank');
@@ -155,6 +182,9 @@ class MainMenuState extends MusicBeatState
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_hank","clown"), 0);
 				shower.setGraphicSize(Std.int(shower.width * 0.63));
+
+				lines.push('WEAK FLESH');
+
 			case 'deimos':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('deimos','menu/Deimos/Deimos_Menu');
 				shower.animation.addByPrefix('idle','Deimos');
@@ -164,6 +194,9 @@ class MainMenuState extends MusicBeatState
 				shower.y -= 65;
 				shower.x -= 145;
 				shower.angle = -8;
+
+				lines.push('ROCK UPGRADGE... INTERESTING');
+
 			case 'auditor':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('auditor','menu/Auditor/Auditor');
 				shower.animation.addByPrefix('idle','Auditor');
@@ -172,6 +205,9 @@ class MainMenuState extends MusicBeatState
 				shower.y -= 300;
 				shower.x -= 200;
 				shower.setGraphicSize(Std.int(shower.width * 0.76));
+
+				lines.push('I HAVE NOTHING TO SAY...');
+
 			case 'mag':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('torture','menu/Torture/Mag_Agent_Torture_Menu');
 				shower.animation.addByPrefix('idle','Mag Agent Torture');
@@ -180,6 +216,9 @@ class MainMenuState extends MusicBeatState
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 310;
 				shower.x -= 500;
+
+				lines.push('AN ABOMINATION');
+
 			case 'sanford':
 				shower.frames = CachedFrames.cachedInstance.fromSparrow('sanford','menu/Sanford/Menu_Sanford');
 				shower.animation.addByPrefix('idle','Sanford');
@@ -188,6 +227,8 @@ class MainMenuState extends MusicBeatState
 				shower.setGraphicSize(Std.int(shower.width * 0.66));
 				shower.y -= 180;
 				shower.x -= 275;
+
+				lines.push('WEAKER THEN THE OTHERS...');
 		}
 		
 		shower.antialiasing = true;
@@ -198,9 +239,13 @@ class MainMenuState extends MusicBeatState
 			reRoll = false;
 		}
 
-		shower.animation.play('idle');
-
-		add(shower);
+		if (show == 'sus' && killed)
+		{
+			shower.offset.set(5,10);
+			shower.animation.play('deathPost');
+		}
+		else
+			shower.animation.play('idle');
 
 		for (i in listOfButtons)
 			{
@@ -211,6 +256,10 @@ class MainMenuState extends MusicBeatState
 				add(i.spriteOne);
 				add(i.spriteTwo);
 			}
+
+
+		add(shower);
+			
 
 		var bgCover:FlxSprite = new FlxSprite(-455,-327).loadGraphic(Paths.image('menu/BGCover','clown'));
 		bgCover.setGraphicSize(Std.int(bgCover.width * 0.7));
@@ -242,6 +291,8 @@ class MainMenuState extends MusicBeatState
 		redLines.setGraphicSize(Std.int(redLines.width * 0.7));
 		redLines.antialiasing = true;
 		add(redLines);
+
+
 
 		var logo:FlxSprite = new FlxSprite(-50,-15).loadGraphic(Paths.image("menu/Mainlogo","clown"));
 		logo.antialiasing = true;
@@ -283,6 +334,9 @@ class MainMenuState extends MusicBeatState
 
 			add(troph);
 		}
+
+		if (show == 'sus')
+			add(hand);
 
 
 		var menuShade:FlxSprite = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/Menu Shade","clown"));
@@ -430,14 +484,79 @@ class MainMenuState extends MusicBeatState
 		}
 	}
 
+	var lines:Array<String> = ['CHAOC... THE CHAOS', 'THE HALO...', 'UNFORESEEN POWER','WHY HAVE YOU REDUCDED ME TO THIS', '...', 'I HATE YOU...', 'LEAVE ME BE', "YOU'VE CAUSED ENOUGH PAIN FOR ME", 'GO AWAY'];
+
+	function doHand()
+	{
+		shower.animation.play('no');
+
+		var selected = listOfButtons[selectedIndex].spriteTwo;
+
+		trace(selected.x);
+		trace(selected.y);
+
+		FlxTween.tween(hand, {alpha: 1, x: selected.x + 10, y: selected.y - 10}, 0.6, {ease: FlxEase.expoInOut});
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
+		if (tinyMan != null)
+		{
+			if (FlxG.mouse.overlaps(tinyMan) && FlxG.mouse.justPressed && tinyMan.animation.curAnim.name == 'idle')
+			{
+				var random = FlxG.random.int(0,50);
+				if (random < 45)
+				{
+					tinyMan.offset.set(33,9);
+					tinyMan.animation.play('click');
+
+					var text = new FlxText(tinyMan.x - 200,tinyMan.y + 285,0,lines[FlxG.random.int(0,lines.length - 1)]);
+
+					text.setFormat('tahoma-bold.ttf',24,FlxColor.WHITE,FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+
+					add(text);
+
+					FlxTween.tween(text, {alpha: 0}, 0.7, {
+						onComplete: function(tween:FlxTween)
+						{
+							text.destroy();
+						}
+					});
+				}
+				else
+				{
+					tinyMan.offset.set(5,-1);
+					FlxG.sound.play(Paths.sound('Meow','clown'));
+					tinyMan.animation.play('meow');
+				}
+			}
+
+			if (tinyMan.animation.finished && tinyMan.animation.curAnim.name != 'idle')
+			{
+				tinyMan.offset.set(0,0);
+				tinyMan.animation.play('idle');
+			}
+		}
+
+		if (show == 'sus' && !killed && shower.animation.finished)
+			shower.animation.play('idle');
+		else if (show == 'sus' && FlxG.mouse.overlaps(shower) && FlxG.mouse.justPressed && !killed)
+		{
+			shower.offset.set(5,10);
+			shower.animation.play('death');
+			killed = true;
+			FlxG.sound.play(Paths.sound('AmongUs-Kill','clown'));
+			if (hand.alpha == 1)
+				FlxTween.tween(hand, {y: FlxG.height + 20 + hand.height,angle: 125, alpha: 0}, 5, {ease: FlxEase.expoOut});
+		}
 		if (!selectingDiff)
 		{
 			if (FlxG.keys.justPressed.RIGHT)
 			{
+				if (show == 'sus' && !killed && hand.alpha == 1)
+					FlxTween.tween(hand, {alpha: 0, x: shower.x + 60, y: shower.y + 60}, 0.6, {ease: FlxEase.expoInOut});
 				if (selectedIndex + 1 < listOfButtons.length)
 				{
 					listOfButtons[selectedIndex].unHighlight();
@@ -459,6 +578,8 @@ class MainMenuState extends MusicBeatState
 			}
 			if (FlxG.keys.justPressed.LEFT)
 			{
+				if (show == 'sus' && !killed && hand.alpha == 1)
+					FlxTween.tween(hand, {alpha: 0, x: shower.x + 60, y: shower.y + 60}, 0.6, {ease: FlxEase.expoInOut});
 				if (selectedIndex > 0)
 				{
 					listOfButtons[selectedIndex].unHighlight();
@@ -482,6 +603,11 @@ class MainMenuState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.ENTER && !selectedSmth)
 			{
+				if (show == 'sus' && !killed)
+				{
+					doHand();
+					return;
+				}
 				selectedSmth = true;
 				if (listOfButtons[selectedIndex].pognt == 'clown')
 					transOut = null;
