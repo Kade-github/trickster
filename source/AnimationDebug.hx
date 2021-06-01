@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -9,16 +10,16 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
+using StringTools;
+
 /**
 	*DEBUG MODE
  */
 class AnimationDebug extends FlxState
 {
-	public static var staticVar:AnimationDebug = null;
-	var bf:Boyfriend;
-	public static var dad:Character;
-	var onion:Character;
-	var char:Character;
+	var dad:Character;
+	var dadBG:Character;
+	//var char:Character;
 	var textAnim:FlxText;
 	var dumbTexts:FlxTypedGroup<FlxText>;
 	var animList:Array<String> = [];
@@ -27,58 +28,60 @@ class AnimationDebug extends FlxState
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
 
+	private var camHUD:FlxCamera;
+	private var camGame:FlxCamera;
+
+	var flippedChars:Array<String> = ["pico"];
+
 	public function new(daAnim:String = 'spooky')
 	{
 		super();
-		staticVar = this;
 		this.daAnim = daAnim;
 	}
 
 	override function create()
 	{
+
+		//openfl.Lib.current.stage.frameRate = 144;
+
+		camGame = new FlxCamera();
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(camGame);
+		FlxG.cameras.add(camHUD);
+
+		FlxCamera.defaultCameras = [camGame];
+
 		FlxG.sound.music.stop();
 
-		FlxG.mouse.visible = true;
-
-		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10,20000,20000);
+		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
-		if (daAnim == 'bf')
-			isDad = false;
+		dad = new Character(0, 0, daAnim);
+		dad.screenCenter();
+		dad.debugMode = true;
 
-		if (isDad)
-		{
-			dad = new Character(PlayState.dad.x, PlayState.dad.y, daAnim, false, true);
-			dad.setGraphicSize(Std.int(dad.width * 0.7));
-			onion = new Character(PlayState.dad.x,PlayState.dad.y,daAnim, false, true);
-			onion.setGraphicSize(Std.int(onion.width * 0.7));
-			dad.debugMode = true;
-			onion.debugMode = true;
-			onion.alpha = 0.5;
-			add(onion);
-			add(dad);
+		dadBG = new Character(0, 0, daAnim);
+		dadBG.screenCenter();
+		dadBG.debugMode = true;
+		dadBG.alpha = 0.75;
+		dadBG.color = 0xFF000000;
 
-			char = dad;
-			dad.flipX = false;
-		}
-		else
-		{
-			bf = new Boyfriend(0, 0);
-			bf.screenCenter();
-			bf.debugMode = true;
-			add(bf);
+		add(dadBG);
+		add(dad);
 
-			char = bf;
-			bf.flipX = false;
-		}
+		dad.flipX = flippedChars.contains(dad.curCharacter);
+		dadBG.flipX = flippedChars.contains(dadBG.curCharacter);
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
 
 		textAnim = new FlxText(300, 16);
 		textAnim.size = 26;
-		textAnim.scrollFactor.set();
+		textAnim.scrollFactor.set(0);
+		textAnim.cameras = [camHUD];
 		add(textAnim);
 
 		genBoyOffsets();
@@ -96,49 +99,18 @@ class AnimationDebug extends FlxState
 	{
 		var daLoop:Int = 0;
 
-		if (char.otherFrames == null)
+		for (anim => offsets in dad.animOffsets)
 		{
-			for (anim => offsets in char.animOffsets)
-			{
-				var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
-				text.scrollFactor.set();
-				text.color = FlxColor.BLUE;
-				dumbTexts.add(text);
+			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
+			text.scrollFactor.set(0);
+			text.color = FlxColor.BLUE;
+			text.cameras = [camHUD];
+			dumbTexts.add(text);
 
-				if (pushList)
-					animList.push(anim);
+			if (pushList)
+				animList.push(anim);
 
-				daLoop++;
-			}
-		}
-
-		if (char.otherFrames != null)
-		{
-			for (i in char.otherFrames)
-			{
-				i.setGraphicSize(Std.int(i.width * 0.7));
-				for (anim => offsets in i.animOffsets)
-				{
-					var anim = "";
-					if (StringTools.contains(i.curCharacter.toLowerCase(),"left"))
-						anim = "singLEFT";
-					if (StringTools.contains(i.curCharacter.toLowerCase(),"up"))
-						anim = "singUP";
-					if (StringTools.contains(i.curCharacter.toLowerCase(),"down"))
-						anim = "singDOWN";
-					if (StringTools.contains(i.curCharacter.toLowerCase(),"right"))
-						anim = "singRIGHT";
-					var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
-					text.scrollFactor.set();
-					text.color = FlxColor.BLUE;
-					dumbTexts.add(text);
-		
-					if (pushList)
-						animList.push(anim);
-		
-					daLoop++;
-				}
-			}
+			daLoop++;
 		}
 	}
 
@@ -153,33 +125,26 @@ class AnimationDebug extends FlxState
 
 	override function update(elapsed:Float)
 	{
-		textAnim.text = char.animation.curAnim.name;
+		textAnim.text = dad.animation.curAnim.name;
 
-		
-
-		if (FlxG.keys.justPressed.E)
-			FlxG.camera.zoom += 0.25;
-		if (FlxG.keys.justPressed.Q)
-			FlxG.camera.zoom -= 0.25;
-
-		if (FlxG.keys.pressed.ONE)
-			camFollow.y += 10;
-		else if (FlxG.keys.pressed.TWO)
-			camFollow.y -= 10;
+		if (FlxG.keys.pressed.E)
+			FlxG.camera.zoom += 0.0025;
+		if (FlxG.keys.pressed.Q)
+			FlxG.camera.zoom -= 0.0025;
 
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{
 			if (FlxG.keys.pressed.I)
-				camFollow.velocity.y = -90;
+				camFollow.velocity.y = -150;
 			else if (FlxG.keys.pressed.K)
-				camFollow.velocity.y = 90;
+				camFollow.velocity.y = 150;
 			else
 				camFollow.velocity.y = 0;
 
 			if (FlxG.keys.pressed.J)
-				camFollow.velocity.x = -90;
+				camFollow.velocity.x = -150;
 			else if (FlxG.keys.pressed.L)
-				camFollow.velocity.x = 90;
+				camFollow.velocity.x = 150;
 			else
 				camFollow.velocity.x = 0;
 		}
@@ -191,33 +156,11 @@ class AnimationDebug extends FlxState
 		if (FlxG.keys.justPressed.W)
 		{
 			curAnim -= 1;
-			switch(animList[curAnim])
-			{
-				case 'singLEFT':
-					curAnim = 0;
-				case 'singRIGHT':
-					curAnim = 1;
-				case 'singUP':
-					curAnim = 2;
-				case 'singDOWN':
-					curAnim = 3;
-			}
 		}
 
 		if (FlxG.keys.justPressed.S)
 		{
 			curAnim += 1;
-			switch(animList[curAnim])
-			{
-				case 'singLEFT':
-					curAnim = 0;
-				case 'singRIGHT':
-					curAnim = 1;
-				case 'singUP':
-					curAnim = 2;
-				case 'singDOWN':
-					curAnim = 3;
-			}
 		}
 
 		if (curAnim < 0)
@@ -228,10 +171,20 @@ class AnimationDebug extends FlxState
 
 		if (FlxG.keys.justPressed.S || FlxG.keys.justPressed.W || FlxG.keys.justPressed.SPACE)
 		{
-			char.playAnim(animList[curAnim]);
+			dad.playAnim(animList[curAnim], true);
+
+			if(animList[curAnim].endsWith("miss"))
+				dadBG.playAnim(animList[curAnim].substring(0, animList[curAnim].length - 4), true);
+			else
+				dadBG.playAnim("idle", true);
 
 			updateTexts();
 			genBoyOffsets(false);
+		}
+		
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			FlxG.switchState(new PlayState());
 		}
 
 		var upP = FlxG.keys.anyJustPressed([UP]);
@@ -247,47 +200,18 @@ class AnimationDebug extends FlxState
 		if (upP || rightP || downP || leftP)
 		{
 			updateTexts();
-			if (char.otherFrames != null)
-			{
-				trace(char.otherFrames[curAnim].animOffsets);
-				if (upP)
-					char.otherFrames[curAnim].animOffsets.get('idle')[1] += 1 * multiplier;
-				if (downP)
-					char.otherFrames[curAnim].animOffsets.get('idle')[1] -= 1 * multiplier;
-				if (leftP)
-					char.otherFrames[curAnim].animOffsets.get('idle')[0] += 1 * multiplier;
-				if (rightP)
-					char.otherFrames[curAnim].animOffsets.get('idle')[0] -= 1 * multiplier;
-				updateTexts();
-				genBoyOffsets(false);
-				var anim = "";
-				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"left"))
-					anim = "singLEFT";
-				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"up"))
-					anim = "singUP";
-				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"down"))
-					anim = "singDOWN";
-				if (StringTools.contains(char.otherFrames[curAnim].curCharacter.toLowerCase(),"right"))
-					anim = "singRIGHT";
-				
-				char.playAnim(anim);
-			}
-			else
-			{
-				if (upP)
-					char.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
-				if (downP)
-					char.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
-				if (leftP)
-					char.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
-				if (rightP)
-					char.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
+			if (upP)
+				dad.animOffsets.get(animList[curAnim])[1] += 1 * multiplier;
+			if (downP)
+				dad.animOffsets.get(animList[curAnim])[1] -= 1 * multiplier;
+			if (leftP)
+				dad.animOffsets.get(animList[curAnim])[0] += 1 * multiplier;
+			if (rightP)
+				dad.animOffsets.get(animList[curAnim])[0] -= 1 * multiplier;
 
-				updateTexts();
-				genBoyOffsets(false);
-				char.playAnim(animList[curAnim]);
-			}
-
+			updateTexts();
+			genBoyOffsets(false);
+			dad.playAnim(animList[curAnim]);
 		}
 
 		super.update(elapsed);

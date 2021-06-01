@@ -607,7 +607,8 @@ class PlayState extends MusicBeatState
 
 			tstatic.antialiasing = true;
 			tstatic.scrollFactor.set(0,0);
-			tstatic.setGraphicSize(Std.int(tstatic.width * 8.3));
+			tstatic.setGraphicSize(Std.int(tstatic.width * 10));
+			tstatic.screenCenter(Y);
 			tstatic.animation.add('static', [0, 1, 2], 24, true);
 			tstatic.animation.play('static');
 
@@ -634,6 +635,8 @@ class PlayState extends MusicBeatState
 			hank.animation.play('dance');
 			hank.scrollFactor.set(0.9, 0.9);
 			hank.setGraphicSize(Std.int(hank.width * 1.55));
+			hank.antialiasing = true;
+			
 
 			add(hank);
 		}
@@ -1213,6 +1216,8 @@ class PlayState extends MusicBeatState
 		gramlan.animation.addByIndices('grab','HP Gremlin ANIMATION',[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], "", 24, false);
 		gramlan.animation.addByIndices('hold','HP Gremlin ANIMATION',[25,26,27,28],"",24);
 		gramlan.animation.addByIndices('release','HP Gremlin ANIMATION',[29,30,31,32,33],"",24,false);
+
+		gramlan.antialiasing = true;
 
 		add(gramlan);
 
@@ -2313,8 +2318,17 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new Charting()); */
 
 		#if debug
-		if (FlxG.keys.justPressed.EIGHT)
-			FlxG.switchState(new AnimationDebug(SONG.player2));
+		if (FlxG.keys.justPressed.EIGHT){
+            if(FlxG.keys.pressed.SHIFT){
+                FlxG.switchState(new AnimationDebug(SONG.player1));
+            }
+            else if(FlxG.keys.pressed.CONTROL){
+                FlxG.switchState(new AnimationDebug(gf.curCharacter));
+            }
+            else{
+                FlxG.switchState(new AnimationDebug(SONG.player2));
+            }
+        }
 		#end
 
 		if (startingSong)
@@ -2577,7 +2591,7 @@ class PlayState extends MusicBeatState
 						else
 							daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2)));
 						
-						daNote.y -= (daNote.burning ? ((curStage != 'auditorHell' && FlxG.save.data.downscroll) ? 165 : 65 ) : 0);
+						daNote.y -= (daNote.burning ? ((curStage != 'auditorHell' && FlxG.save.data.downscroll) ? 185 : 65 ) : 0);
 		
 						// WIP interpolation shit? Need to fix the pause issue
 						// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));

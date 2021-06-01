@@ -910,7 +910,7 @@ class Character extends FlxSprite
 
 			if (debugMode && otherFrames != null)
 				{
-					if (AnimationDebug.dad != null)
+					/*if (AnimationDebug.dad != null)
 					{
 						trace('debug play anim ' + AnimName);
 						AnimationDebug.dad.alpha = 0.6;
@@ -938,7 +938,7 @@ class Character extends FlxSprite
 								AnimationDebug.dad.alpha = 1;
 								animation.play('idle', Force, Reversed, Frame);
 						}
-					}
+					}*/
 				}
 				else if (otherFrames != null && PlayState.dad != null && PlayState.generatedMusic)
 					{
