@@ -382,6 +382,12 @@ class MusicMenu extends MusicBeatState
             }
         }
 
+        if (Vocals == null && FlxG.sound.music.playing)
+        {
+            circleOne.angle += 1;
+            circleTwo.angle += 1;
+        }
+
         if (!selecting)
         {
             if (FlxG.keys.justPressed.RIGHT)

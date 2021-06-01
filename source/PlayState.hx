@@ -1793,6 +1793,8 @@ class PlayState extends MusicBeatState
 							// animation finished, start a dialog or start the countdown (should also probably fade into this, aka black fade in when the animation gets done and black fade out. Or just make the last frame tranisiton into the idle animation)
 							if (black.alpha != 1)
 							{
+								if (tstatic.alpha != 0)
+									manuallymanuallyresetspookytextmanual();
 								black.alpha += 0.4;
 								tmr.reset(0.1);
 								trace('increase blackness lmao!!!');
@@ -1806,6 +1808,7 @@ class PlayState extends MusicBeatState
 									trace('transision ' + black.visible + ' ' + black3.alpha);
 									remove(animation);
 									dad.alpha = 1;
+									// why did I write this comment? I'm so confused
 									// shitty layering but ninja muffin can suck my dick like mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 									remove(red);
 									remove(black);
