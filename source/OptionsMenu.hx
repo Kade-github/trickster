@@ -58,9 +58,10 @@ class OptionsMenu extends MusicBeatState
 
 	var menuShade:FlxSprite;
 
+	var offsetPog:FlxText;
+
 	override function create()
 	{
-	
 		var bg:FlxSprite = new FlxSprite(-10,-10).loadGraphic(Paths.image('menu/freeplay/RedBG','clown'));
 		add(bg);
 		var hedge:FlxSprite = new FlxSprite(-810,-335).loadGraphic(Paths.image('menu/freeplay/hedge','clown'));
@@ -74,6 +75,7 @@ class OptionsMenu extends MusicBeatState
 		add(bars);
 
 
+		
 		for (i in 0...options.length)
 		{
 			var option:OptionCatagory = options[i];
@@ -93,6 +95,10 @@ class OptionsMenu extends MusicBeatState
 		currentDescription = "none";
 
 		currentOptions[0].color = FlxColor.WHITE;
+
+		offsetPog = new FlxText(125,600,0,"Offset: " + FlxG.save.data.offset);
+		offsetPog.setFormat("tahoma-bold.ttf",42,FlxColor.RED);
+		add(offsetPog);
 
 		menuShade = new FlxSprite(-1350,-1190).loadGraphic(Paths.image("menu/freeplay/Menu Shade","clown"));
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
@@ -187,8 +193,43 @@ class OptionsMenu extends MusicBeatState
 						}
 					}
 				}
+				else
+				{
+					if (FlxG.keys.pressed.SHIFT)
+					{
+						if (FlxG.keys.pressed.RIGHT)
+							FlxG.save.data.offset++;
+						if (FlxG.keys.pressed.LEFT)
+							FlxG.save.data.offset--;
+					}
+					else
+					{
+						if (FlxG.keys.justPressed.RIGHT)
+							FlxG.save.data.offset++;
+						if (FlxG.keys.justPressed.LEFT)
+							FlxG.save.data.offset--;
+					}
+				}
+			}	
+			else
+			{
+					if (FlxG.keys.pressed.SHIFT)
+					{
+						if (FlxG.keys.pressed.RIGHT)
+							FlxG.save.data.offset++;
+						if (FlxG.keys.pressed.LEFT)
+							FlxG.save.data.offset--;
+					}
+					else
+					{
+						if (FlxG.keys.justPressed.RIGHT)
+							FlxG.save.data.offset++;
+						if (FlxG.keys.justPressed.LEFT)
+							FlxG.save.data.offset--;
+					}
 			}
-			
+
+			offsetPog.text = "Offset: " + FlxG.save.data.offset + " (Left/Right)";
 
 			if (controls.RESET)
 					FlxG.save.data.offset = 0;
