@@ -36,8 +36,15 @@ class MusicMenu extends MusicBeatState
     var circleOne:FlxSprite;
     var circleTwo:FlxSprite;
 
+    var debug:Bool = false;
+
     override function create()
     {
+
+        #if debug
+        debug = true;
+        #end
+
         theMen.push(new TrickyTextButton(0,0,"ROZEBUD","ROZEBUD",48,roze));
 
         theMen[0].spriteOne.screenCenter();
@@ -59,7 +66,7 @@ class MusicMenu extends MusicBeatState
         thing.spriteOne.screenCenter();
         thing.spriteOne.y += 110;
         thing.spriteOne.x += 315;
-        if (FlxG.save.data.beatenHard)
+        if (FlxG.save.data.beatenHard || debug)
         {
             theMen.push(new TrickyTextButton(0,0,"JADS","JADS",48,jads));
 
@@ -158,7 +165,7 @@ class MusicMenu extends MusicBeatState
 
         var indicator:FlxSprite;
 
-        if (FlxG.save.data.beatenHard) 
+        if (FlxG.save.data.beatenHard || debug)
             indicator =  new FlxSprite().loadGraphic(Paths.image("menu/music/MusicIndicationLines","clown"));
         else 
             indicator =  new FlxSprite().loadGraphic(Paths.image("menu/music/noJadsLine","clown"));
@@ -191,7 +198,7 @@ class MusicMenu extends MusicBeatState
 				add(i.spriteTwo);
 			}
 
-        if (FlxG.save.data.beatenHard)
+        if (FlxG.save.data.beatenHard || debug)
         {
             exp = new TrickyTextButton(0,0,"EXPURGATION","EXPURGATION",24,selectSongJads,"EXPURGATION");
             add(exp);
@@ -224,7 +231,7 @@ class MusicMenu extends MusicBeatState
             trace(currentSelected.pognt);
             updateSong(rozeSongs[rozeSelected].pognt);
         }
-        if (FlxG.save.data.beatenHard)
+        if (FlxG.save.data.beatenHard || debug)
         {
             if (jadsSelected != -1)
             {
