@@ -281,12 +281,12 @@ class MusicMenu extends MusicBeatState
                         FlxG.sound.playMusic(Paths.music("nexus_other","clown"));
                     default:
                         Vocals = new FlxSound().loadEmbedded(Paths.voices(song.toLowerCase()),true);
-                        Vocals.play();
                         
                         Vocals.persist = true;
                         Vocals.autoDestroy = false;
         
                         FlxG.sound.playMusic(Paths.inst(song.toLowerCase()), 1, true);
+                        Vocals.play();
                         FlxG.sound.list.add(Vocals);
                 }
 
