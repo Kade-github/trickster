@@ -2002,6 +2002,12 @@ class PlayState extends MusicBeatState
 		else
 			FlxG.sound.music.onComplete = endSong;
 		vocals.play();
+
+		new FlxTimer().start(0.3, function(tmr:FlxTimer)
+		{
+			if(!paused)
+			resyncVocals();
+		});
 	}
 
 	var debugNum:Int = 0;
@@ -2588,6 +2594,7 @@ class PlayState extends MusicBeatState
 		
 							//trace("DA ALT THO?: " + SONG.notes[Math.floor(curStep / 16)].altAnim);
 		
+							if (!(curBeat >= 532 && curBeat <= 536  && curSong.toLowerCase() == "expurgation")){
 							switch (Math.abs(daNote.noteData))
 							{
 								case 2:
@@ -2598,6 +2605,7 @@ class PlayState extends MusicBeatState
 									dad.playAnim('singDOWN' + altAnim, true);
 								case 0:
 									dad.playAnim('singLEFT' + altAnim, true);
+							}
 							}
 		
 							switch(dad.curCharacter)
@@ -3776,6 +3784,16 @@ class PlayState extends MusicBeatState
 			{
 				dad.playAnim('cheer', true);
 			}
+		}
+
+		if (curBeat == 532 && curSong.toLowerCase() == "expurgation")
+		{
+			dad.playAnim('Hank', true);
+		}
+
+		if (curBeat == 536 && curSong.toLowerCase() == "expurgation")
+		{
+			dad.playAnim('idle', true);
 		}
 
 		switch (curStage)
