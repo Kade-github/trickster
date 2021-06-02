@@ -165,7 +165,7 @@ class MusicMenu extends MusicBeatState
 
         var indicator:FlxSprite;
 
-        if (FlxG.save.data.beatenHard || debug)) 
+        if (FlxG.save.data.beatenHard || debug))
             indicator =  new FlxSprite().loadGraphic(Paths.image("menu/music/MusicIndicationLines","clown"));
         else 
             indicator =  new FlxSprite().loadGraphic(Paths.image("menu/music/noJadsLine","clown"));
@@ -198,7 +198,7 @@ class MusicMenu extends MusicBeatState
 				add(i.spriteTwo);
 			}
 
-        if (FlxG.save.data.beatenHard || debug))
+        if (FlxG.save.data.beatenHard || debug)
         {
             exp = new TrickyTextButton(0,0,"EXPURGATION","EXPURGATION",24,selectSongJads,"EXPURGATION");
             add(exp);
@@ -231,7 +231,7 @@ class MusicMenu extends MusicBeatState
             trace(currentSelected.pognt);
             updateSong(rozeSongs[rozeSelected].pognt);
         }
-        if (FlxG.save.data.beatenHard || debug))
+        if (FlxG.save.data.beatenHard || debug)
         {
             if (jadsSelected != -1)
             {
