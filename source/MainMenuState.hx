@@ -128,7 +128,7 @@ class MainMenuState extends MusicBeatState
 		switch(show)
 		{
 			case 'bf':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('bf','menu/MenuBF/MenuBF');
+				shower.frames = Paths.getSparrowAtlas("menu/MenuBF/MenuBF","clown");
 				shower.animation.addByPrefix('idle','BF idle menu');
 				shower.flipX = true;
 				if (!FlxG.sound.music.playing)
@@ -138,7 +138,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('THE KID IS WEAK...');
 
 			case 'tricky':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('tricky','menu/MenuTricky/MenuTricky');
+				shower.frames = Paths.getSparrowAtlas("menu/MenuTricky/MenuTricky","clown");
 				shower.animation.addByPrefix('idle','menutricky');
 				shower.y -= 155;
 				shower.x -= 120;
@@ -149,7 +149,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('MY LESSER FORM...');
 			case 'sus':
 				FlxG.mouse.visible = true;
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('sus','menu/Sus/Menu_ALLSUS');
+				shower.frames = Paths.getSparrowAtlas("menu/Sus/Menu_ALLSUS","clown");
 				shower.animation.addByPrefix('idle','AmongUsIDLE', 24);
 				shower.animation.addByPrefix('death','AMONG DEATH', 24, false);
 				shower.animation.addByIndices('deathPost','AMONG DEATH', [5], "", 24, false);
@@ -168,7 +168,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('A DESPICABLE THING LURKS HERE');
 				
 			case 'jebus':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('jebus','menu/Jebus/Menu_jebus');
+				shower.frames = Paths.getSparrowAtlas("menu/Jebus/Menu_jebus","clown");
 				shower.animation.addByPrefix('idle','Jebus');
 				shower.y -= 240;
 				shower.x -= 145;
@@ -179,7 +179,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('HE CAUSED THIS');
 
 			case 'hank':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('hank','menu/Hank/Hank_Menu');
+				shower.frames = Paths.getSparrowAtlas("menu/Hank/Hank_Menu","clown");
 				shower.animation.addByPrefix('idle','Hank');
 				shower.y -= 240;
 				shower.x -= 180;
@@ -190,7 +190,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('WEAK FLESH');
 
 			case 'deimos':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('deimos','menu/Deimos/Deimos_Menu');
+				shower.frames = Paths.getSparrowAtlas("menu/Deimos/Deimos_Menu","clown");
 				shower.animation.addByPrefix('idle','Deimos');
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_deimos","clown"), 0);
@@ -202,7 +202,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('ROCK UPGRADGE... INTERESTING');
 
 			case 'auditor':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('auditor','menu/Auditor/Auditor');
+				shower.frames = Paths.getSparrowAtlas("menu/Auditor/Auditor","clown");
 				shower.animation.addByPrefix('idle','Auditor');
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_auditor","clown"), 0);
@@ -213,7 +213,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('I HAVE NOTHING TO SAY...');
 
 			case 'mag':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('torture','menu/Torture/Mag_Agent_Torture_Menu');
+				shower.frames = Paths.getSparrowAtlas("menu/Torture/Mag_Agent_Torture_Menu","clown");
 				shower.animation.addByPrefix('idle','Mag Agent Torture');
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_torture","clown"), 0);
@@ -224,7 +224,7 @@ class MainMenuState extends MusicBeatState
 				lines.push('AN ABOMINATION');
 
 			case 'sanford':
-				shower.frames = CachedFrames.cachedInstance.fromSparrow('sanford','menu/Sanford/Menu_Sanford');
+				shower.frames = Paths.getSparrowAtlas("menu/Sanford/Menu_Sanford","clown");
 				shower.animation.addByPrefix('idle','Sanford');
 				if (!FlxG.sound.music.playing)
 					FlxG.sound.playMusic(Paths.music("nexus_sanford","clown"), 0);
