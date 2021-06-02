@@ -23,3 +23,6 @@ lime test windows -release
 ```
 
 or what ever platform, be it linux or mac or smth lol!
+
+
+btw special thanks to [GWebDev](https://github.com/GrowtopiaFli) for obviously video support, chad man.
