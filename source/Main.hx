@@ -1,6 +1,9 @@
 package;
 
+#if cpp
 import webm.WebmPlayer;
+#end
+
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxGame;
