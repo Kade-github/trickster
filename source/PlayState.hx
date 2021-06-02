@@ -173,6 +173,9 @@ class PlayState extends MusicBeatState
 	{
 		KeyBinds.keyCheck();
 
+		FlxG.sound.cache(Paths.inst(PlayState.SONG.song));
+		FlxG.sound.cache(Paths.voices(PlayState.SONG.song));
+
 		generatedMusic = false;
 		theFunne = FlxG.save.data.newInput;
 		if (FlxG.sound.music != null)

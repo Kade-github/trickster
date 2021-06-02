@@ -87,7 +87,7 @@ class Main extends Sprite
         GlobalVideo.setVid(vHandler);
         vHandler.source(ourSource);
         #elseif desktop
-		WebmPlayer.SKIP_STEP_LIMIT = 120; //haxelib git extension-webm https://github.com/ThatRozebudDude/extension-webm
+		WebmPlayer.SKIP_STEP_LIMIT = 90; //haxelib git extension-webm https://github.com/ThatRozebudDude/extension-webm
         var str1:String = "WEBM SHIT"; 
         var webmHandle = new WebmHandler();
         webmHandle.source(ourSource);
