@@ -165,7 +165,7 @@ class MusicMenu extends MusicBeatState
 
         var indicator:FlxSprite;
 
-        if (FlxG.save.data.beatenHard || debug))
+        if (FlxG.save.data.beatenHard || debug)
             indicator =  new FlxSprite().loadGraphic(Paths.image("menu/music/MusicIndicationLines","clown"));
         else 
             indicator =  new FlxSprite().loadGraphic(Paths.image("menu/music/noJadsLine","clown"));
