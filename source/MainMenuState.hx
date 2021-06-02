@@ -304,7 +304,7 @@ class MainMenuState extends MusicBeatState
 
 		if (FlxG.save.data.beaten)
 		{
-			var troph:FlxSprite = new FlxSprite(875, -5).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
+			var troph:FlxSprite = new FlxSprite(875, 60).loadGraphic(Paths.image("menu/Silver_Trophy","clown"));
 			if (FlxG.save.data.beatenHard)
 			{
 
