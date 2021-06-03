@@ -11,8 +11,9 @@ just do these things in the cmd window:
 ```
 haxelib install actuate
 haxelib git extension-webm https://github.com/KadeDev/extension-webm
-lime rebuild extension-webm [windows/mac/linux]
+lime rebuild extension-webm windows
 ```
+you can change windows to mac or linux
 
 alright you got everything you need to build now.
 
