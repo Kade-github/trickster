@@ -10,10 +10,10 @@ class MusicMenu extends MusicBeatState
     var tapeJads:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menu/music/Cassette Jads','clown'));
     var tapeYing:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menu/music/Cassette YingYang','clown'));
 
-    // THIS CODE IS AUTISTIC I'M SORRY
+    // THIS CODE IS BAD I'M SORRY
     // - kade
 
-    // liteartly don't ever do this, i'm doing it because i'm retarded.
+    // liteartly don't ever do this, i'm doing it because i'm stupid.
     // - kade
 
     var theMen:Array<TrickyTextButton> = [];
