@@ -65,7 +65,7 @@ class StoryMenuState extends MusicBeatState
 		
 		trace(trans.animation.frames);
 
-		trans.setGraphicSize(Std.int(trans.width * 1.38));
+		trans.setGraphicSize(Std.int(trans.width * 1.4));
 		
 
 		transIn = FlxTransitionableState.defaultTransIn;
