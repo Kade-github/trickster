@@ -70,7 +70,7 @@ class MainMenuState extends MusicBeatState
 		
 		trace(trans.animation.frames);
 
-		trans.setGraphicSize(Std.int(trans.width * 1.38));
+		trans.setGraphicSize(Std.int(trans.width * 1.4));
 
 		var bg:FlxSprite = new FlxSprite(-10,-10).loadGraphic(Paths.image('menu/RedBG','clown'));
 		add(bg);

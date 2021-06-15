@@ -80,11 +80,11 @@ class Character extends FlxSprite
 				animation.addByPrefix('scared', 'GF FEAR', 24);
 
 				addOffset('cheer');
-				addOffset('sad', -2, -2);
-				addOffset('danceLeft', 0, -9);
-				addOffset('danceRight', 0, -9);
+				addOffset('sad', 0, 0);
+				addOffset('danceLeft', 0, -2);
+				addOffset('danceRight', 0, -2);
 
-				addOffset('scared', -2, -17);
+				addOffset('scared', 0, -5);
 
 				playAnim('danceRight');
 			
@@ -167,7 +167,7 @@ class Character extends FlxSprite
 
 				trace('poggers');
 
-				addOffset("idle", 325, 0);
+				addOffset("idle", 113, 0);
 				playAnim('idle');
 			case 'trickyHDown':
 				tex = CachedFrames.cachedInstance.fromSparrow('down','hellclwn/Tricky/Down');
@@ -179,7 +179,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Down', 24);
 
-				addOffset("idle",475, -450);
+				addOffset("idle", 166, -157);
 
 				y -= 2000;
 				x -= 1400;
@@ -196,7 +196,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Up', 24);
 
-				addOffset("idle", 575, -450);
+				addOffset("idle", 201, -157);
 
 				y -= 2000;
 				x -= 1400;
@@ -212,7 +212,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Right', 24);
 
-				addOffset("idle",485, -300);
+				addOffset("idle", 169, -105);
 
 				y -= 2000;
 				x -= 1400;
@@ -228,7 +228,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('idle','Proper Left', 24);
 
-				addOffset("idle", 516, 25);
+				addOffset("idle", 180, 8);
 
 				y -= 2000;
 				x -= 1400;
@@ -311,17 +311,17 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('stunned', 'BF hit', 24, false);
 
-				addOffset('idle', -5);
-				addOffset("singUP", -29, 27);
-				addOffset("singRIGHT", -38, -7);
-				addOffset("singLEFT", 12, -6);
-				addOffset("singDOWN", -10, -50);
-				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
-				addOffset("singDOWNmiss", -11, -19);
+				addOffset('idle', -1);
+				addOffset("singUP", -8, 8);
+				addOffset("singRIGHT", -11, -2);
+				addOffset("singLEFT", 3, -1);
+				addOffset("singDOWN", -3, -15);
+				addOffset("singUPmiss", -8, 8);
+				addOffset("singRIGHTmiss", -9, 6);
+				addOffset("singLEFTmiss", 3, 7);
+				addOffset("singDOWNmiss", -3, -5);
 
-				addOffset('scared', -4);
+				addOffset('scared', -1);
 
 				playAnim('idle');
 

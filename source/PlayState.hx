@@ -287,12 +287,12 @@ class PlayState extends MusicBeatState
 		else if (SONG.song.toLowerCase() == 'hellclown')
 		{
 			//trace("line 538");
-			defaultCamZoom = 0.35;
+			defaultCamZoom = 1;
 			curStage = 'nevadaSpook';
 
 			tstatic.antialiasing = true;
 			tstatic.scrollFactor.set(0,0);
-			tstatic.setGraphicSize(Std.int(tstatic.width * 10));
+			tstatic.setGraphicSize(Std.int(tstatic.width * 3));
 			tstatic.screenCenter(Y);
 			tstatic.animation.add('static', [0, 1, 2], 24, true);
 			tstatic.animation.play('static');
@@ -300,27 +300,22 @@ class PlayState extends MusicBeatState
 			tstatic.alpha = 0;
 
 
-			var bg:FlxSprite = new FlxSprite(-1000, -1000).loadGraphic(Paths.image('fourth/bg','clown'));
-			bg.antialiasing = true;
+			var bg:FlxSprite = new FlxSprite(-1540, -845).loadGraphic(Paths.image('fourth/bg','clown'));
 			bg.scrollFactor.set(0.9, 0.9);
-			bg.setGraphicSize(Std.int(bg.width * 5));
+			bg.setGraphicSize(Std.int(bg.width * 1.75));
 			bg.active = false;
 			add(bg);
 
-			var stageFront:FlxSprite = new FlxSprite(-2000, -400).loadGraphic(Paths.image('hellclwn/island_but_red','clown'));
-			stageFront.setGraphicSize(Std.int(stageFront.width * 2.6));
-			stageFront.antialiasing = true;
+			var stageFront:FlxSprite = new FlxSprite(-1840, -750).loadGraphic(Paths.image('hellclwn/island_but_red','clown'));
 			stageFront.scrollFactor.set(0.9, 0.9);
 			stageFront.active = false;
 			add(stageFront);
 			
-			hank = new FlxSprite(60,-170);
+			hank = new FlxSprite(-25, -250);
 			hank.frames = Paths.getSparrowAtlas('hellclwn/Hank','clown');
 			hank.animation.addByPrefix('dance','Hank',24);
 			hank.animation.play('dance');
 			hank.scrollFactor.set(0.9, 0.9);
-			hank.setGraphicSize(Std.int(hank.width * 1.55));
-			hank.antialiasing = true;
 			
 
 			add(hank);
@@ -434,10 +429,11 @@ class PlayState extends MusicBeatState
 			case 'trickyMask':
 				camPos.x += 400;
 			case 'trickyH':
-				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 500);
-				dad.y -= 2000;
-				dad.x -= 1400;
-				gf.x -= 380;
+				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 175);
+				dad.x -= 650;
+				dad.y -= 965;
+				gf.x -= 370;
+				gf.y -= 220;
 			case 'exTricky':
 				dad.x -= 250;
 				dad.y -= 365;
@@ -462,7 +458,6 @@ class PlayState extends MusicBeatState
 		switch (curStage)
 		{
 			case 'nevada':
-				boyfriend.y -= 0;
 				boyfriend.x += 260;
 			case 'auditorHell':
 				boyfriend.y -= 160;
@@ -506,9 +501,8 @@ class PlayState extends MusicBeatState
 
 		if (dad.curCharacter == 'trickyH')
 		{
-			gf.setGraphicSize(Std.int(gf.width * 0.8));
-			boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.8));
-			gf.x += 220;
+			boyfriend.x -= 620;
+			boyfriend.y -= 480;
 		}
 
 		if (curStage == 'nevada')
@@ -548,7 +542,7 @@ class PlayState extends MusicBeatState
 
 		if (dad.curCharacter == 'trickyH')
 		{
-			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y + 265);
+			camFollow.setPosition(dad.getMidpoint().x + 50, dad.getMidpoint().y + 90);
 		
 		}
 		
@@ -1192,7 +1186,7 @@ class PlayState extends MusicBeatState
 			var playonce:Bool = false;
 
 			
-			trans = new FlxSprite(-400,-760);
+			trans = new FlxSprite(-270, -745);
 			trans.frames = Paths.getSparrowAtlas('Jaws','clown');
 			trans.antialiasing = true;
 
@@ -1200,7 +1194,7 @@ class PlayState extends MusicBeatState
 			
 			trace(trans.animation.frames);
 
-			trans.setGraphicSize(Std.int(trans.width * 1.6));
+			trans.setGraphicSize(Std.int(trans.width * 1.85));
 
 			trans.scrollFactor.set();
 
@@ -2003,7 +1997,8 @@ class PlayState extends MusicBeatState
 					case 'trickyMask':
 						camFollow.y = dad.getMidpoint().y + 25;
 					case 'trickyH':
-						camFollow.y = dad.getMidpoint().y + 375;
+						camFollow.x = dad.getMidpoint().x - 50;
+						camFollow.y = dad.getMidpoint().y + 130;
 					case 'senpai':
 						camFollow.y = dad.getMidpoint().y - 430;
 						camFollow.x = dad.getMidpoint().x - 100;
@@ -2024,6 +2019,13 @@ class PlayState extends MusicBeatState
 			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
 			{
 				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 300);
+
+				switch (curStage)
+				{
+					case 'nevadaSpook':
+						camFollow.x = boyfriend.getMidpoint().x - 35;
+						camFollow.y = boyfriend.getMidpoint().y - 105;
+				}
 
 				if (SONG.song.toLowerCase() == 'tutorial')
 				{
@@ -2145,7 +2147,7 @@ class PlayState extends MusicBeatState
 										{
 											createSpookyText(TrickyLinesSing[FlxG.random.int(0,TrickyLinesSing.length)]);
 										}
-									FlxG.camera.shake(0.02,0.2);
+									FlxG.camera.shake(0.01, 0.2);
 								case 'exTricky': // 60% chance
 									if (FlxG.random.bool(60) && !spookyRendered && !daNote.isSustainNote) // create spooky text :flushed:
 										{
